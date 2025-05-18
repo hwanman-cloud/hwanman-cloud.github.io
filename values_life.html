@@ -190,7 +190,6 @@
 
     submissionAllowed = false;
     setTimeout(() => { submissionAllowed = true; }, 3000);
-
     document.getElementById('loadingSpinner').classList.remove('hidden');
 
     try {
@@ -202,8 +201,13 @@
             body: JSON.stringify(gameData)
         });
 
+        if (!response.ok) {
+            throw new Error(`서버 응답 오류: ${response.status}`);
+        }
+
         const result = await response.json();
         onSuccess(result);
+
     } catch (error) {
         onFailure(error);
     }
