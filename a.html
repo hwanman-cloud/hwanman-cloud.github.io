@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>데이터 전송 예제</title>
+  <style>
+    #loadingSpinner {
+      display: none;
+    }
+    #loadingSpinner.active {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>데이터 전송 테스트</h2>
+  <button onclick="submitData()">데이터 전송</button>
+  <div id="loadingSpinner">로딩 중...</div>
+  <div id="resultMessage"></div>
+
+  <script>
+    let submissionAllowed = true;
+
+    async function submitData() {
+      if (!submissionAllowed) {
+        showPopup('잠시 후 다시 시도해주세요.');
+        return;
+      }
+
+      submissionAllowed = false;
+      setTimeout(() => { submissionAllowed = true; }, 3000);
+      document.getElementById('loadingSpinner').classList.add('active');
+
+      // 전송할 데이터 정의
+      const gameData = {
+        a: 1,
+        b: 2,
+        c: 3,
+        d: 4,
+        e: 5
+      };
+
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwT3qhWVzUWZA9UEuP-mCev94t2HvRTV0ANsQhtZy4fXIJwn8wV9EsMYS_OKa81dSreVQ/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(gameData)
+        });
+
+        if (!response.ok) {
+          throw new Error(`서버 응답 오류: ${response.status}`);
+        }
+
+        const resultText = await response.text(); // 서버가 텍스트 반환하므로 json 대신 text 사용
+        onSuccess(resultText);
+
+      } catch (error) {
+        onFailure(error);
+      }
+    }
+
+    function onSuccess(message) {
+      document.getElementById('loadingSpinner').classList.remove('active');
+      document.getElementById('resultMessage').textContent = `성공: ${message}`;
+    }
+
+    function onFailure(error) {
+      document.getElementById('loadingSpinner').classList.remove('active');
+      document.getElementById('resultMessage').textContent = `실패: ${error.message}`;
+    }
+
+    function showPopup(msg) {
+      alert(msg);
+    }
+  </script>
+
+</body>
+</html>
