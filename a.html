@@ -24,7 +24,7 @@
 
     async function submitData() {
       if (!submissionAllowed) {
-        showPopup('잠시 후 다시 시도해주세요.');
+        alert('잠시 후 다시 시도해주세요.');
         return;
       }
 
@@ -32,32 +32,33 @@
       setTimeout(() => { submissionAllowed = true; }, 3000);
       document.getElementById('loadingSpinner').classList.add('active');
 
-      // 전송할 데이터 정의
       const gameData = {
-        groupName: "1",
-        roundName: "2",
-        teamName: "3",
-        bidAmount: "4",
-        betting: "5"
+        groupName: '1',
+        roundName: '2',
+        teamName: '3',
+        bidAmount: '4',
+        betting: '5'
       };
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycby_Q4iPcOhTV6rYYoKTS6627m7OSKINkvYschrCSb3h2iw-DhobWz2G7pNdB50mVsnJ/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbx4jfCidKzVwQHHbgLxeoe-PU7ptpOx7qyaJlxlJAJgVS0jgEFg98GBFRT9kjV_XD1j/exec", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(gameData)
+          body: JSON.stringify(gameData),
+          mode: "cors"  // 🔸 CORS 허용 명시
         });
 
         if (!response.ok) {
           throw new Error(`서버 응답 오류: ${response.status}`);
         }
 
-        const resultText = await response.text(); // 서버가 텍스트 반환하므로 json 대신 text 사용
+        const resultText = await response.text();
         onSuccess(resultText);
 
       } catch (error) {
+        console.error("Fetch 실패:", error); // 콘솔 출력 추가
         onFailure(error);
       }
     }
@@ -70,10 +71,6 @@
     function onFailure(error) {
       document.getElementById('loadingSpinner').classList.remove('active');
       document.getElementById('resultMessage').textContent = `실패: ${error.message}`;
-    }
-
-    function showPopup(msg) {
-      alert(msg);
     }
   </script>
 
