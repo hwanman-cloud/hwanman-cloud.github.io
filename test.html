@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>테스트 제출 폼</title>
+  </head>
+  <body>
+    <input type="text" id="name" placeholder="이름을 입력하세요">
+    <button onclick="submitForm()">제출하기</button>
+
+    <script>
+      function submitForm() {
+        const name = document.getElementById("name").value;
+
+        fetch('https://script.google.com/macros/s/AKfycb.../exec', { // 웹앱 URL로 바꾸세요
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: name })
+        })
+        .then(response => response.text())
+        .then(result => {
+          alert("응답: " + result);
+        })
+        .catch(error => {
+          alert("오류 발생: " + error);
+        });
+      }
+    </script>
+  </body>
+</html>
