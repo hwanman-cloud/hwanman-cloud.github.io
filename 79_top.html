@@ -3,183 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>환경 토론 투표 예측 게임 (에너지 절약)</title>
+  <title>환경 토론 투표 예측 게임</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    .btn-hover:hover {
-      transform: scale(1.05);
+    /* Custom styles for button hover and loading spinner */
+    .btn-scale {
       transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
     }
-    .btn-active:active {
-      transform: scale(0.95);
-      transition: transform 0.1s ease-in-out;
-      background-color: #1e3a8a;
+    .btn-scale:hover {
+      transform: scale(1.05);
     }
-    #loadingSpinner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
+    .btn-scale:active {
+      transform: scale(0.95);
+      background-color: #1e40af;
     }
     .spinner {
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #1e40af;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #1e40af;
       border-radius: 50%;
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       animation: spin 1s linear infinite;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    #popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      display: none;
-      z-index: 10000;
-      text-align: center;
-      max-width: 90%;
-    }
   </style>
 </head>
-<body class="bg-gradient-to-r from-blue-100 to-blue-200 min-h-screen flex items-center justify-center font-sans">
-  <div id="loadingSpinner">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <!-- Loading Spinner -->
+  <div id="spinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="spinner"></div>
   </div>
-  <div id="popup" class="hidden">
-    <p id="popupMessage" class="text-lg font-semibold text-blue-800"></p>
-    <button id="popupConfirm" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg btn-hover btn-active">확인</button>
-  </div>
 
-  <!-- Page 1: Group Name -->
-  <div id="page1" class="w-full max-w-md mx-auto p-6">
-    <h1 class="text-2xl font-bold text-blue-800 text-center mb-4">환경 토론 투표 예측 게임 (에너지 절약)</h1>
-    <p class="text-center text-blue-600 mb-6">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
-    <div class="flex items-center justify-center mb-6">
-      <i class="fas fa-users mr-2 text-blue-600"></i>
-      <input id="groupName" type="text" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="단체명 입력">
-    </div>
-    <div class="text-center">
-      <button onclick="goToPage(2)" class="bg-blue-600 text-white px-6 py-3 rounded-lg btn-hover btn-active">다음</button>
+  <!-- Popup for Success/Completion -->
+  <div id="popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <p id="popup-message" class="text-lg font-semibold text-blue-800"></p>
+      <button id="popup-confirm" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">확인</button>
     </div>
   </div>
 
-  <!-- Page 2: Team Name -->
-  <div id="page2" class="w-full max-w-md mx-auto p-6 hidden">
-    <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임 (에너지 절약)</h1>
-    <p class="text-center text-blue-600 mb-4">단체명: <span id="groupNameDisplay2" class="font-semibold"></span></p>
-    <div class="flex items-center justify-center mb-6">
-      <i class="fas fa-user-friends mr-2 text-blue-600"></i>
-      <select id="teamName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+  <!-- Main Container -->
+  <div id="app" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <!-- Page 1: Group Name -->
+    <div id="page-1" class="page">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-4">환경 토론 투표 예측 게임(에너지 절약)</h1>
+      <p class="text-center text-gray-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="group-name" type="text" class="w-full p-2 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+      <button id="next-1" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+    </div>
+
+    <!-- Page 2: Team Selection -->
+    <div id="page-2" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임(에너지 절약)</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="group-name-display-2" class="font-semibold"></span></p>
+      <p class="text-center text-gray-600 mb-4">팀을 선택하세요.</p>
+      <select id="team-name" class="w-full p-2 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="" disabled selected>팀 선택</option>
-        <?php for ($i = 1; $i <= 60; $i++): ?>
-          <option value="팀<?=$i?>">팀<?=$i?></option>
-        <?php endfor; ?>
       </select>
+      <div class="flex space-x-2">
+        <button id="back-2" class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg btn-scale">뒤로 가기 <i class="fas fa-arrow-left ml-2"></i></button>
+        <button id="next-2" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
     </div>
-    <div class="text-center flex justify-center space-x-4">
-      <button onclick="goToPage(1)" class="bg-gray-400 text-white px-6 py-3 rounded-lg btn-hover btn-active">뒤로 가기</button>
-      <button onclick="goToPage(3)" class="bg-blue-600 text-white px-6 py-3 rounded-lg btn-hover btn-active">다음</button>
-    </div>
-  </div>
 
-  <!-- Page 3: Round Selection -->
-  <div id="page3" class="w-full max-w-md mx-auto p-6 hidden">
-    <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임 (에너지 절약)</h1>
-    <p class="text-center text-blue-600 mb-2">단체명: <span id="groupNameDisplay3" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">팀명: <span id="teamNameDisplay3" class="font-semibold"></span></p>
-    <div class="flex items-center justify-center mb-6">
-      <i class="fas fa-list-ol mr-2 text-blue-600"></i>
-      <select id="round" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <!-- Page 3: Round Selection -->
+    <div id="page-3" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임(에너지 절약)</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="group-name-display-3" class="font-semibold"></span>, 팀명: <span id="team-name-display-3" class="font-semibold"></span></p>
+      <p class="text-center text-gray-600 mb-4">라운드를 선택하세요.</p>
+      <select id="round" class="w-full p-2 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="" disabled selected>라운드 선택</option>
-        <?php for ($i = 1; $i <= 10; $i++): ?>
-          <option value="라운드<?=$i?>">라운드<?=$i?></option>
-        <?php endfor; ?>
       </select>
+      <div class="flex space-x-2">
+        <button id="back-3" class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg btn-scale">뒤로 가기 <i class="fas fa-arrow-left ml-2"></i></button>
+        <button id="next-3" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
     </div>
-    <div class="text-center flex justify-center space-x-4">
-      <button onclick="goToPage(2)" class="bg-gray-400 text-white px-6 py-3 rounded-lg btn-hover btn-active">뒤로 가기</button>
-      <button onclick="goToPage(4)" class="bg-blue-600 text-white px-6 py-3 rounded-lg btn-hover btn-active">다음</button>
-    </div>
-  </div>
 
-  <!-- Page 4: Choice Selection -->
-  <div id="page4" class="w-full max-w-md mx-auto p-6 hidden">
-    <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임 (에너지 절약)</h1>
-    <p class="text-center text-blue-600 mb-2">단체명: <span id="groupNameDisplay4" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">팀명: <span id="teamNameDisplay4" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">나의 선택</p>
-    <div class="flex items-center justify-center mb-6">
-      <i class="fas fa-check-circle mr-2 text-blue-600"></i>
-      <select id="choice" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <!-- Page 4: choice Selection -->
+    <div id="page-4" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임(에너지 절약)</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="group-name-display-4" class="font-semibold"></span>, 팀명: <span id="team-name-display-4" class="font-semibold"></span></p>
+      <p class="text-center text-gray-600 mb-4">나의 선택</p>
+      <select id="choice" class="w-full p-2 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="" disabled selected>선택</option>
         <option value="찬성(1번)">찬성(1번)</option>
         <option value="반대(2번)">반대(2번)</option>
       </select>
+      <div class="flex space-x-2">
+        <button id="back-4" class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg btn-scale">뒤로 가기 <i class="fas fa-arrow-left ml-2"></i></button>
+        <button id="next-4" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
     </div>
-    <div class="text-center flex justify-center space-x-4">
-      <button onclick="goToPage(3)" class="bg-gray-400 text-white px-6 py-3 rounded-lg btn-hover btn-active">뒤로 가기</button>
-      <button onclick="goToPage(5)" class="bg-blue-600 text-white px-6 py-3 rounded-lg btn-hover btn-active">다음</button>
-    </div>
-  </div>
 
-  <!-- Page 5: Percentage Prediction -->
-  <div id="page5" class="w-full max-w-md mx-auto p-6 hidden">
-    <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임 (에너지 절약)</h1>
-    <p class="text-center text-blue-600 mb-2">단체명: <span id="groupNameDisplay5" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">팀명: <span id="teamNameDisplay5" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">나의 선택과 같은 선택을 하는 % 예측</p>
-    <div class="flex items-center justify-center mb-6">
-      <i class="fas fa-percentage mr-2 text-blue-600"></i>
-      <select id="percentage" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-        <option value="" disabled selected>% 선택</option>
-        <?php foreach ([2,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,98] as $p): ?>
-          <option value="<?=$p?>"><?=$p?></option>
-        <?php endfor; ?>
+    <!-- Page 5: Percentage Prediction -->
+    <div id="page-5" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임(에너지 절약)</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="group-name-display-5" class="font-semibold"></span>, 팀명: <span id="team-name-display-5" class="font-semibold"></span></p>
+      <p class="text-center text-gray-600 mb-4">나의 선택과 같은 선택을 하는 % 예측</p>
+      <select id="percentage" class="w-full p-2 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="" disabled selected>퍼센트 선택</option>
+        <option value="2">2</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="35">35</option>
+        <option value="40">40</option>
+        <option value="45">45</option>
+        <option value="50">50</option>
+        <option value="55">55</option>
+        <option value="60">60</option>
+        <option value="65">65</option>
+        <option value="70">70</option>
+        <option value="75">75</option>
+        <option value="80">80</option>
+        <option value="85">85</option>
+        <option value="90">90</option>
+        <option value="95">95</option>
+        <option value="98">98</option>
       </select>
+      <div class="flex space-x-2">
+        <button id="back-5" class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg btn-scale">뒤로 가기 <i class="fas fa-arrow-left ml-2"></i></button>
+        <button id="next-5" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
     </div>
-    <div class="text-center flex justify-center space-x-4">
-      <button onclick="goToPage(4)" class="bg-gray-400 text-white px-6 py-3 rounded-lg btn-hover btn-active">뒤로 가기</button>
-      <button onclick="goToPage(6)" class="bg-blue-600 text-white px-6 py-3 rounded-lg btn-hover btn-active">다음</button>
-    </div>
-  </div>
 
-  <!-- Page 6: Betting Selection -->
-  <div id="page6" class="w-full max-w-md mx-auto p-6 hidden">
-    <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임 (에너지 절약)</h1>
-    <p class="text-center text-blue-600 mb-2">단체명: <span id="groupNameDisplay6" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">팀명: <span id="teamNameDisplay6" class="font-semibold"></span></p>
-    <p class="text-center text-blue-600 mb-4">베팅 선택</p>
-    <div class="flex items-center justify-center mb-6">
-      <i class="fas fa-coins mr-2 text-blue-600"></i>
-      <select id="bet" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <!-- Page 6: Betting Selection -->
+    <div id="page-6" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">환경 토론 투표 예측 게임(에너지 절약)</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="group-name-display-6" class="font-semibold"></span>, 팀명: <span id="team-name-display-6" class="font-semibold"></span></p>
+      <p class="text-center text-gray-600 mb-4">베팅 선택</p>
+      <select id="bet" class="w-full p-2 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="" disabled selected>베팅 선택</option>
-        <?php for ($i = 1; $i <= 9; $i++): ?>
-          <option value="<?=$i?>"><?=$i?></option>
-        <?php endfor; ?>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
       </select>
-    </div>
-    <div class="text-center flex justify-center space-x-4">
-      <button onclick="goToPage(5)" class="bg-gray-400 text-white px-6 py-3 rounded-lg btn-hover btn-active">뒤로 가기</button>
-      <button onclick="submitData()" id="submitBtn" class="bg-blue-600 text-white px-6 py-3 rounded-lg btn-hover btn-active">제출하기</button>
+      <div class="flex space-x-2">
+        <button id="back-6" class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg btn-scale">뒤로 가기 <i class="fas fa-arrow-left ml-2"></i></button>
+        <button id="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg btn-scale">제출하기 <i class="fas fa-check ml-2"></i></button>
+      </div>
     </div>
   </div>
 
   <script>
+    // State management
     let formData = {
       groupName: '',
       teamName: '',
@@ -188,152 +171,187 @@
       percentage: '',
       bet: ''
     };
+    let currentPage = 1;
     let isSubmitting = false;
 
-    function showPage(pageNum) {
-      for (let i = 1; i <= 6; i++) {
-        document.getElementById(`page${i}`).classList.add('hidden');
-      }
-      document.getElementById(`page${pageNum}`).classList.remove('hidden');
+    // Populate team dropdown (1 to 60)
+    const teamSelect = document.getElementById('team-name');
+    for (let i = 1; i <= 60; i++) {
+      const option = document.createElement('option');
+      option.value = `${i}팀`;
+      option.textContent = `${i}팀`;
+      teamSelect.appendChild(option);
     }
 
-    function goToPage(pageNum) {
-      if (pageNum === 2 && !document.getElementById('groupName').value) {
-        alert('단체명을 입력해주세요.');
-        return;
-      }
-      if (pageNum === 3 && !document.getElementById('teamName').value) {
-        alert('팀명을 선택해주세요.');
-        return;
-      }
-      if (pageNum === 4 && !document.getElementById('round').value) {
-        alert('라운드를 선택해주세요.');
-        return;
-      }
-      if (pageNum === 5 && !document.getElementById('choice').value) {
-        alert('선택을 입력해주세요.');
-        return;
-      }
-      if (pageNum === 6 && !document.getElementById('percentage').value) {
-        alert('예측 %를 선택해주세요.');
-        return;
-      }
-
-      formData.groupName = document.getElementById('groupName').value || formData.groupName;
-      formData.teamName = document.getElementById('teamName').value || formData.teamName;
-      formData.round = document.getElementById('round').value || formData.round;
-      formData.choice = document.getElementById('choice').value || formData.choice;
-      formData.percentage = document.getElementById('percentage').value || formData.percentage;
-
-      if (pageNum >= 2) document.getElementById('groupNameDisplay2').textContent = formData.groupName;
-      if (pageNum >= 3) {
-        document.getElementById('groupNameDisplay3').textContent = formData.groupName;
-        document.getElementById('teamNameDisplay3').textContent = formData.teamName;
-      }
-      if (pageNum >= 4) {
-        document.getElementById('groupNameDisplay4').textContent = formData.groupName;
-        document.getElementById('teamNameDisplay4').textContent = formData.teamName;
-      }
-      if (pageNum >= 5) {
-        document.getElementById('groupNameDisplay5').textContent = formData.groupName;
-        document.getElementById('teamNameDisplay5').textContent = formData.teamName;
-      }
-      if (pageNum >= 6) {
-        document.getElementById('groupNameDisplay6').textContent = formData.groupName;
-        document.getElementById('teamNameDisplay6').textContent = formData.teamName;
-      }
-
-      showPage(pageNum);
+    // Populate round dropdown (1 to 10)
+    const roundSelect = document.getElementById('round');
+    for (let i = 1; i <= 10; i++) {
+      const option = document.createElement('option');
+      option.value = `${i}라운드`;
+      option.textContent = `${i}라운드`;
+      roundSelect.appendChild(option);
     }
 
-    function submitData() {
+    // Show/hide pages
+    function showPage(pageNumber) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page-${pageNumber}`).classList.remove('hidden');
+      currentPage = pageNumber;
+
+      // Update displayed group name and team name
+      if (pageNumber >= 2) {
+        document.getElementById(`group-name-display-${pageNumber}`).textContent = formData.groupName;
+      }
+      if (pageNumber >= 3) {
+        document.getElementById(`team-name-display-${pageNumber}`).textContent = formData.teamName;
+      }
+    }
+
+    // Show popup with message
+    function showPopup(message, nextPage, autoSelectRound) {
+      document.getElementById('popup-message').textContent = message;
+      document.getElementById('popup').classList.remove('hidden');
+      document.getElementById('popup-confirm').onclick = () => {
+        document.getElementById('popup').classList.add('hidden');
+        showPage(nextPage);
+        if (autoSelectRound) {
+          const roundNum = parseInt(formData.round) + 1;
+          if (roundNum <= 10) {
+            roundSelect.value = `${roundNum}라운드`;
+            formData.round = `${roundNum}라운드`;
+          }
+        }
+      };
+    }
+
+    // Handle form submission with debounce
+    function submitForm() {
       if (isSubmitting) return;
-      if (!document.getElementById('bet').value) {
-        alert('베팅을 선택해주세요.');
-        return;
-      }
-
-      formData.bet = document.getElementById('bet').value;
       isSubmitting = true;
-      document.getElementById('submitBtn').disabled = true;
-      document.getElementById('loadingSpinner').style.display = 'flex';
+      document.getElementById('spinner').classList.remove('hidden');
 
-      fetch('https://script.google.com/macros/s/AKfycbx1lY2Z1bNxW4MCtqCT322MOQeKHxugSzqF9rf8SaOTRgMmfDZUVycpQ6FVYfLXUPPs/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbyQNeBQdqjsqs9ia-QijyABZ0FJBKv1i9u1yXoCj3RHZ1EphjAIZjpAdqr9iL5sU3td/exec', {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(formData)
       })
       .then(() => {
-        document.getElementById('loadingSpinner').style.display = 'none';
-        const currentRound = parseInt(formData.round.replace('라운드', ''));
-        showPopup(currentRound === 10 ? '모든 입력이 완료되었습니다!' : `입력이 성공했습니다: ${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`);
-        document.getElementById('popupConfirm').onclick = () => {
-          if (currentRound === 10) {
-            resetForm();
-            showPage(1);
-          } else {
-            document.getElementById('round').value = `라운드${currentRound + 1}`;
-            document.getElementById('choice').value = '';
-            document.getElementById('percentage').value = '';
-            document.getElementById('bet').value = '';
-            formData.choice = '';
-            formData.percentage = '';
-            formData.bet = '';
-            showPage(3);
-          }
-          document.getElementById('popup').style.display = 'none';
-        };
-        setTimeout(() => {
-          isSubmitting = false;
-          document.getElementById('submitBtn').disabled = false;
-        }, 3000);
+        document.getElementById('spinner').classList.add('hidden');
+        const message = `${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`;
+        const isLastRound = formData.round === '10라운드';
+        showPopup(
+          isLastRound ? '모든 입력이 완료되었습니다!' : message,
+          isLastRound ? 1 : 3,
+          !isLastRound
+        );
+        // Reset fields for next round
+        formData.choice = '';
+        formData.percentage = '';
+        formData.bet = '';
+        document.getElementById('choice').value = '';
+        document.getElementById('percentage').value = '';
+        document.getElementById('bet').value = '';
       })
       .catch(() => {
-        document.getElementById('loadingSpinner').style.display = 'none';
-        const currentRound = parseInt(formData.round.replace('라운드', ''));
-        showPopup(currentRound === 10 ? '모든 입력이 완료되었습니다!' : `입력이 성공했습니다: ${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`);
-        document.getElementById('popupConfirm').onclick = () => {
-          if (currentRound === 10) {
-            resetForm();
-            showPage(1);
-          } else {
-            document.getElementById('round').value = `라운드${currentRound + 1}`;
-            document.getElementById('choice').value = '';
-            document.getElementById('percentage').value = '';
-            document.getElementById('bet').value = '';
-            formData.choice = '';
-            formData.percentage = '';
-            formData.bet = '';
-            showPage(3);
-          }
-          document.getElementById('popup').style.display = 'none';
-        };
+        document.getElementById('spinner').classList.add('hidden');
+        const message = `${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`;
+        const isLastRound = formData.round === '10라운드';
+        showPopup(
+          isLastRound ? '모든 입력이 완료되었습니다!' : message,
+          isLastRound ? 1 : 3,
+          !isLastRound
+        );
+        // Reset fields for next round
+        formData.choice = '';
+        formData.percentage = '';
+        formData.bet = '';
+        document.getElementById('choice').value = '';
+        document.getElementById('percentage').value = '';
+        document.getElementById('bet').value = '';
+      })
+      .finally(() => {
         setTimeout(() => {
           isSubmitting = false;
-          document.getElementById('submitBtn').disabled = false;
-        }, 3000);
+        }, 3000); // 3-second debounce
       });
     }
 
-    function showPopup(message) {
-      document.getElementById('popupMessage').textContent = message;
-      document.getElementById('popup').style.display = 'block';
-    }
-
-    function resetForm() {
-      formData = { groupName: '', teamName: '', round: '', choice: '', percentage: '', bet: '' };
-      document.getElementById('groupName').value = '';
-      document.getElementById('teamName').value = '';
-      document.getElementById('round').value = '';
-      document.getElementById('choice').value = '';
-      document.getElementById('percentage').value = '';
-      document.getElementById('bet').value = '';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      showPage(1);
+    // Event listeners for navigation
+    document.getElementById('next-1').addEventListener('click', () => {
+      const groupName = document.getElementById('group-name').value.trim();
+      if (groupName) {
+        formData.groupName = groupName;
+        showPage(2);
+      } else {
+        alert('단체명을 입력해주세요.');
+      }
     });
+
+    document.getElementById('next-2').addEventListener('click', () => {
+      const teamName = document.getElementById('team-name').value;
+      if (teamName) {
+        formData.teamName = teamName;
+        showPage(3);
+      } else {
+        alert('팀을 선택해주세요.');
+      }
+    });
+
+    document.getElementById('back-2').addEventListener('click', () => showPage(1));
+
+    document.getElementById('next-3').addEventListener('click', () => {
+      const round = document.getElementById('round').value;
+      if (round) {
+        formData.round = round;
+        showPage(4);
+      } else {
+        alert('라운드를 선택해주세요.');
+      }
+    });
+
+    document.getElementById('back-3').addEventListener('click', () => showPage(2));
+
+    document.getElementById('next-4').addEventListener('click', () => {
+      const choice = document.getElementById('choice').value;
+      if (choice) {
+        formData.choice = choice;
+        showPage(5);
+      } else {
+        alert('투표를 선택해주세요.');
+      }
+    });
+
+    document.getElementById('back-4').addEventListener('click', () => showPage(3));
+
+    document.getElementById('next-5').addEventListener('click', () => {
+      const percentage = document.getElementById('percentage').value;
+      if (percentage) {
+        formData.percentage = percentage;
+        showPage(6);
+      } else {
+        alert('퍼센트를 선택해주세요.');
+      }
+    });
+
+    document.getElementById('back-5').addEventListener('click', () => showPage(4));
+
+    document.getElementById('back-6').addEventListener('click', () => showPage(5));
+
+    document.getElementById('submit').addEventListener('click', () => {
+      const bet = document.getElementById('bet').value;
+      if (bet) {
+        formData.bet = bet;
+        submitForm();
+      } else {
+        alert('베팅을 선택해주세요.');
+      }
+    });
+
+    // Initialize
+    showPage(1);
   </script>
 </body>
 </html>
