@@ -1,42 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>플레이어 입력 창 열기</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      font-family: sans-serif;
-      background-color: #f7f7f7;
-    }
-    .message {
-      text-align: center;
-    }
-    a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #4285f4;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-    }
-    a:hover {
-      background-color: #3367d6;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>iframe 내부 페이지</title>
 </head>
 <body>
-  <div class="message">
-    <p>아래 버튼을 클릭하여 직접 페이지를 여세요.</p>
-    <a href="https://script.google.com/macros/s/AKfycbwP75LP8QgDo9DzlfLMQh1DYO9mkNJZB5Pi92tNgce6toq558ECh3dRVh9wtMsFxzx0/exec" target="_self">
-      플레이어 입력 페이지 열기
-    </a>
-  </div>
+  <div id="top">로딩 중...</div>
+  <div id="main"></div>
+
+  <script>
+    fetch("https://script.google.com/macros/s/AKfycbwP75LP8QgDo9DzlfLMQh1DYO9mkNJZB5Pi92tNgce6toq558ECh3dRVh9wtMsFxzx0/exec")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("top").innerHTML = data;
+      })
+      .catch(err => {
+        document.getElementById("top").innerHTML = "오류 발생: " + err;
+      });
+  </script>
 </body>
 </html>
+
