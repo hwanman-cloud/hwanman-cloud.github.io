@@ -162,196 +162,227 @@
   </div>
 
   <script>
-    // State management
-    let formData = {
-      groupName: '',
-      teamName: '',
-      round: '',
-      choice: '',
-      percentage: '',
-      bet: ''
-    };
-    let currentPage = 1;
-    let isSubmitting = false;
-
-    // Populate team dropdown (1 to 60)
-    const teamSelect = document.getElementById('team-name');
-    for (let i = 1; i <= 60; i++) {
-      const option = document.createElement('option');
-      option.value = `${i}팀`;
-      option.textContent = `${i}팀`;
-      teamSelect.appendChild(option);
-    }
-
-    // Populate round dropdown (1 to 10)
-    const roundSelect = document.getElementById('round');
-    for (let i = 1; i <= 10; i++) {
-      const option = document.createElement('option');
-      option.value = `${i}라운드`;
-      option.textContent = `${i}라운드`;
-      roundSelect.appendChild(option);
-    }
-
-    // Show/hide pages
-    function showPage(pageNumber) {
-      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-      document.getElementById(`page-${pageNumber}`).classList.remove('hidden');
-      currentPage = pageNumber;
-
-      // Update displayed group name and team name
-      if (pageNumber >= 2) {
-        document.getElementById(`group-name-display-${pageNumber}`).textContent = formData.groupName;
-      }
-      if (pageNumber >= 3) {
-        document.getElementById(`team-name-display-${pageNumber}`).textContent = formData.teamName;
-      }
-    }
-
-    // Show popup with message
-    function showPopup(message, nextPage, autoSelectRound) {
-      document.getElementById('popup-message').textContent = message;
-      document.getElementById('popup').classList.remove('hidden');
-      document.getElementById('popup-confirm').onclick = () => {
-        document.getElementById('popup').classList.add('hidden');
-        showPage(nextPage);
-        if (autoSelectRound) {
-          const roundNum = parseInt(formData.round) + 1;
-          if (roundNum <= 10) {
-            roundSelect.value = `${roundNum}라운드`;
-            formData.round = `${roundNum}라운드`;
-          }
-        }
+    // Ensure DOM is fully loaded before populating dropdowns
+    document.addEventListener('DOMContentLoaded', () => {
+      // State management
+      let formData = {
+        groupName: '',
+        teamName: '',
+        round: '',
+        choice: '',
+        percentage: '',
+        bet: ''
       };
-    }
+      let currentPage = 1;
+      let isSubmitting = false;
 
-    // Handle form submission with debounce
-    function submitForm() {
-      if (isSubmitting) return;
-      isSubmitting = true;
-      document.getElementById('spinner').classList.remove('hidden');
+      // Populate team dropdown (1 to 60)
+      const teamSelect = document.getElementById('team-name');
+      if (teamSelect) {
+        for (let i = 1; i <= 60; i++) {
+          const option = document.createElement('option');
+          option.value = `${i}팀`;
+          option.textContent = `${i}팀`;
+          teamSelect.appendChild(option);
+        }
+      } else {
+        console.error('Team select element not found');
+      }
 
-      fetch('https://script.google.com/macros/s/AKfycbyQNeBQdqjsqs9ia-QijyABZ0FJBKv1i9u1yXoCj3RHZ1EphjAIZjpAdqr9iL5sU3td/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-      .then(() => {
-        document.getElementById('spinner').classList.add('hidden');
-        const message = `${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`;
-        const isLastRound = formData.round === '10라운드';
-        showPopup(
-          isLastRound ? '모든 입력이 완료되었습니다!' : message,
-          isLastRound ? 1 : 3,
-          !isLastRound
-        );
-        // Reset fields for next round
-        formData.choice = '';
-        formData.percentage = '';
-        formData.bet = '';
-        document.getElementById('choice').value = '';
-        document.getElementById('percentage').value = '';
-        document.getElementById('bet').value = '';
-      })
-      .catch(() => {
-        document.getElementById('spinner').classList.add('hidden');
-        const message = `${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`;
-        const isLastRound = formData.round === '10라운드';
-        showPopup(
-          isLastRound ? '모든 입력이 완료되었습니다!' : message,
-          isLastRound ? 1 : 3,
-          !isLastRound
-        );
-        // Reset fields for next round
-        formData.choice = '';
-        formData.percentage = '';
-        formData.bet = '';
-        document.getElementById('choice').value = '';
-        document.getElementById('percentage').value = '';
-        document.getElementById('bet').value = '';
-      })
-      .finally(() => {
-        setTimeout(() => {
-          isSubmitting = false;
-        }, 3000); // 3-second debounce
+      // Populate round dropdown (1 to 10)
+      const roundSelect = document.getElementById('round');
+      if (roundSelect) {
+        for (let i = 1; i <= 10; i++) {
+          const option = document.createElement('option');
+          option.value = `${i}라운드`;
+          option.textContent = `${i}라운드`;
+          roundSelect.appendChild(option);
+        }
+      } else {
+        console.error('Round select element not found');
+      }
+
+      // Show/hide pages
+      function showPage(pageNumber) {
+        document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+        const pageElement = document.getElementById(`page-${pageNumber}`);
+        if (pageElement) {
+          pageElement.classList.remove('hidden');
+          currentPage = pageNumber;
+
+          // Update displayed group name and team name
+          if (pageNumber >= 2) {
+            const groupDisplay = document.getElementById(`group-name-display-${pageNumber}`);
+            if (groupDisplay) groupDisplay.textContent = formData.groupName;
+          }
+          if (pageNumber >= 3) {
+            const teamDisplay = document.getElementById(`team-name-display-${pageNumber}`);
+            if (teamDisplay) teamDisplay.textContent = formData.teamName;
+          }
+        } else {
+          console.error(`Page ${pageNumber} not found`);
+        }
+      }
+
+      // Show popup with message
+      function showPopup(message, nextPage, autoSelectRound) {
+        const popupMessage = document.getElementById('popup-message');
+        const popup = document.getElementById('popup');
+        if (popupMessage && popup) {
+          popupMessage.textContent = message;
+          popup.classList.remove('hidden');
+          document.getElementById('popup-confirm').onclick = () => {
+            popup.classList.add('hidden');
+            showPage(nextPage);
+            if (autoSelectRound && roundSelect) {
+              const roundNum = parseInt(formData.round) + 1;
+              if (roundNum <= 10) {
+                roundSelect.value = `${roundNum}라운드`;
+                formData.round = `${roundNum}라운드`;
+              }
+            }
+          };
+        } else {
+          console.error('Popup elements not found');
+        }
+      }
+
+      // Handle form submission with debounce
+      function submitForm() {
+        if (isSubmitting) return;
+        isSubmitting = true;
+        const spinner = document.getElementById('spinner');
+        if (spinner) spinner.classList.remove('hidden');
+
+        fetch('https://script.google.com/macros/s/AKfycbyQNeBQdqjsqs9ia-QijyABZ0FJBKv1i9u1yXoCj3RHZ1EphjAIZjpAdqr9iL5sU3td/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(() => {
+          if (spinner) spinner.classList.add('hidden');
+          const message = `${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`;
+          const isLastRound = formData.round === '10라운드';
+          showPopup(
+            isLastRound ? '모든 입력이 완료되었습니다!' : message,
+            isLastRound ? 1 : 3,
+            !isLastRound
+          );
+          // Reset fields for next round
+          formData.choice = '';
+          formData.percentage = '';
+          formData.bet = '';
+          const choiceSelect = document.getElementById('choice');
+          const percentageSelect = document.getElementById('percentage');
+          const betSelect = document.getElementById('bet');
+          if (choiceSelect) choiceSelect.value = '';
+          if (percentageSelect) percentageSelect.value = '';
+          if (betSelect) betSelect.value = '';
+        })
+        .catch(() => {
+          if (spinner) spinner.classList.add('hidden');
+          const message = `${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`;
+          const isLastRound = formData.round === '10라운드';
+          showPopup(
+            isLastRound ? '모든 입력이 완료되었습니다!' : message,
+            isLastRound ? 1 : 3,
+            !isLastRound
+          );
+          // Reset fields for next round
+          formData.choice = '';
+          formData.percentage = '';
+          formData.bet = '';
+          const choiceSelect = document.getElementById('choice');
+          const percentageSelect = document.getElementById('percentage');
+          const betSelect = document.getElementById('bet');
+          if (choiceSelect) choiceSelect.value = '';
+          if (percentageSelect) percentageSelect.value = '';
+          if (betSelect) betSelect.value = '';
+        })
+        .finally(() => {
+          setTimeout(() => {
+            isSubmitting = false;
+          }, 3000); // 3-second debounce
+        });
+      }
+
+      // Event listeners for navigation
+      document.getElementById('next-1').addEventListener('click', () => {
+        const groupName = document.getElementById('group-name').value.trim();
+        if (groupName) {
+          formData.groupName = groupName;
+          showPage(2);
+        } else {
+          alert('단체명을 입력해주세요.');
+        }
       });
-    }
 
-    // Event listeners for navigation
-    document.getElementById('next-1').addEventListener('click', () => {
-      const groupName = document.getElementById('group-name').value.trim();
-      if (groupName) {
-        formData.groupName = groupName;
-        showPage(2);
-      } else {
-        alert('단체명을 입력해주세요.');
-      }
+      document.getElementById('next-2').addEventListener('click', () => {
+        const teamName = document.getElementById('team-name').value;
+        if (teamName) {
+          formData.teamName = teamName;
+          showPage(3);
+        } else {
+          alert('팀을 선택해주세요.');
+        }
+      });
+
+      document.getElementById('back-2').addEventListener('click', () => showPage(1));
+
+      document.getElementById('next-3').addEventListener('click', () => {
+        const round = document.getElementById('round').value;
+        if (round) {
+          formData.round = round;
+          showPage(4);
+        } else {
+          alert('라운드를 선택해주세요.');
+        }
+      });
+
+      document.getElementById('back-3').addEventListener('click', () => showPage(2));
+
+      document.getElementById('next-4').addEventListener('click', () => {
+        const choice = document.getElementById('choice').value;
+        if (choice) {
+          formData.choice = choice;
+          showPage(5);
+        } else {
+          alert('투표를 선택해주세요.');
+        }
+      });
+
+      document.getElementById('back-4').addEventListener('click', () => showPage(3));
+
+      document.getElementById('next-5').addEventListener('click', () => {
+        const percentage = document.getElementById('percentage').value;
+        if (percentage) {
+          formData.percentage = percentage;
+          showPage(6);
+        } else {
+          alert('퍼센트를 선택해주세요.');
+        }
+      });
+
+      document.getElementById('back-5').addEventListener('click', () => showPage(4));
+
+      document.getElementById('back-6').addEventListener('click', () => showPage(5));
+
+      document.getElementById('submit').addEventListener('click', () => {
+        const bet = document.getElementById('bet').value;
+        if (bet) {
+          formData.bet = bet;
+          submitForm();
+        } else {
+          alert('베팅을 선택해주세요.');
+        }
+      });
+
+      // Initialize
+      showPage(1);
     });
-
-    document.getElementById('next-2').addEventListener('click', () => {
-      const teamName = document.getElementById('team-name').value;
-      if (teamName) {
-        formData.teamName = teamName;
-        showPage(3);
-      } else {
-        alert('팀을 선택해주세요.');
-      }
-    });
-
-    document.getElementById('back-2').addEventListener('click', () => showPage(1));
-
-    document.getElementById('next-3').addEventListener('click', () => {
-      const round = document.getElementById('round').value;
-      if (round) {
-        formData.round = round;
-        showPage(4);
-      } else {
-        alert('라운드를 선택해주세요.');
-      }
-    });
-
-    document.getElementById('back-3').addEventListener('click', () => showPage(2));
-
-    document.getElementById('next-4').addEventListener('click', () => {
-      const choice = document.getElementById('choice').value;
-      if (choice) {
-        formData.choice = choice;
-        showPage(5);
-      } else {
-        alert('투표를 선택해주세요.');
-      }
-    });
-
-    document.getElementById('back-4').addEventListener('click', () => showPage(3));
-
-    document.getElementById('next-5').addEventListener('click', () => {
-      const percentage = document.getElementById('percentage').value;
-      if (percentage) {
-        formData.percentage = percentage;
-        showPage(6);
-      } else {
-        alert('퍼센트를 선택해주세요.');
-      }
-    });
-
-    document.getElementById('back-5').addEventListener('click', () => showPage(4));
-
-    document.getElementById('back-6').addEventListener('click', () => showPage(5));
-
-    document.getElementById('submit').addEventListener('click', () => {
-      const bet = document.getElementById('bet').value;
-      if (bet) {
-        formData.bet = bet;
-        submitForm();
-      } else {
-        alert('베팅을 선택해주세요.');
-      }
-    });
-
-    // Initialize
-    showPage(1);
   </script>
 </body>
 </html>
