@@ -9,24 +9,36 @@
     <button onclick="submitForm()">제출하기5</button>
 
     <script>
-      function submitForm() {
-        const name = document.getElementById("name").value;
-
-        fetch('https://script.google.com/macros/s/AKfycbyId_-v6PYxelnA4ytI_20LyVsfXW0Ls-Ylntik99p6Tu5OY1y05QwPF8ghsP2bokDE/exec', { // 웹앱 URL로 바꾸세요
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: name })
-        })
-        .then(response => response.text())
-        .then(result => {
-          alert("응답: " + result);
-        })
-        .catch(error => {
-          alert("오류 발생: " + error);
-        });
-      }
+function submitForm() {
+  const name = document.getElementById("name").value;
+  
+  if (!name.trim()) {
+    alert("이름을 입력해주세요.");
+    return;
+  }
+  
+  fetch('https://script.google.com/macros/s/AKfycbxdeOilBGOdZWToG58j_UXFzuW5T3lJOJmiXxZLMAYezukLyGVseEcw6j_8K3wWnxuq/exec', {
+    method: 'POST',
+    mode: 'cors', // CORS 모드 명시
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name: name })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.text();
+  })
+  .then(result => {
+    alert("응답: " + result);
+  })
+  .catch(error => {
+    console.error('상세 오류:', error);
+    alert("오류 발생: " + error.message);
+  });
+}    
     </script>
   </body>
 </html>
