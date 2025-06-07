@@ -8,16 +8,19 @@
   <div id="top">로딩 중...</div>
   <div id="main"></div>
 
+
   <script>
-    fetch("https://script.google.com/macros/s/AKfycby2Mwgtf4dlTpeTHzybl2rZ0I5D5bpE-pUPAyA78iTEa7nQTY-ttjbF_jOH51nNl3rv/exec")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("top").innerHTML = data;
-      })
-      .catch(err => {
-        document.getElementById("top").innerHTML = "오류 발생: " + err;
-      });
-  </script>
+  fetch("https://script.google.com/macros/s/AKfycby1TkO9M_di0T3jPhqa54z7pCWW27IRwdj1dskIDBOY3vlPPA3Cp0g4G99Cxy_mph-A/exec")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("top").innerHTML = data.html;
+    })
+    .catch(err => {
+      document.getElementById("top").innerHTML = "오류 발생: " + err;
+    });
+</script>
+
+
 </body>
 </html>
 
