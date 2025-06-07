@@ -19,7 +19,7 @@ function submitForm() {
   
   fetch('https://script.google.com/macros/s/AKfycbxdeOilBGOdZWToG58j_UXFzuW5T3lJOJmiXxZLMAYezukLyGVseEcw6j_8K3wWnxuq/exec', {
     method: 'POST',
-    mode: 'cors', // CORS 모드 명시
+    mode: 'no-cors', // CORS 모드 명시
     headers: {
       'Content-Type': 'application/json',
     },
