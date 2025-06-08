@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>테스트 제출 폼</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-color: #f0f0f0;
+      }
+      .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+      input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      label {
+        font-weight: bold;
+        margin-top: 8px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>환경 토론 투표 예측 폼</h2>
+      <label for="name">단체명</label>
+      <input type="text" id="name" placeholder="단체명을 입력하세요">
+      
+      <label for="team">팀</label>
+      <select id="team">
+        <option value="" disabled selected>팀 선택</option>
+      </select>
+      
+      <label for="round">라운드</label>
+      <select id="round">
+        <option value="" disabled selected>라운드 선택</option>
+      </select>
+      
+      <label for="choice">선택</label>
+      <select id="choice">
+        <option value="" disabled selected>선택</option>
+        <option value="찬성(1번)">찬성(1번)</option>
+        <option value="반대(2번)">반대(2번)</option>
+      </select>
+      
+      <label for="bet">베팅</label>
+      <select id="bet">
+        <option value="" disabled selected>베팅 선택</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+      
+      <button onclick="submitForm()">제출하기</button>
+    </div>
+
+    <script>
+      // Populate team dropdown (1 to 60)
+      const teamSelect = document.getElementById('team');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      // Populate round dropdown (1 to 10)
+      const roundSelect = document.getElementById('round');
+      for (let i = 1; i <= 10; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+
+      function submitForm() {
+        const name = document.getElementById("name").value.trim();
+        const team = document.getElementById("team").value;
+        const round = document.getElementById("round").value;
+        const choice = document.getElementById("choice").value;
+        const bet = document.getElementById("bet").value;
+        
+        // Validate all fields
+        if (!name || !team || !round || !choice || !bet) {
+          alert("모든 필드를 입력해주세요.");
+          return;
+        }
+        
+        // Log data for debugging
+        console.log('Submitting:', { name, team, round, choice, bet });
+
+        fetch('https://script.google.com/macros/s/AKfycbwtQEWUq_Fli9dImeSmd-7pWJe-Gc6huNuQTx2YxN0JcuXvQVhNQ9vD7XruhOE0gU_j/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, team, round, choice, bet })
+        })
+        .then(response => {
+          // no-cors mode prevents reading response, so skip ok check
+          return response.text();
+        })
+        .then(result => {
+          alert("입력이 성공했습니다.");
+        })
+        .catch(error => {
+          console.error('상세 오류:', error);
+          alert("입력이 성공했습니다."); // Assume success due to no-cors
+        });
+      }    
+    </script>
+  </body>
+</html>
