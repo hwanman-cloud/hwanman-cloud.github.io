@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환경 토론 투표 예측 게임(친환경 발전 딜레마)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .page { display: none; }
+        .active { display: block; }
+        .btn { transition: all 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        .spinner { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9999; 
+        }
+        .spinner::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid #fff; 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: translate(-50%, -50%) rotate(0deg); } 
+            100% { transform: translate(-50%, -50%) rotate(360deg); } 
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
+    <div class="container mx-auto p-4 max-w-md">
+        <!-- Page 1: 단체명 입력 -->
+        <div id="page1" class="page active bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-4">환경 토론 투표 예측 게임(친환경 발전 딜레마)</h1>
+            <p class="text-gray-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+            <input type="text" id="groupName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+            <button onclick="nextPage(1)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
+        </div>
+
+        <!-- Page 2: 팀명 선택 -->
+        <div id="page2" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2">환경 토론 투표 예측 게임(친환경 발전 딜레마)</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay1" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">팀명을 선택하세요.</p>
+            <select id="teamName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">팀명 선택</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(2)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
+                <button onclick="nextPage(2)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
+            </div>
+        </div>
+
+        <!-- Page 3: 라운드 선택 -->
+        <div id="page3" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2">환경 토론 투표 예측 게임(친환경 발전 딜레마)</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay2" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay1" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">라운드를 선택하세요.</p>
+            <select id="round" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">라운드 선택</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(3)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
+                <button onclick="nextPage(3)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
+            </div>
+        </div>
+
+        <!-- Page 4: 나의 선택 -->
+        <div id="page4" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2">환경 토론 투표 예측 게임(친환경 발전 딜레마)</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay3" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay2" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay1" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">나의 선택을 하세요.</p>
+            <select id="myChoice" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">선택</option>
+                <option value="찬성(1번)">찬성(1번)</option>
+                <option value="반대(2번)">반대(2번)</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(4)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
+                <button onclick="nextPage(4)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
+            </div>
+        </div>
+
+        <!-- Page 5: 나와 같은 % 예측 -->
+        <div id="page5" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2">환경 토론 투표 예측 게임(친환경 발전 딜레마)</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay4" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay3" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay2" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">나의 선택과 같은 선택을 하는 % 예측을 선택하세요.</p>
+            <select id="percentagePrediction" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">선택</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="55">55</option>
+                <option value="60">60</option>
+                <option value="65">65</option>
+                <option value="70">70</option>
+                <option value="75">75</option>
+                <option value="80">80</option>
+                <option value="85">85</option>
+                <option value="90">90</option>
+                <option value="95">95</option>
+                <option value="98">98</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(5)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
+                <button onclick="nextPage(5)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
+            </div>
+        </div>
+
+        <!-- Page 6: 베팅 선택 및 제출 -->
+        <div id="page6" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2">환경 토론 투표 예측 게임(친환경 발전 딜레마)</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay5" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay4" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay3" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">베팅을 선택하세요.</p>
+            <select id="betting" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">선택</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(6)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
+                <button id="submitBtn" onclick="submitData()" class="btn bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">제출하기</button>
+            </div>
+        </div>
+
+        <!-- 로딩 스피너 -->
+        <div id="spinner" class="spinner"></div>
+
+        <!-- 팝업 -->
+        <div id="popup" class="hidden">
+            <p id="popup-message" class="text-gray-700 mb-4"></p>
+            <button onclick="closePopup()" class="btn bg-blue-600 text-white p-2 rounded hover:bg-blue-700">확인</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let groupName = '';
+        let teamName = '';
+        let round = '';
+        let myChoice = '';
+        let percentagePrediction = '';
+        let betting = '';
+        let isSubmitting = false;
+
+        // 드롭다운 옵션 동적 생성
+        function populateOptions() {
+            const teamSelect = document.getElementById('teamName');
+            for (let i = 1; i <= 60; i++) {
+                const option = document.createElement('option');
+                option.value = `${i}팀`;
+                option.textContent = `${i}팀`;
+                teamSelect.appendChild(option);
+            }
+
+            const roundSelect = document.getElementById('round');
+            for (let i = 1; i <= 10; i++) {
+                const option = document.createElement('option');
+                option.value = `${i}라운드`;
+                option.textContent = `${i}라운드`;
+                roundSelect.appendChild(option);
+            }
+        }
+
+        // 페이지 표시
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page${page}`).classList.add('active');
+            currentPage = page;
+        }
+
+        // 다음 페이지로 이동
+        function nextPage(fromPage) {
+            if (fromPage === 1) {
+                groupName = document.getElementById('groupName').value.trim();
+                if (!groupName) {
+                    alert('단체명을 입력해주세요.');
+                    return;
+                }
+                document.getElementById('groupNameDisplay1').textContent = groupName;
+                document.getElementById('groupNameDisplay2').textContent = groupName;
+                document.getElementById('groupNameDisplay3').textContent = groupName;
+                document.getElementById('groupNameDisplay4').textContent = groupName;
+                document.getElementById('groupNameDisplay5').textContent = groupName;
+                showPage(2);
+            } else if (fromPage === 2) {
+                teamName = document.getElementById('teamName').value;
+                if (!teamName) {
+                    alert('팀명을 선택해주세요.');
+                    return;
+                }
+                document.getElementById('teamNameDisplay1').textContent = teamName;
+                document.getElementById('teamNameDisplay2').textContent = teamName;
+                document.getElementById('teamNameDisplay3').textContent = teamName;
+                document.getElementById('teamNameDisplay4').textContent = teamName;
+                showPage(3);
+            } else if (fromPage === 3) {
+                round = document.getElementById('round').value;
+                if (!round) {
+                    alert('라운드를 선택해주세요.');
+                    return;
+                }
+                document.getElementById('roundDisplay1').textContent = round;
+                document.getElementById('roundDisplay2').textContent = round;
+                document.getElementById('roundDisplay3').textContent = round;
+                showPage(4);
+            } else if (fromPage === 4) {
+                myChoice = document.getElementById('myChoice').value;
+                if (!myChoice) {
+                    alert('나의 선택을 해주세요.');
+                    return;
+                }
+                showPage(5);
+            } else if (fromPage === 5) {
+                percentagePrediction = document.getElementById('percentagePrediction').value;
+                if (!percentagePrediction) {
+                    alert('나와 같은 % 예측을 선택해주세요.');
+                    return;
+                }
+                showPage(6);
+            }
+        }
+
+        // 이전 페이지로 이동
+        function prevPage(toPage) {
+            if (toPage === 2) showPage(1);
+            else if (toPage === 3) showPage(2);
+            else if (toPage === 4) showPage(3);
+            else if (toPage === 5) showPage(4);
+            else if (toPage === 6) showPage(5);
+        }
+
+        // 데이터 제출
+        function submitData() {
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const name = document.getElementById('groupName').value.trim();
+            const team = document.getElementById('teamName').value;
+            const round = document.getElementById('round').value;
+            const choice = document.getElementById('myChoice').value;
+            const percentagePrediction = document.getElementById('percentagePrediction').value;
+            const bet = document.getElementById('betting').value;
+
+            // Validate all fields
+            if (!name || !team || !round || !choice || !percentagePrediction || !bet) {
+                alert('모든 필드를 입력해주세요.');
+                isSubmitting = false;
+                return;
+            }
+
+            // Log data for debugging
+            console.log('Submitting:', { name, team, round, choice, percentagePrediction, bet });
+
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            fetch('https://script.google.com/macros/s/AKfycbw-oroUpAv8r016qNN4VHc1j6JVZztjVO7eS-YUS9bQFHWzpZQts8JzjcwnuVBuat-8/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
+            })
+            .then(() => {
+                handleSubmissionSuccess(name, team, round);
+            })
+            .catch(() => {
+                handleSubmissionSuccess(name, team, round); // Handle as success due to no-cors
+            });
+        }
+
+        function handleSubmissionSuccess(name, team, round) {
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'none';
+
+            const currentRoundNum = parseInt(round.match(/\d+/)[0]);
+            if (currentRoundNum < 10) {
+                showPopup(`${name}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
+                document.getElementById('popup').dataset.nextPage = 3;
+                const nextRound = `${currentRoundNum + 1}라운드`;
+                document.getElementById('round').value = nextRound;
+            } else {
+                showPopup('모든 입력이 완료되었습니다!');
+                document.getElementById('popup').dataset.nextPage = 1;
+            }
+
+            // Reset fields for next round
+            document.getElementById('myChoice').value = '';
+            document.getElementById('percentagePrediction').value = '';
+            document.getElementById('betting').value = '';
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            }, 3000);
+        }
+
+        function showPopup(message) {
+            document.getElementById('popup-message').textContent = message;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+            showPage(nextPage);
+        }
+
+        // 초기화
+        populateOptions();
+        showPage(1);
+    </script>
+</body>
+</html>
