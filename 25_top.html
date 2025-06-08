@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .btn-transition {
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .btn-transition:hover {
+      transform: scale(1.1);
+    }
+    .btn-transition:active {
+      transform: scale(0.95);
+    }
+    #loadingSpinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-blue-50 flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <!-- Page 1: Group Name -->
+    <div id="page1" class="page flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-4 text-center">부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</h1>
+      <p class="text-blue-600 mb-4 text-center">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+      <button onclick="goToPage(2)" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+        <i class="fas fa-arrow-right mr-2"></i>다음
+      </button>
+    </div>
+
+    <!-- Page 2: Team Name -->
+    <div id="page2" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2 text-center">부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</h1>
+      <p class="text-blue-600 mb-4 text-center">단체명: <span id="groupNameDisplay2"></span></p>
+      <label for="teamName" class="text-blue-600 mb-2">팀명을 선택하세요:</label>
+      <select id="teamName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Options will be populated by JavaScript -->
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(1)" class="btn-transition bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 active:bg-gray-700">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로
+        </button>
+        <button onclick="goToPage(3)" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2 text-center">부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</h1>
+      <p class="text-blue-600 mb-2 text-center">단체명: <span id="groupNameDisplay3"></span></p>
+      <p class="text-blue-600 mb-4 text-center">팀명: <span id="teamNameDisplay3"></span></p>
+      <label for="round" class="text-blue-600 mb-2">라운드를 선택하세요:</label>
+      <select id="round" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Options will be populated by JavaScript -->
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(2)" class="btn-transition bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 active:bg-gray-700">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로
+        </button>
+        <button onclick="goToPage(4)" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 4: Random Lease -->
+    <div id="page4" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2 text-center">부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</h1>
+      <p class="text-blue-600 mb-2 text-center">단체명: <span id="groupNameDisplay4"></span></p>
+      <p class="text-blue-600 mb-2 text-center">팀명: <span id="teamNameDisplay4"></span></p>
+      <p class="text-blue-600 mb-4 text-center">라운드: <span id="roundDisplay4"></span></p>
+      <label for="randomLease" class="text-blue-600 mb-2">무작위 임대(1~32 숫자 선택):</label>
+      <select id="randomLease" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Options will be populated by JavaScript -->
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(3)" class="btn-transition bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 active:bg-gray-700">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로
+        </button>
+        <button onclick="goToPage(5)" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 5: Tax Rate -->
+    <div id="page5" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2 text-center">부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</h1>
+      <p class="text-blue-600 mb-2 text-center">단체명: <span id="groupNameDisplay5"></span></p>
+      <p class="text-blue-600 mb-2 text-center">팀명: <span id="teamNameDisplay5"></span></p>
+      <p class="text-blue-600 mb-4 text-center">라운드: <span id="roundDisplay5"></span></p>
+      <label for="taxRate" class="text-blue-600 mb-2">세금은 몇 %를 납부하시겠습니까?</label>
+      <select id="taxRate" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Options will be populated by JavaScript -->
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(4)" class="btn-transition bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 active:bg-gray-700">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로
+        </button>
+        <button onclick="goToPage(6)" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 6: Welfare Cost -->
+    <div id="page6" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2 text-center">부동산 세금과 복지가 있는 세상 게임-무작위 이용하기</h1>
+      <p class="text-blue-600 mb-2 text-center">단체명: <span id="groupNameDisplay6"></span></p>
+      <p class="text-blue-600 mb-2 text-center">팀명: <span id="teamNameDisplay6"></span></p>
+      <p class="text-blue-600 mb-4 text-center">라운드: <span id="roundDisplay6"></span></p>
+      <label for="welfareCost" class="text-blue-600 mb-2">복지 비용은 총 세금의 몇 %를 납부하시겠습니까?</label>
+      <select id="welfareCost" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Options will be populated by JavaScript -->
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(5)" class="btn-transition bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 active:bg-gray-700">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로
+        </button>
+        <button id="submitBtn" onclick="submitData()" class="btn-transition bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 active:bg-green-800">
+          <i class="fas fa-check mr-2"></i>제출하기
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="flex">
+      <svg class="animate-spin h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8 8 8 0 01-8-8z"></path>
+      </svg>
+    </div>
+
+    <!-- Confirmation Popup -->
+    <div id="confirmationPopup" class="popup hidden">
+      <p id="confirmationMessage" class="text-blue-800 mb-4"></p>
+      <button onclick="handleConfirmation()" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+        <i class="fas fa-check mr-2"></i>확인
+      </button>
+    </div>
+
+    <!-- Completion Popup -->
+    <div id="completionPopup" class="popup hidden">
+      <p class="text-blue-800 mb-4">모든 입력이 완료되었습니다!</p>
+      <button onclick="closeCompletionPopup()" class="btn-transition bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 active:bg-blue-800">
+        <i class="fas fa-check mr-2"></i>확인
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let isSubmitting = false;
+    const formData = {
+      groupName: '',
+      team: '',
+      round: '',
+      randomLease: '',
+      taxRate: '',
+      welfareCost: ''
+    };
+
+    // Populate dropdowns
+    function populateDropdowns() {
+      // Team Name (1 to 60)
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.text = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      // Round (1 to 12)
+      const roundSelect = document.getElementById('round');
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.text = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+
+      // Random Lease (1 to 32)
+      const leaseSelect = document.getElementById('randomLease');
+      for (let i = 1; i <= 32; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        leaseSelect.appendChild(option);
+      }
+
+      // Tax Rate (0 to 85)
+      const taxSelect = document.getElementById('taxRate');
+      for (let i = 0; i <= 85; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        taxSelect.appendChild(option);
+      }
+
+      // Welfare Cost (0 to 80)
+      const welfareSelect = document.getElementById('welfareCost');
+      for (let i = 0; i <= 80; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        welfareSelect.appendChild(option);
+      }
+    }
+
+    // Navigate to page
+    function goToPage(page, selectNextRound = false) {
+      // Validate inputs before proceeding
+      if (page === 2 && !document.getElementById('groupName').value.trim()) {
+        alert('단체명을 입력해 주세요.');
+        return;
+      }
+      if (page === 3 && !document.getElementById('teamName').value) {
+        alert('팀명을 선택해 주세요.');
+        return;
+      }
+      if (page === 4 && !document.getElementById('round').value) {
+        alert('라운드를 선택해 주세요.');
+        return;
+      }
+      if (page === 5 && !document.getElementById('randomLease').value) {
+        alert('무작위 임대를 선택해 주세요.');
+        return;
+      }
+      if (page === 6 && !document.getElementById('taxRate').value) {
+        alert('세율을 선택해 주세요.');
+        return;
+      }
+
+      // Save data
+      if (currentPage === 1) {
+        formData.groupName = document.getElementById('groupName').value.trim();
+      } else if (currentPage === 2) {
+        formData.team = document.getElementById('teamName').value || formData.team;
+      } else if (currentPage === 3) {
+        formData.round = document.getElementById('round').value;
+      } else if (currentPage === 4) {
+        formData.randomLease = document.getElementById('randomLease').value;
+      } else if (currentPage === 5) {
+        formData.taxRate = document.getElementById('taxRate').value;
+      } else if (currentPage === 6) {
+        formData.welfareCost = document.getElementById('welfareCost').value;
+      }
+
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      // Show target page
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+
+      // If navigating to Page 3 and selectNextRound is true, select the next round
+      if (page === 3 && selectNextRound) {
+        const roundSelect = document.getElementById('round');
+        const currentRound = parseInt(formData.round) || 1;
+        const nextRound = Math.min(currentRound + 1, 12);
+        roundSelect.value = `${nextRound}라운드`;
+        formData.round = `${nextRound}라운드`;
+      }
+
+      // Update displays
+      updateDisplays();
+    }
+
+    // Update group name, team name, and round displays
+    function updateDisplays() {
+      for (let i = 2; i <= 6; i++) {
+        document.getElementById(`groupNameDisplay${i}`).textContent = formData.groupName;
+      }
+      for (let i = 3; i <= 6; i++) {
+        document.getElementById(`teamNameDisplay${i}`).textContent = formData.team;
+      }
+      for (let i = 4; i <= 6; i++) {
+        document.getElementById(`roundDisplay${i}`).textContent = formData.round;
+      }
+    }
+
+    // Submit data
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      formData.welfareCost = document.getElementById('welfareCost').value;
+
+      // Validate all fields
+      if (!formData.groupName || !formData.team || !formData.round || !formData.randomLease || !formData.taxRate || !formData.welfareCost) {
+        alert('모든 필드를 입력해 주세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      // Log data for debugging
+      console.log('Submitting:', formData);
+
+      const spinner = document.getElementById('loadingSpinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'flex';
+      submitBtn.disabled = true;
+
+      fetch('https://script.google.com/macros/s/AKfycbzK7_kuf8QH46FmJBzQSINBugPs5IDsx6KvywNUm4Q8IEP8The3WAUOz9qzXfYqcM9E/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(() => {
+        handleSubmissionSuccess();
+      })
+      .catch(() => {
+        handleSubmissionSuccess(); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess() {
+      const spinner = document.getElementById('loadingSpinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const currentRoundNum = parseInt(formData.round.match(/\d+/)[0]);
+      if (currentRoundNum < 12) {
+        document.getElementById('confirmationMessage').textContent = `${formData.groupName}, ${formData.team}, ${formData.round} 내용이 잘 입력됐습니다.`;
+        document.getElementById('confirmationPopup').style.display = 'block';
+        document.getElementById('confirmationPopup').classList.remove('hidden');
+      } else {
+        document.getElementById('completionPopup').style.display = 'block';
+        document.getElementById('completionPopup').classList.remove('hidden');
+      }
+
+      // Reset fields for next round
+      document.getElementById('randomLease').value = '';
+      document.getElementById('taxRate').value = '';
+      document.getElementById('welfareCost').value = '';
+      formData.randomLease = '';
+      formData.taxRate = '';
+      formData.welfareCost = '';
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    // Handle confirmation popup
+    function handleConfirmation() {
+      const popup = document.getElementById('confirmationPopup');
+      popup.style.display = 'none';
+      popup.classList.add('hidden');
+      goToPage(3, true); // Navigate to Page 3 with next round selected
+    }
+
+    // Close completion popup and return to page 1
+    function closeCompletionPopup() {
+      const popup = document.getElementById('completionPopup');
+      popup.style.display = 'none';
+      popup.classList.add('hidden');
+      // Reset formData for a new session
+      formData.groupName = '';
+      formData.team = '';
+      formData.round = '';
+      formData.randomLease = '';
+      formData.taxRate = '';
+      formData.welfareCost = '';
+      goToPage(1);
+    }
+
+    // Initialize
+    window.onload = () => {
+      populateDropdowns();
+      goToPage(1);
+    };
+  </script>
+</body>
+</html>
