@@ -1,31 +1,48 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>온라인 보드게임</title>
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-    }
-    .frame {
-      width: 100%;
-      border: none;
-    }
-    #top {
-      height: 35%;
-    }
-    #middle {
-      height: 55%;
-    }
-    #bottom {
-      height: 10%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 보드게임</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        .container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        .left, .right {
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .left {
+            width: 45%;
+            background-color: #f0f0f0;
+        }
+        .right {
+            width: 55%;
+            background-color: #e0e0e0;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-  <iframe id="top" class="frame" src="11_top.html"></iframe>
-  <iframe id="middle" class="frame" src="https://onboardgame.tistory.com/11"></iframe>
-  <iframe id="bottom" class="frame" src="index.html"></iframe>
+    <div class="container">
+        <div class="left">
+            <iframe src="11_top.html" title="Left Frame"></iframe>
+        </div>
+        <div class="right">
+            <iframe src="https://onboardgame.tistory.com/11" title="Right Frame"></iframe>
+        </div>
+    </div>
 </body>
 </html>
