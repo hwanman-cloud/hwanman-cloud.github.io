@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>캐쉬플로우(CashFlow) 자산 증식 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover {
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .btn-hover:hover {
+      transform: scale(1.1);
+      background-color: #2563eb;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+    .spinner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div id="app" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <!-- Page 1: Group Name -->
+    <div id="page1" class="page flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-4">캐쉬플로우(CashFlow) 자산 증식 게임</h1>
+      <p class="text-center text-gray-700 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border rounded mb-4" placeholder="단체명 입력">
+      <button onclick="goToPage(2)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+    </div>
+
+    <!-- Page 2: Team Name -->
+    <div id="page2" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">캐쉬플로우(CashFlow) 자산 증식 게임</h1>
+      <p class="text-gray-700 mb-4">단체명: <span id="groupDisplay2"></span></p>
+      <select id="teamName" class="w-full p-2 border rounded mb-4">
+        <option value="" disabled selected>팀명 선택</option>
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(1)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button onclick="goToPage(3)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Initial Assets -->
+    <div id="page3" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">캐쉬플로우(CashFlow) 자산 증식 게임</h1>
+      <p class="text-gray-700 mb-4">단체명: <span id="groupDisplay3"></span></p>
+      <p class="text-gray-700 mb-4">팀명: <span id="teamDisplay3"></span></p>
+      <div class="w-full text-center mb-4">
+        <p class="font-bold">당신의 현재 자산 보유 상태를 알려드립니다.</p>
+        <p class="font-bold">부동산: 200</p>
+        <p class="font-bold">주식: 200</p>
+        <p class="font-bold">금: 200</p>
+        <p class="font-bold">달러(미 국채): 200</p>
+        <p class="font-bold">원자재: 200</p>
+        <p class="font-bold">코인: 200</p>
+      </div>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(2)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button onclick="goToPage(4)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 4: Round Selection -->
+    <div id="page4" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">캐쉬플로우(CashFlow) 자산 증식 게임</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupDisplay4"></span></p>
+      <p class="text-gray-700 mb-4">팀명: <span id="teamDisplay4"></span></p>
+      <select id="roundName" class="w-full p-2 border rounded mb-4">
+        <option value="" disabled selected>라운드 선택</option>
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(3)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button onclick="goToPage(5)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 5: Asset Input -->
+    <div id="page5" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">캐쉬플로우(CashFlow) 자산 증식 게임</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupDisplay5"></span></p>
+      <p class="text-gray-700 mb-2">팀명: <span id="teamDisplay5"></span></p>
+      <p class="text-gray-700 mb-4">라운드: <span id="roundDisplay5"></span></p>
+      <p class="font-bold">맨 아래의 자산과 관련된 경제 변동 상황을 확인하고 자산의 매도/매수 수량을 선택하세요.</p>
+      <div class="w-full space-y-2 mb-4">
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">부동산</label>
+          <select id="A_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">주식</label>
+          <select id="B_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">금(GOLD)</label>
+          <select id="C_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">달러(미 국채)</label>
+          <select id="D_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">원자재(선물)</label>
+          <select id="E_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">코인</label>
+          <select id="F_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+      </div>
+      <div id="roundInfo" class="w-full text-sm text-gray-600 mb-4"></div>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(4)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button onclick="goToPage(6)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 6: Income and Expenses -->
+    <div id="page6" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">캐쉬플로우(CashFlow) 자산 증식 게임</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupDisplay6"></span></p>
+      <p class="text-gray-700 mb-4">팀명: <span id="teamDisplay6"></span></p>
+      <p class="font-bold">자산 증식과 관련한 일상 생활의 수입/지출 비용을 선택하세요. 이 선택은 모두 무작위로 선택됩니다.</p>
+      <div class="w-full space-y-2 mb-4">
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">근로소득금액(무작위 선택됨)</label>
+          <select id="income" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">은행적금이율(무작위 선택됨)</label>
+          <select id="savingsRate" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">기본생활비(무작위 선택됨)</label>
+          <select id="basicExpenses" class="w-1/4 p-2 border rounded"></select>
+          <p class="w-5/12 text-sm text-gray-600 ml-2">의식주비, 품위유지비, 자녀양육비, 여가생활비, 외식비</p>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">추가생활비(무작위 선택됨)</label>
+          <select id="additionalExpenses" class="w-1/4 p-2 border rounded"></select>
+          <p class="w-5/12 text-sm text-gray-600 ml-2">교육비, 병원비, 사고보상비, 집수리관리비, 경조사비</p>
+        </div>
+      </div>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(5)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button id="submitBtn" onclick="submitData()" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">제출하기</button>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="spinner"></div>
+
+    <!-- Popup -->
+    <div id="popup" class="hidden">
+      <p id="popup-message" class="text-gray-700 mb-4"></p>
+      <button onclick="closePopup()" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">확인</button>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let isSubmitting = false;
+
+    const stockOptions = [100, 85, 70, 55, 50, 45, 30, 15, 0, -15, -30, -45, -50, -55, -70, -85, -100];
+    const incomeOptions = Array.from({length: 15}, (_, i) => i + 1);
+    const expenseOptions = Array.from({length: 5}, (_, i) => i + 1);
+    const roundInfo = {
+      '1라운드': `
+        부동산: 경기 변동성 상승 발표 즉 경제 활동이 상대적으로 불안정함<br>
+        주식: 미국 금리상승으로 인한 채권 수익률 향상으로 주식의 매력 감소<br>
+        금: 금융시장의 견고성 확인으로 안전자산인 금 가격 하락<br>
+        달러: 미국의 경제지표 지수(물가, 고용, 성장률 등) 양호 발표<br>
+        원자재: 우크라이나와 중동 전쟁 등으로 인한 원자재 공급망 차질 발생<br>
+        코인: 코인을 가치 저장 수단으로 인식하는 경향 강화
+      `,
+      '2라운드': `
+        부동산: 3기 신도시의 본격적인 본 청약 진행으로 인한 부동산 가격 안정 또는 하락 가능성 대두<br>
+        주식: 생산자물가지수(PPI) 상승 즉 기업의 생산 원가 부담 가중으로 인플레이션 우려 발생<br>
+        금: 금의 채굴량 증가 및 금광 발견 증가<br>
+        달러: 유러화의 강세 지속으로 인한 달러화의 약세 지속<br>
+        원자재: 코로나 등 팬데믹으로 인한 원자재 수급 불균형 심화<br>
+        코인: 미국과 홍콩 등에서 비트코인 현물 ETF(상장지수펀드) 거래 시작으로 비트코인 투자 활성화
+      `,
+      '3라운드': `
+        부동산: 스트레스 DSR(총부채원리금상환비율) 정책 시행으로 인한 대출이자 상승과 대출한도 제한하는 정책 발표<br>
+        주식: 장단기 금리차(장기 금리와 단기 금리의 차이) 역전으로 인한 미래 경기 불투명성 확대<br>
+        금: 금리 인상으로 인한 은행 이자율 상승과 이로 인한 금 가치 하락<br>
+        달러: 환율하락으로 인한 달러 가치 하락 그리고 수출 증가 및 수입 감소<br>
+        원자재: 전세계적 경기 침체로 인한 수요 감소<br>
+        코인: 알트코인, 이더리움, 리플 등과 같은 새로운 코인 우후죽순 등장 후 소멸
+      `,
+      '4라운드': `
+        부동산: 경기가 점차 호전될 것이라는 관측 우세해짐<br>
+        주식: 전년 동월비 산업생산지수의 하락으로 경기 침체 가능성 대두<br>
+        금: 달러화의 강세로 인한 환율상승 그리고 금의 상대적인 매력 저하<br>
+        달러: 미국 국채 금리 상승으로 미국 자산의 매력 증가와 달러화에 대한 수요 증가<br>
+        원자재: 초전도체, 전력망 확충의 필요성에 따른 구리 수요 증가<br>
+        코인: 코인의 범죄자금 매매 수단 등으로 인한 부정적 인식 상승
+      `,
+      '5라운드': `
+        부동산: 지속적인 출산률 하락과 초고령화 가속<br>
+        주식: 인공지능, 전기차, 배터리 시장 등 미래 신 산업 대거 등장<br>
+        금: 전쟁, 내전 등 국내외적 정치적 불확실성 확대로 안전자산인 금에 대한 수요 증가<br>
+        달러: 금융시장의 불안 요인 확산으로 안전자산이며 기축통화인 달러화 강세<br>
+        원자재: 인공 다이아몬드 기술의 획기적 개선으로 인한 다이아몬드 시장의 변화<br>
+        코인: 중국, 비트코인 거래를 불법으로 간주. 가상화폐 단속 강화
+      `,
+      '6라운드': `
+        부동산: 기업의 신규 건설량 증가로 인한 부동산 공급 증가<br>
+        주식: 인플레이션 장기화로 인한 긴축재정(정부 지출을 줄임)으로 인한 기업 수익 감소<br>
+        금: 인공다이아몬드의 품질 증가로 금 수요의 감소<br>
+        달러: 미국 금리 인하로 인한 달러화 가치 하락 그리고 국내 화폐가치(환율) 상승<br>
+        원자재: 북극해의 개척으로 인한 해상 운송의 시간과 비용 절감으로 인한 원자재 가격 하락<br>
+        코인: 엘살바도르, 비트코인 법정화폐로 채택
+      `,
+      '7라운드': `
+        부동산: 다주택자 대상 양도세 완화 정책 발표로 인한 부동산 매물 증가와 가격 하락<br>
+        main body of the artifact
+        주식: 미국 금리 상승으로 인한 전세계적 유동성 축소 그리고 주식 시장에 악영향<br>
+        금: 인공다이아몬드의 품질 증가로 금 수요의 감소<br>
+        달러: 전세계적 경제 호황으로 인한 위험자산인 주식, 원자재 가격 상승과 안전자산인 금과 달러화 가격 하락<br>
+        원자재: 경제 위기로 인한 금, 달러 등에 대한 안전자산 선호하게 되고 위험자산인 주식, 원자재 가격 하락<br>
+        코인: 비트코인 반감기(채굴자 보상 절반으로 감소) 도래로 비트코인 가격 상승 전망
+      `,
+      '8라운드': `
+        부동산: 대선, 총선, 지방자치선거가 있을 예정으로 정책 기대감으로 인한 부동산 가격 상승 가능성 대두<br>
+        주식: 코리아 디스카운트 즉 국내 주식 저평가로 인해 외국인 투자자들의 바이(BUY)코리아 열풍으로 인한 국내 주식 상승<br>
+        금: 금 생산 지역에서의 정치적 불안정성 확대<br>
+        달러: 한국은행 금리 인상 발표로 인해 환율(원화가치) 상승 이로 인한 달러 가치 하락<br>
+        원자재: 전기자동차 배터리 수요 급증으로 인한 니켈, 리튬, 텅스텐 수요 증가<br>
+        코인: 전세계적 경기 침체 지속으로 위험자산인 코인 가격 하락 가능성
+      `,
+      '9라운드': `
+        부동산: 기준금리 인상 발표 그리고 부동산 대출금리 상승으로 인한 부동산 대출 이자 부담 가중<br>
+        주식: 환율 상승으로 인한 외국인 투자자들의 지속적인 투매 발생<br>
+        금: 미국 금리 인하로 인한 달러 약세 그리고 이로 인한 금 수요 증가<br>
+        달러: 경제 불안정성 지속으로 인한 안전자산인 금값 상승<br>
+        원자재: 미국 금리 인상으로 인한 달러화 가격 상승과 이로 인한 달러로 거래되는 원자재의 상대 가격 상승과 원자재 수요 감소 발생<br>
+        코인: 비트코인 등의 암호화폐의 트랜잭션 이상과 보안 위험성 대두
+      `,
+      '10라운드': `
+        부동산: 전세 가격 지속 상승으로 인한 매매 가격 상승 압력 가중<br>
+        주식: 금리 하락으로 인한 채권 수익률 하락으로 투자 대안으로서 주식 매력 증가<br>
+        금: 중앙은행의 금 보유량 확대로 인한 금 수요 증가 그리고 금 가격 상승 압력<br>
+        달러: 미국중앙은행의 긴축재정 발표(금리 인상)로 인한 달러화 가치 증가<br>
+        원자재: 전세계 주식 시장 활성화로 인한 주식, 채권 수요 증가 이로 인한 원자재 수요 감소<br>
+        코인: 은행, 헤지펀드, 은행 등의 금융기관에서의 관심도 증가로 코인 신뢰도 상승
+      `,
+      '11라운드': `
+        부동산: 특례보금자리론, 신생아특례대출 등 대출 지원으로 수요 증가와 가격 상승 압력<br>
+        주식: 한국은행 금리 인상 발표로 대출 이자 증가 우려 이로 인한 은행으로의 자금 유입 가중<br>
+        금: 인공지능, 전기차 수요로 인한 전세계적 경제 호황으로 주식과 원자재 등의 위험자산 선호도 증가<br>
+        달러: 원자재 수입 증가로 인한 달러 수요 증가 이로 인한 달러 가격 상승 압력<br>
+        원자재: 전세계적 경기 침체 예상으로 인한 수요 감소로 인한 원자재 가격 하락 압력<br>
+        코인: 암호화폐와 블록체인 기술로 인한 거래 속도 향상과 수수료 감소로 암호화폐 시장 정서 개선
+      `,
+      '12라운드': `
+        부동산: 우크라이나 전쟁으로 인한 해외 리스크 상승으로 인한 아파트 분양가의 지속적 상승<br>
+        주식: 실업률 둔화 등 양호한 고용지표 발표로 소비 증가 기대감 발생 이로 인한 주식 시장에 긍정적인 영향<br>
+        금: 전세계적 증시 호황 이로 인한 안전자산인 금 가격 하락<br>
+        달러: 무역수지 흑자로 인한 달러 풍부 이로 인한 달러화 가격 하락<br>
+        원자재: 버블 붕괴로 인한 경기 침체 가속화로 인한 소비 감소 예상. 이로 인한 원자재 가격 하락 압력<br>
+        코인: 미국 금리 인상으로 인한 달러화 가격 상승 이로 인한 고위험 자산인 코인 가격 하락 압력
+      `
+    };
+
+    // Initialize dropdowns
+    function initDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.text = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.text = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+
+      ['A_stock', 'B_stock', 'C_stock', 'D_stock', 'E_stock', 'F_stock'].forEach(id => {
+        const select = document.getElementById(id);
+        stockOptions.forEach(value => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.text = value;
+          select.appendChild(option);
+        });
+      });
+
+      ['income', 'savingsRate'].forEach(id => {
+        const select = document.getElementById(id);
+        incomeOptions.forEach(value => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.text = value;
+          select.appendChild(option);
+        });
+      });
+
+      ['basicExpenses', 'additionalExpenses'].forEach(id => {
+        const select = document.getElementById(id);
+        expenseOptions.forEach(value => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.text = value;
+          select.appendChild(option);
+        });
+      });
+    }
+
+    // Navigate to page
+    function goToPage(page) {
+      if (page === 2 && !document.getElementById('groupName').value.trim()) {
+        showPopup('단체명을 입력해주세요.');
+        return;
+      }
+      if (page === 3 && !document.getElementById('teamName').value) {
+        showPopup('팀명을 선택해주세요.');
+        return;
+      }
+      if (page === 5 && !document.getElementById('roundName').value) {
+        showPopup('라운드를 선택해주세요.');
+        return;
+      }
+
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+
+      if (page === 2) {
+        groupName = document.getElementById('groupName').value.trim();
+        document.getElementById('groupDisplay2').textContent = groupName;
+      }
+      if (page === 3) {
+        teamName = document.getElementById('teamName').value;
+        document.getElementById('groupDisplay3').textContent = groupName;
+        document.getElementById('teamDisplay3').textContent = teamName;
+      }
+      if (page === 4) {
+        document.getElementById('groupDisplay4').textContent = groupName;
+        document.getElementById('teamDisplay4').textContent = teamName;
+      }
+      if (page === 5) {
+        roundName = document.getElementById('roundName').value;
+        document.getElementById('groupDisplay5').textContent = groupName;
+        document.getElementById('teamDisplay5').textContent = teamName;
+        document.getElementById('roundDisplay5').textContent = roundName;
+        document.getElementById('roundInfo').innerHTML = roundInfo[roundName] || '';
+      }
+      if (page === 6) {
+        document.getElementById('groupDisplay6').textContent = groupName;
+        document.getElementById('teamDisplay6').textContent = teamName;
+      }
+    }
+
+    // Submit data
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      // Re-fetch values from DOM
+      groupName = document.getElementById('groupName').value.trim();
+      teamName = document.getElementById('teamName').value;
+      roundName = document.getElementById('roundName').value;
+      const A_stock = document.getElementById('A_stock').value;
+      const B_stock = document.getElementById('B_stock').value;
+      const C_stock = document.getElementById('C_stock').value;
+      const D_stock = document.getElementById('D_stock').value;
+      const E_stock = document.getElementById('E_stock').value;
+      const F_stock = document.getElementById('F_stock').value;
+      const income = document.getElementById('income').value;
+      const savingsRate = document.getElementById('savingsRate').value;
+      const basicExpenses = document.getElementById('basicExpenses').value;
+      const additionalExpenses = document.getElementById('additionalExpenses').value;
+
+      // Validate fields
+      const missingFields = [];
+      if (!groupName) missingFields.push('단체명');
+      if (!teamName) missingFields.push('팀명');
+      if (!roundName) missingFields.push('라운드');
+      if (!A_stock) missingFields.push('부동산');
+      if (!B_stock) missingFields.push('주식');
+      if (!C_stock) missingFields.push('금');
+      if (!D_stock) missingFields.push('달러');
+      if (!E_stock) missingFields.push('원자재');
+      if (!F_stock) missingFields.push('코인');
+      if (!income) missingFields.push('근로소득금액');
+      if (!savingsRate) missingFields.push('은행적금이율');
+      if (!basicExpenses) missingFields.push('기본생활비');
+      if (!additionalExpenses) missingFields.push('추가생활비');
+
+      if (missingFields.length > 0) {
+        console.log('Missing fields:', missingFields);
+        showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'block';
+      submitBtn.disabled = true;
+
+      const data = {
+        groupName,
+        teamName,
+        roundName,
+        A_stock,
+        B_stock,
+        C_stock,
+        D_stock,
+        E_stock,
+        F_stock,
+        income,
+        savingsRate,
+        basicExpenses,
+        additionalExpenses
+      };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbzjJghhhfwvvjVB1BgAeAfSzLOp0v8HQpMd-4eElPg0YJVHIHEZuVZNoQasSAPoTcsS/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    // Handle submission success
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (currentRoundNum < 12) {
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
+        document.getElementById('popup').dataset.nextPage = 4;
+        const nextRound = `${currentRoundNum + 1}라운드`;
+        document.getElementById('roundName').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+        groupName = '';
+        teamName = '';
+        roundName = '';
+        document.getElementById('groupName').value = '';
+        document.getElementById('teamName').value = '';
+        document.getElementById('roundName').value = '';
+      }
+
+      // Reset fields for next round
+      ['A_stock', 'B_stock', 'C_stock', 'D_stock', 'E_stock', 'F_stock', 'income', 'savingsRate', 'basicExpenses', 'additionalExpenses'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    // Show popup
+    function showPopup(message) {
+      document.getElementById('popup-message').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      goToPage(nextPage);
+    }
+
+    // Initialize
+    window.onload = function() {
+      initDropdowns();
+      goToPage(1);
+    };
+  </script>
+</body>
+</html>
