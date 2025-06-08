@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국제구호기금과 재해재난의 나비효과 게임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+        }
+        .page {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        #loadingSpinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-blue-100">
+    <div id="app" class="container mx-auto px-4 py-8 max-w-md">
+        <h1 class="text-3xl font-bold text-center text-blue-800 mb-8">
+            <i class="fas fa-globe-americas mr-2"></i>국제구호기금과 재해재난의 나비효과 게임
+        </h1>
+
+        <!-- Page 1 -->
+        <div id="page1" class="page active bg-white rounded-lg shadow-md p-6">
+            <p class="mb-4 text-gray-700">
+                <i class="fas fa-info-circle mr-2"></i>Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.
+            </p>
+            <input type="text" id="groupName" class="w-full p-2 border rounded mb-4" placeholder="단체명 입력">
+            <button onclick="nextPage(2)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
+                <i class="fas fa-arrow-right mr-2"></i>다음
+            </button>
+        </div>
+
+        <!-- Page 2 -->
+        <div id="page2" class="page bg-white rounded-lg shadow-md p-6">
+            <h2 id="groupNameDisplay" class="text-xl font-semibold mb-4"></h2>
+            <select id="teamName" class="w-full p-2 border rounded mb-4">
+                <option value="">팀 선택</option>
+            </select>
+            <div class="flex justify-between">
+                <button onclick="prevPage(1)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button onclick="nextPage(3)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <i class="fas fa-arrow-right mr-2"></i>다음
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 3 -->
+        <div id="page3" class="page bg-white rounded-lg shadow-md p-6">
+            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4"></h2>
+            <select id="roundName" class="w-full p-2 border rounded mb-4">
+                <option value="">라운드 선택</option>
+            </select>
+            <div class="flex justify-between">
+                <button onclick="prevPage(2)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button onclick="nextPage(4)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <i class="fas fa-arrow-right mr-2"></i>다음
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 4 -->
+        <div id="page4" class="page bg-white rounded-lg shadow-md p-6">
+            <h2 id="roundNameDisplay" class="text-xl font-semibold mb-4"></h2>
+            <p class="mb-2">
+                <i class="fas fa-leaf mr-2"></i>나의 무의식적 비환경적 행동과 습관
+            </p>
+            <select id="myChoice" class="w-full p-2 border rounded mb-4">
+                <option value="">선택하세요</option>
+                <option value="0 고기를 좋아한다. 야채는 잘 안 먹는 편..">0 고기를 좋아한다. 야채는 잘 안 먹는 편..</option>
+                <option value="1 되도록 보기에 예쁜 것을 선택한다. 보기 좋은 떡이 먹기도 좋다!!">1 되도록 보기에 예쁜 것을 선택한다. 보기 좋은 떡이 먹기도 좋다!!</option>
+                <option value="2 사람은 도시에서 살아야 하더라. 시골 생활은 외로워..!!">2 사람은 도시에서 살아야 하더라. 시골 생활은 외로워..!!</option>
+                <option value="3 수돗물과 전기 가격은 싸니까 낭비해도 괜찮다~~">3 수돗물과 전기 가격은 싸니까 낭비해도 괜찮다~~</option>
+                <option value="4 공유 경제도 좋지만, 남이 쓴 물건은 꺼려진다.~~">4 공유 경제도 좋지만, 남이 쓴 물건은 꺼려진다.~~</option>
+                <option value="5 나는 얼리 어답터다. 신상 물건을 좋아한다~">5 나는 얼리 어답터다. 신상 물건을 좋아한다~</option>
+                <option value="6 해외 여행 / 외국 제품을 좋아한다.~~">6 해외 여행 / 외국 제품을 좋아한다.~~</option>
+                <option value="7 배달음식, 일회용품을 애용하는 편이다.!!">7 배달음식, 일회용품을 애용하는 편이다.!!</option>
+                <option value="8 자가용 운전을 좋아한다. 버스, 지하철, 기차는 불편하다!!">8 자가용 운전을 좋아한다. 버스, 지하철, 기차는 불편하다!!</option>
+                <option value="9 남들에게 기 죽는 건 싫어한다. 허례허식하는 편이다~~">9 남들에게 기 죽는 건 싫어한다. 허례허식하는 편이다~~</option>
+            </select>
+            <div class="flex justify-between">
+                <button onclick="prevPage(3)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button onclick="nextPage(5)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <i class="fas fa-arrow-right mr-2"></i>다음
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 5 -->
+        <div id="page5" class="page bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">
+                <i class="fas fa-balance-scale mr-2"></i>UN 일괄 세금 징수 찬반 여부
+            </h2>
+            <select id="opponentTeam" class="w-full p-2 border rounded mb-4">
+                <option value="">선택하세요</option>
+                <option value="찬성">찬성</option>
+                <option value="반대">반대</option>
+            </select>
+            <div class="flex justify-between">
+                <button onclick="prevPage(4)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button onclick="nextPage(6)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <i class="fas fa-arrow-right mr-2"></i>다음
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 6 -->
+        <div id="page6" class="page bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">
+                <i class="fas fa-hand-holding-usd mr-2"></i>나의 재난 기부 금액
+            </h2>
+            <select id="myBet" class="w-full p-2 border rounded mb-4">
+                <option value="">선택하세요</option>
+                <option value="0">0</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="200">200</option>
+                <option value="250">250</option>
+                <option value="300">300</option>
+                <option value="350">350</option>
+                <option value="400">400</option>
+                <option value="450">450</option>
+                <option value="500">500</option>
+                <option value="600">600</option>
+                <option value="700">700</option>
+                <option value="800">800</option>
+                <option value="900">900</option>
+                <option value="1000">1000</option>
+                <option value="2000">2000</option>
+                <option value="3000">3000</option>
+                <option value="4000">4000</option>
+                <option value="5000">5000</option>
+            </select>
+            <div class="flex justify-between mb-4">
+                <button onclick="prevPage(5)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button id="submitBtn" onclick="submitData()" class="btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    <i class="fas fa-paper-plane mr-2"></i>제출하기
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Popup -->
+        <div id="popup" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p id="popupMessage" class="text-xl mb-4"></p>
+                <button onclick="closePopup()" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
+                    <i class="fas fa-check mr-2"></i>확인
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let isSubmitting = false;
+
+        function nextPage(pageNum) {
+            if (pageNum === 2 && !document.getElementById('groupName').value.trim()) {
+                alert('단체명을 입력해주세요.');
+                return;
+            } else if (pageNum === 3 && !document.getElementById('teamName').value) {
+                alert('팀명을 선택해주세요.');
+                return;
+            } else if (pageNum === 4 && !document.getElementById('roundName').value) {
+                alert('라운드를 선택해주세요.');
+                return;
+            } else if (pageNum === 5 && !document.getElementById('myChoice').value) {
+                alert('나의 선택을 해주세요.');
+                return;
+            } else if (pageNum === 6 && !document.getElementById('opponentTeam').value) {
+                alert('찬반 여부를 선택해주세요.');
+                return;
+            }
+
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            document.getElementById(`page${pageNum}`).classList.add('active');
+            currentPage = pageNum;
+
+            updateDisplays();
+        }
+
+        function prevPage(pageNum) {
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            document.getElementById(`page${pageNum}`).classList.add('active');
+            currentPage = pageNum;
+        }
+
+        function updateDisplays() {
+            const groupName = document.getElementById('groupName').value.trim();
+            const teamName = document.getElementById('teamName').value;
+            const roundName = document.getElementById('roundName').value;
+
+            document.getElementById('groupNameDisplay').textContent = `단체명: ${groupName}`;
+            document.getElementById('teamNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}팀`;
+            document.getElementById('roundNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}팀, 라운드: ${roundName}라운드`;
+        }
+
+        function submitData() {
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const groupName = document.getElementById('groupName').value.trim();
+            const teamName = document.getElementById('teamName').value;
+            const roundName = document.getElementById('roundName').value;
+            const myChoice = document.getElementById('myChoice').value;
+            const opponentTeam = document.getElementById('opponentTeam').value;
+            const myBet = document.getElementById('myBet').value;
+
+            // Validate all fields
+            if (!groupName || !teamName || !roundName || !myChoice || !opponentTeam || !myBet) {
+                alert('모든 필드를 입력해주세요.');
+                isSubmitting = false;
+                return;
+            }
+
+            // Log data for debugging
+            console.log('Submitting:', { groupName, teamName, roundName, myChoice, opponentTeam, myBet });
+
+            const spinner = document.getElementById('loadingSpinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            fetch('https://script.google.com/macros/s/AKfycbxDQZ42bip18A2HtNZHZvlc5m4vfASnvIhGhlB5V8GdSYV8Dj_9AtvpzCk9v1jm_t7B/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ groupName, teamName, roundName, myChoice, opponentTeam, myBet })
+            })
+            .then(() => {
+                handleSubmissionSuccess(groupName, teamName, roundName);
+            })
+            .catch(() => {
+                handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+            });
+        }
+
+        function handleSubmissionSuccess(groupName, teamName, roundName) {
+            const spinner = document.getElementById('loadingSpinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.classList.add('hidden');
+
+            const currentRoundNum = parseInt(roundName);
+            if (currentRoundNum < 12) {
+                showPopup(`${groupName}, ${teamName}팀, ${roundName}라운드 내용이 잘 입력됐습니다.`);
+                document.getElementById('popup').dataset.nextPage = 3;
+                document.getElementById('roundName').value = (currentRoundNum + 1).toString();
+            } else {
+                showPopup('모든 입력이 완료되었습니다!');
+                document.getElementById('popup').dataset.nextPage = 1;
+            }
+
+            // Reset fields for next round
+            document.getElementById('myChoice').value = '';
+            document.getElementById('opponentTeam').value = '';
+            document.getElementById('myBet').value = '';
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            }, 3000);
+        }
+
+        function showPopup(message) {
+            document.getElementById('popupMessage').textContent = message;
+            document.getElementById('popup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.add('hidden');
+            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+            if (nextPage) {
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                document.getElementById(`page${nextPage}`).classList.add('active');
+                currentPage = nextPage;
+                updateDisplays();
+            }
+        }
+
+        // 팀 옵션 생성
+        const teamSelect = document.getElementById('teamName');
+        for (let i = 1; i <= 25; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `${i}팀`;
+            teamSelect.appendChild(option);
+        }
+
+        // 라운드 옵션 생성
+        const roundSelect = document.getElementById('roundName');
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `${i}라운드`;
+            roundSelect.appendChild(option);
+        }
+
+        // 페이지 로드 시 초기화
+        window.onload = function() {
+            updateDisplays();
+        }
+    </script>
+</body>
+</html>
