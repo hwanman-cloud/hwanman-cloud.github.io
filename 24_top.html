@@ -259,7 +259,7 @@
 
             console.log('Submitting:', gameData);
 
-            fetch('https://script.google.com/macros/s/AKfycbyafulaDSy5ipZ64DVpQJqEQEoA-njMkdK5B5BHdPYI2vvS-wODfOsg7rB8l9KZVg4N/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbwwsvNbckQjIKUNrn1nHEIheYA8wSiggm2gGoY8180MF33A-YAsZVnYI0K9Bqmraac4/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {
@@ -284,13 +284,19 @@
             const currentRoundNum = parseInt(roundName.replace('라운드', ''));
             if (currentRoundNum < 15) {
                 showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
-                document.getElementById('popup').dataset.nextPage = 3;
                 const nextRound = `${currentRoundNum + 1}라운드`;
                 document.getElementById('roundName').value = nextRound;
                 gameData.roundName = nextRound;
+                // Navigate directly to page 3
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                document.getElementById('page3').classList.add('active');
+                currentPage = 3;
             } else {
                 showPopup('모든 입력이 완료되었습니다!');
-                document.getElementById('popup').dataset.nextPage = 1;
+                // Navigate directly to page 1
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                document.getElementById('page1').classList.add('active');
+                currentPage = 1;
                 gameData.groupName = '';
                 gameData.teamName = '';
                 gameData.roundName = '';
@@ -298,7 +304,7 @@
                 gameData.betting = '';
                 document.getElementById('groupName').value = '';
                 document.getElementById('teamName').value = '';
-                document.getElementById('roundName').value = '';
+                document.getElementById('roundName').value = '1라운드';
             }
 
             // Reset fields for next round
@@ -324,10 +330,6 @@
         // Close popup
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
-            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
-            if (nextPage) {
-                nextPage(nextPage);
-            }
         }
 
         // Initialize dropdowns
@@ -350,7 +352,7 @@
             roundSelect.value = '1라운드'; // Default to 1라운드
 
             const bidAmountSelect = document.getElementById('bidAmount');
-            for (let i = 1; i <= 30; i++) {
+            for (let i = 0; i <= 30; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = i;
