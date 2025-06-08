@@ -110,6 +110,7 @@
         const team = document.getElementById("team").value;
         const round = document.getElementById("round").value;
         const choice = document.getElementById("choice").value;
+        const percentagePrediction = '70';
         const bet = document.getElementById("bet").value;
         
         // Validate all fields
@@ -119,15 +120,15 @@
         }
         
         // Log data for debugging
-        console.log('Submitting:', { name, team, round, choice, bet });
+        console.log('Submitting:', { name, team, round, choice, percentagePrediction, bet });
 
-        fetch('https://script.google.com/macros/s/AKfycbwtQEWUq_Fli9dImeSmd-7pWJe-Gc6huNuQTx2YxN0JcuXvQVhNQ9vD7XruhOE0gU_j/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbzLEGi9AegdQJOl6VRUxg0zd0-5O6iAFeldqUGcHEdkNaWauKD-88YguDRptz3XwCUN/exec', {
           method: 'POST',
           mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, team, round, choice, bet })
+          body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
         })
         .then(response => {
           // no-cors mode prevents reading response, so skip ok check
