@@ -11,9 +11,18 @@
 </head>
 <body class="bg-blue-50">
     <div class="container mx-auto p-4">
-        <!-- Page 1: Team Selection -->
+        <!-- Page 1: Group Name Input -->
         <div id="page1" class="page flex flex-col items-center justify-center min-h-screen">
             <h1 class="text-2xl font-bold text-blue-600">바다 목장(공유지)의 비극 게임</h1>
+            <div class="mt-4 w-full max-w-md">
+                <label for="groupName" class="block text-lg text-blue-700"><i class="fas fa-building mr-2"></i>단체명 입력</label>
+                <input type="text" id="groupName" class="mt-2 p-2 border rounded w-full bg-white text-blue-800" placeholder="단체명을 입력하세요">
+            </div>
+            <button onclick="goToPage2()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 transform hover:scale-105 transition-transform">다음</button>
+        </div>
+
+        <!-- Page 2: Team Selection -->
+        <div id="page2" class="page flex flex-col items-center justify-center min-h-screen hidden">
             <div class="mt-4 w-full max-w-md">
                 <label for="team" class="block text-lg text-blue-700"><i class="fas fa-users mr-2"></i>팀 선택</label>
                 <select id="team" class="mt-2 p-2 border rounded w-full bg-white text-blue-800">
@@ -24,15 +33,6 @@
                         }
                     </script>
                 </select>
-            </div>
-            <button onclick="goToPage2()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 transform hover:scale-105 transition-transform">다음</button>
-        </div>
-
-        <!-- Page 2: Group Name Input -->
-        <div id="page2" class="page flex flex-col items-center justify-center min-h-screen hidden">
-            <div class="mt-4 w-full max-w-md">
-                <label for="groupName" class="block text-lg text-blue-700"><i class="fas fa-building mr-2"></i>단체명 입력</label>
-                <input type="text" id="groupName" class="mt-2 p-2 border rounded w-full bg-white text-blue-800" placeholder="단체명을 입력하세요">
             </div>
             <button onclick="goToPage3()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 transform hover:scale-105 transition-transform">다음</button>
         </div>
@@ -83,13 +83,13 @@
 
     <script>
         let isSubmitting = false;
-        let selectedTeam = '';
         let selectedGroup = '';
+        let selectedTeam = '';
 
         function goToPage2() {
-            selectedTeam = document.getElementById('team').value;
-            if (!selectedTeam) {
-                showPopup('팀을 선택해주세요.');
+            selectedGroup = document.getElementById('groupName').value.trim();
+            if (!selectedGroup) {
+                showPopup('단체명을 입력해주세요.');
                 return;
             }
             document.getElementById('page1').classList.add('hidden');
@@ -97,9 +97,9 @@
         }
 
         function goToPage3() {
-            selectedGroup = document.getElementById('groupName').value.trim();
-            if (!selectedGroup) {
-                showPopup('단체명을 입력해주세요.');
+            selectedTeam = document.getElementById('team').value;
+            if (!selectedTeam) {
+                showPopup('팀을 선택해주세요.');
                 return;
             }
             document.getElementById('page2').classList.add('hidden');
@@ -107,6 +107,11 @@
         }
 
         function goToPage4() {
+            const round = document.getElementById('round').value;
+            if (!round) {
+                showPopup('라운드를 선택해주세요.');
+                return;
+            }
             document.getElementById('page3').classList.add('hidden');
             document.getElementById('page4').classList.remove('hidden');
         }
@@ -118,7 +123,7 @@
             const round = document.getElementById('round').value;
             const fishCount = document.getElementById('fishCount').value;
 
-            if (!selectedTeam || !selectedGroup || !round || !fishCount) {
+            if (!selectedGroup || !selectedTeam || !round || !fishCount) {
                 showPopup('모든 항목을 입력해주세요.');
                 isSubmitting = false;
                 return;
@@ -129,7 +134,7 @@
             spinner.classList.remove('hidden');
             submitBtn.disabled = true;
 
-            const data = { team: selectedTeam, group: selectedGroup, round, fishCount };
+            const data = { group: selectedGroup, team: selectedTeam, round, fishCount };
             console.log('Submitting:', data);
 
             fetch('https://script.google.com/macros/s/AKfycbxKfSAWWwMyO2dCyE_Aem9T-skSTrxagefbwqbIUChR5tGg_WQ65CvA35vEF5cPD8Ad0A/exec', {
@@ -153,14 +158,14 @@
             const submitBtn = document.getElementById('submitBtn');
             spinner.classList.add('hidden');
 
-            const currentRoundNum = parseInt(round);
+            const currentRoundNum = parseInt(round.match(/\d+/)[0]);
             if (currentRoundNum < 12) {
                 showPopup(`${group}, ${team} 팀, ${round} 라운드, ${fishCount} 마리 내용이 잘 입력됐습니다.`);
                 document.getElementById('popup').dataset.nextPage = 3;
-                const nextRound = currentRoundNum + 1;
+                const nextRound = `${currentRoundNum + 1}라운드`;
                 document.getElementById('round').value = nextRound;
             } else {
-                showPopup('모든 입력이 완료되었습니다!');
+                showPopup('게임이 완료되었습니다!');
                 document.getElementById('popup').dataset.nextPage = 1;
             }
 
