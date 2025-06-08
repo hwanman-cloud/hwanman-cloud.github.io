@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover:hover {
+      transform: scale(1.05);
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-active:active {
+      transform: scale(0.95);
+      background-color: #2563eb;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 10000;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center text-gray-800">
+  <!-- Page 1: Group Name Input -->
+  <div id="page1" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-4">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+    <input id="groupName" type="text" class="w-full p-2 border rounded-lg mb-4" placeholder="단체명 입력">
+    <button onclick="goToPage(2)" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+  </div>
+
+  <!-- Page 2: Team Name Selection -->
+  <div id="page2" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupNameDisplay2"></p>
+    <select id="teamName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(1)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 3: Round Selection -->
+  <div id="page3" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamDisplay3"></p>
+    <select id="roundName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(2)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 4: Environmental Policy Selection -->
+  <div id="page4" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay4"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">환경 정책 선택</label>
+      <select id="environmentalPolicy" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">환경 정책 번호-플라스틱 쓰레기 배출량/이익: 1번: 200/100, 2번: 180/90, 3번: 160/80, 4번: 140/70, 5번: 120/60, 6번: 100/50, 7번: 80/40, 8번: 60/30, 9번: 40/20, 10번: 20/10</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 5: Environmental Tax Rate Selection -->
+  <div id="page5" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay5"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">환경 세율(%) 선택</label>
+      <select id="environmentalTaxRate" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 6: Forced Team Selection -->
+  <div id="page6" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay6"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">플라스틱 사용 억제를 강제할 팀</label>
+      <select id="forcedTeam" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 7: Restriction Policy Selection -->
+  <div id="page7" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay7"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">플라스틱 사용 억제 정책 번호 선택</label>
+      <select id="restrictionPolicy" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">억제할 플라스틱 정책/플라스틱 제거량/이익 감소량: 1번: 소각장 설치/-40/-15, 2번: 해양 플라스틱 수거/-50/-10, 3번: 기업이 재활용까지 책임지는 법 제정/-10/-70, 4번: 플라스틱 용기 통일법 제정/0/-25, 5번: 과대포장-일회용품 사용 금지법 제정/-25/-50, 6번: 생분해성 플라스틱 개발/-30/10, 7번: 플라스틱 사용 규제법 철폐/20/25</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(8)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 8: Quiz Answer Selection -->
+  <div id="page8" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay8"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">퀴즈 정답은?</label>
+      <select id="quizAnswer" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p id="quizContent" class="text-sm text-gray-600 mt-2"></p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(9)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 9: Quiz Score Selection -->
+  <div id="page9" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">플라스틱의 역습 게임(바다 생물의 멸종을 막아라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay9"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">퀴즈를 맞췄다고 가정할 때 내가 선택할 점수</label>
+      <select id="quizScore" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <button id="submitBtn" onclick="submitData()" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active mt-4">제출하기</button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="spinner" class="spinner flex">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup">
+    <p id="popupMessage" class="text-lg text-blue-800 mb-4"></p>
+    <button onclick="closePopup()" class="mt-4 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">확인</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let environmentalPolicy = 0;
+    let environmentalTaxRate = 0;
+    let forcedTeam = '';
+    let restrictionPolicy = 0;
+    let quizAnswer = 0;
+    let quizScore = 0;
+    let isSubmitting = false;
+
+    function initializeDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+
+      const policySelect = document.getElementById('environmentalPolicy');
+      for (let i = 1; i <= 10; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        policySelect.appendChild(option);
+      }
+
+      const taxRateSelect = document.getElementById('environmentalTaxRate');
+      [0, 5, 10, 20, 30, 40, 50, 60, 70].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        taxRateSelect.appendChild(option);
+      });
+
+      const forcedTeamSelect = document.getElementById('forcedTeam');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        forcedTeamSelect.appendChild(option);
+      }
+
+      const restrictionPolicySelect = document.getElementById('restrictionPolicy');
+      for (let i = 1; i <= 7; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        restrictionPolicySelect.appendChild(option);
+      }
+
+      const quizAnswerSelect = document.getElementById('quizAnswer');
+      for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        quizAnswerSelect.appendChild(option);
+      }
+
+      const quizScoreSelect = document.getElementById('quizScore');
+      [20, 15, 10, 5, 0, -5, -10, -15, -20].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        quizScoreSelect.appendChild(option);
+      });
+    }
+
+    function updateQuizContent() {
+      const roundNum = parseInt(roundName.match(/\d+/)[0]);
+      const quizContent = document.getElementById('quizContent');
+      const quizzes = {
+        1: '다음 중 땅에 매립했을 때 썩는데 가장 오랜 시간이 걸리는 것은 무엇일까요? ① 알루미늄 캔 ② 플라스틱 용기 ③ 유리병',
+        2: '아래 4가지 중 나머지 3개와 다른 양인 것은? ➀ 30년 된 나무 21그루 ➁ 온실가스 1톤 ➂ 폐지 1톤 재활용 ➃ 우유곽 10000개',
+        3: '현재까지 지구 상에 버려진 플라스틱 쓰레기의 양은? ① 83억톤 ② 138억톤',
+        4: '현재까지 해양에만 버려진 플라스틱 쓰레기는 어느 정도일까? ① 3억톤 ② 5억톤',
+        5: '2019년 기준 대한민국에서 하루동안 발생하는 쓰레기의 량은? ① 5만톤 ② 10만톤',
+        6: '우리가 소비하는 플라스틱의 몇 %는 재활용되지 않고 그냥 쓰레기로 버려질까요? ① 40% ② 52% ③ 67% ④ 84% ⑤ 91%',
+        7: '선진국의 공병 회수율은 85%입니다. 2012년~2014년의 3년간 대한민국의 평균 공병회수율은 몇 %였을까요? ① 12% ② 23% ③ 35% ④ 42% ⑤ 96%',
+        8: '2019년 현재 대한민국 국민 1인당 1년에 버리는 비닐봉지의 평균 개수는? ① 249개 ② 425개',
+        9: '2019년 현재 대한민국 국민 1인당 1년간 버리는 플라스틱만의 무게는? ① 57kg ② 146kg',
+        10: '플라스틱 쓰레기 재활용 과정에서 가장 중요한 단계는 무엇인가요? ① 수거 ② 선별 ③ 재가공',
+        11: '유리병은 색상별로 분리배출해야 한다. 다음 중 분리배출할 유리병의 색상이 아닌 것은? ① 녹색 ② 갈색 ③ 파란색 ④ 백색',
+        12: '후쿠시마 발전소 파괴로 바다로 흘러간 방사능 오염수가 태평양을 한 바퀴 돌아 다시 동해바다를 오염시키는 데 걸리는 시간은? ① 2년 ② 4년 ③ 10년'
+      };
+      quizContent.textContent = quizzes[roundNum] || '';
+    }
+
+    function goToPage(page) {
+      if (page === currentPage) return;
+
+      if (page === 2) {
+        groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          showPopup('단체명을 입력해주세요!');
+          return;
+        }
+        document.getElementById('groupNameDisplay2').textContent = groupName;
+      } else if (page === 3) {
+        teamName = document.getElementById('teamName').value;
+        if (!teamName) {
+          showPopup('팀명을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamDisplay3').textContent = `${groupName} - ${teamName}`;
+      } else if (page === 4) {
+        roundName = document.getElementById('roundName').value;
+        if (!roundName) {
+          showPopup('라운드를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay4').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 5) {
+        environmentalPolicy = document.getElementById('environmentalPolicy').value;
+        if (!environmentalPolicy) {
+          showPopup('환경 정책을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay5').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 6) {
+        environmentalTaxRate = document.getElementById('environmentalTaxRate').value;
+        if (!environmentalTaxRate && environmentalTaxRate !== '0') {
+          showPopup('환경 세율을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay6').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 7) {
+        forcedTeam = document.getElementById('forcedTeam').value;
+        if (!forcedTeam) {
+          showPopup('플라스틱 사용 억제를 강제할 팀을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay7').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 8) {
+        restrictionPolicy = document.getElementById('restrictionPolicy').value;
+        if (!restrictionPolicy) {
+          showPopup('플라스틱 사용 억제 정책 번호를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay8').textContent = `${groupName} - ${teamName} - ${roundName}`;
+        updateQuizContent();
+      } else if (page === 9) {
+        quizAnswer = document.getElementById('quizAnswer').value;
+        if (!quizAnswer) {
+          showPopup('퀴즈 정답을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay9').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      }
+
+      document.getElementById(`page${currentPage}`).classList.add('hidden');
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+    }
+
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      quizScore = document.getElementById('quizScore').value;
+      if (!groupName || !teamName || !roundName || !environmentalPolicy || !environmentalTaxRate || !forcedTeam || !restrictionPolicy || !quizAnswer || !quizScore) {
+        showPopup('모든 항목을 입력해주세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'flex';
+      submitBtn.disabled = true;
+
+      const data = {
+        groupName,
+        teamName,
+        roundName,
+        environmentalPolicy,
+        environmentalTaxRate,
+        forcedTeam,
+        restrictionPolicy,
+        quizAnswer,
+        quizScore
+      };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbztfg0ZdMTXsQb5o2BVZ5yqSmPxULp3MHRD6uylXGNHh37KkFWIe-9Wz0wNaGwDtI0V/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const roundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (roundNum < 12) {
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력되었습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        const nextRound = `${roundNum + 1}라운드`;
+        document.getElementById('roundName').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+      }
+
+      // Reset fields for next round
+      document.getElementById('environmentalPolicy').value = '';
+      document.getElementById('environmentalTaxRate').value = '';
+      document.getElementById('forcedTeam').value = '';
+      document.getElementById('restrictionPolicy').value = '';
+      document.getElementById('quizAnswer').value = '';
+      document.getElementById('quizScore').value = '';
+      environmentalPolicy = 0;
+      environmentalTaxRate = 0;
+      forcedTeam = '';
+      restrictionPolicy = 0;
+      quizAnswer = 0;
+      quizScore = 0;
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      goToPage(nextPage);
+    }
+
+    window.onload = function() {
+      initializeDropdowns();
+      document.getElementById('spinner').style.display = 'none';
+      goToPage(1);
+    };
+  </script>
+</body>
+</html>
