@@ -254,8 +254,8 @@
             const roundName = document.getElementById('roundName').value;
 
             document.getElementById('groupNameDisplay').textContent = `단체명: ${groupName}`;
-            document.getElementById('teamNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}팀`;
-            document.getElementById('roundNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}팀, 라운드: ${roundName}라운드`;
+            document.getElementById('teamNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}`;
+            document.getElementById('roundNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}, 라운드: ${roundName}`;
         }
 
         function submitData() {
@@ -305,14 +305,16 @@
             const submitBtn = document.getElementById('submitBtn');
             spinner.classList.add('hidden');
 
-            const currentRoundNum = parseInt(roundName);
+            const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
             if (currentRoundNum < 12) {
-                showPopup(`${groupName}, ${teamName}팀, ${roundName}라운드 내용이 잘 입력됐습니다.`);
+                showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
                 document.getElementById('popup').dataset.nextPage = 3;
-                document.getElementById('roundName').value = (currentRoundNum + 1).toString();
+                const nextRoundNum = currentRoundNum + 1;
+                document.getElementById('roundName').value = `${nextRoundNum}라운드`;
             } else {
                 showPopup('모든 입력이 완료되었습니다!');
                 document.getElementById('popup').dataset.nextPage = 1;
+                document.getElementById('roundName').value = '1라운드';
             }
 
             // Reset fields for next round
@@ -346,7 +348,7 @@
         const teamSelect = document.getElementById('teamName');
         for (let i = 1; i <= 25; i++) {
             const option = document.createElement('option');
-            option.value = i;
+            option.value = `${i}팀`;
             option.textContent = `${i}팀`;
             teamSelect.appendChild(option);
         }
@@ -355,7 +357,7 @@
         const roundSelect = document.getElementById('roundName');
         for (let i = 1; i <= 12; i++) {
             const option = document.createElement('option');
-            option.value = i;
+            option.value = `${i}라운드`;
             option.textContent = `${i}라운드`;
             roundSelect.appendChild(option);
         }
