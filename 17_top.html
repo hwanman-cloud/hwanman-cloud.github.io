@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>바이러스(코로나)와 세균의 역습 게임</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover:hover {
+      transform: scale(1.05);
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-active:active {
+      transform: scale(0.95);
+      background-color: #2563eb;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 10000;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center text-gray-800">
+  <!-- Page 1: Group Name Input -->
+  <div id="page1" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-4">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+    <input id="groupName" type="text" class="w-full p-2 border rounded-lg mb-4" placeholder="단체명 입력">
+    <button onclick="goToPage(2)" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+  </div>
+
+  <!-- Page 2: Team Name Selection -->
+  <div id="page2" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupNameDisplay2"></p>
+    <select id="teamName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(1)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 3: Round Selection -->
+  <div id="page3" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamDisplay3"></p>
+    <select id="roundName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(2)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 4: Unenvironmental Action Selection -->
+  <div id="page4" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay4"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">바이러스를 깨우는 비환경적 행동</label>
+      <select id="unenvironmentalAction" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600">숫자가 클 수록 바이러스로 인한 이익은 높지만 바이러스의 감염률과 사망률이 증가함.</p>
+    <p class="text-sm text-gray-600 mt-2">바이러스를 깨우는 비환경적 행동/이익량/감염률/사망률: 1번: 환경파괴로 기존 바이러스 변이 초래/1000/0.1/0.1, 2번: 야생동물 서식지 파괴로 야생동물 속 바이러스와 접촉/2000/0.2/0.2, 3번: 미지의 서식지 개발로 인한 미지의 바이러스와 접촉/3000/0.3/0.3, 4번: 온실가스 배출로 영구동토층 속 고대 바이러스와 접촉/4000/0.4/0.4, 5번: 야생동물 먹는 문화 유행으로 미지의 바이러스와 접촉/5000/0.5/0.5, 6번: 바이러스 유전자 조작을 통한 신종 바이러스 제조/6000/0.6/0.6</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 5: Infected Virus Selection -->
+  <div id="page5" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay5"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">무작위 바이러스 감염 선택</label>
+      <select id="infectedVirus" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">바이러스 종류/감염률/사망률: 스페인독감(1918) 신종 변이 출현/5.3/7, 사스(2003) 신종 변이 출현/4.3/9, 신종플루(2009) 신종 변이 출현/3.7/3, 에볼라(2014) 신종 변이 출현/3.1/15, 메르스(2015) 신종 변이 출현/2.8/12, 코로나19(2019) 신종 변이 출현/4/5</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 6: Hygiene Level Selection -->
+  <div id="page6" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay6"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">국민 위생 수준 선택</label>
+      <select id="hygieneLevel" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">위생수준/지출비용/감염률 하락: 1번: 매우 약함/-1000/-0.1, 2번: 약함/-2000/-0.2, 3번: 중간 정도/-3000/-0.3, 4번: 강함/-4000/-0.4, 5번: 매우 강함/-5000/-0.5</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 7: Medical Support Selection -->
+  <div id="page7" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay7"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">국가 의료 지원 선택</label>
+      <select id="medicalSupport" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">국가 의료/지출비용/사망률 하락: 1번: 매우 약함/-1000/-0.1, 2번: 약함/-2000/-0.2, 3번: 중간 정도/-3000/-0.3, 4번: 강함/-4000/-0.4, 5번: 매우 강함/-5000/-0.5</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(8)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 8: Virus Variant Selection -->
+  <div id="page8" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay8"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">무작위 바이러스 변이</label>
+      <select id="virusVariant" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">바이러스 변이 종류: 알파 변이, 베타 변이, 감마 변이, 델타 변이, 오미크론 변이</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(9)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <!-- Page 9: Gathering Ban Selection -->
+  <div id="page9" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">바이러스(코로나)와 세균의 역습 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay9"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">5인 이상 모임 금지 선택</label>
+      <select id="gatheringBan" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(8)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+    </div>
+    <button id="submitBtn" onclick="submitData()" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active mt-4">제출하기</button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="spinner" class="spinner flex">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup">
+    <p id="popupMessage" class="text-lg text-blue-800 mb-4"></p>
+    <button onclick="closePopup()" class="mt-4 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">확인</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let unenvironmentalAction = 0;
+    let infectedVirus = 0;
+    let hygieneLevel = 0;
+    let medicalSupport = 0;
+    let virusVariant = 0;
+    let gatheringBan = '';
+    let isSubmitting = false;
+
+    function initializeDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      for (let i = 1; i <= 15; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+
+      const unenvironmentalActionSelect = document.getElementById('unenvironmentalAction');
+      for (let i = 1; i <= 6; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        unenvironmentalActionSelect.appendChild(option);
+      }
+
+      const infectedVirusSelect = document.getElementById('infectedVirus');
+      for (let i = 1; i <= 6; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        infectedVirusSelect.appendChild(option);
+      }
+
+      const hygieneLevelSelect = document.getElementById('hygieneLevel');
+      for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        hygieneLevelSelect.appendChild(option);
+      }
+
+      const medicalSupportSelect = document.getElementById('medicalSupport');
+      for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        medicalSupportSelect.appendChild(option);
+      }
+
+      const virusVariantSelect = document.getElementById('virusVariant');
+      for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        virusVariantSelect.appendChild(option);
+      }
+
+      const gatheringBanSelect = document.getElementById('gatheringBan');
+      ['찬성', '반대'].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        gatheringBanSelect.appendChild(option);
+      });
+    }
+
+    function goToPage(page) {
+      if (page === currentPage) return;
+
+      if (page === 2) {
+        groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          showPopup('단체명을 입력해주세요!');
+          return;
+        }
+        document.getElementById('groupNameDisplay2').textContent = groupName;
+      } else if (page === 3) {
+        teamName = document.getElementById('teamName').value;
+        if (!teamName) {
+          showPopup('팀명을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamDisplay3').textContent = `${groupName} - ${teamName}`;
+      } else if (page === 4) {
+        roundName = document.getElementById('roundName').value;
+        if (!roundName) {
+          showPopup('라운드를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay4').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 5) {
+        unenvironmentalAction = document.getElementById('unenvironmentalAction').value;
+        if (!unenvironmentalAction) {
+          showPopup('비환경적 행동을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay5').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 6) {
+        infectedVirus = document.getElementById('infectedVirus').value;
+        if (!infectedVirus) {
+          showPopup('바이러스 감염을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay6').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 7) {
+        hygieneLevel = document.getElementById('hygieneLevel').value;
+        if (!hygieneLevel) {
+          showPopup('위생 수준을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay7').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 8) {
+        medicalSupport = document.getElementById('medicalSupport').value;
+        if (!medicalSupport) {
+          showPopup('국가 의료 지원을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay8').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 9) {
+        virusVariant = document.getElementById('virusVariant').value;
+        if (!virusVariant) {
+          showPopup('바이러스 변이를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay9').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      }
+
+      document.getElementById(`page${currentPage}`).classList.add('hidden');
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+    }
+
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      gatheringBan = document.getElementById('gatheringBan').value;
+      if (!groupName || !teamName || !roundName || !unenvironmentalAction || !infectedVirus || !hygieneLevel || !medicalSupport || !virusVariant || !gatheringBan) {
+        showPopup('모든 항목을 입력해주세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'flex';
+      submitBtn.disabled = true;
+
+      const data = {
+        groupName,
+        teamName,
+        roundName,
+        unenvironmentalAction,
+        infectedVirus,
+        hygieneLevel,
+        medicalSupport,
+        virusVariant,
+        gatheringBan
+      };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbw8B2b0N5p8vS5M8G2W4YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const roundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (roundNum < 15) {
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력되었습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        const nextRound = `${roundNum + 1}라운드`;
+        document.getElementById('roundName').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+      }
+
+      // Reset fields for next round
+      document.getElementById('unenvironmentalAction').value = '';
+      document.getElementById('infectedVirus').value = '';
+      document.getElementById('hygieneLevel').value = '';
+      document.getElementById('medicalSupport').value = '';
+      document.getElementById('virusVariant').value = '';
+      document.getElementById('gatheringBan').value = '';
+      unenvironmentalAction = 0;
+      infectedVirus = 0;
+      hygieneLevel = 0;
+      medicalSupport = 0;
+      virusVariant = 0;
+      gatheringBan = '';
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      goToPage(nextPage);
+    }
+
+    window.onload = function() {
+      initializeDropdowns();
+      document.getElementById('spinner').style.display = 'none';
+      goToPage(1);
+    };
+  </script>
+</body>
+</html>
