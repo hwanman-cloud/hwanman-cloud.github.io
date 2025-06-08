@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기와집 건축 경영 게임</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* Custom styles beyond Tailwind */
+    body {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%);
+      min-height: 100vh;
+    }
+    
+    .page-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn {
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .select-custom {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1em;
+    }
+    
+    /* Spinner */
+    .spinner-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Modal/Popup */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      max-width: 80%;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(0);
+      animation: popup 0.3s ease forwards;
+    }
+    
+    @keyframes popup {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body class="bg-blue-50 text-gray-800 font-sans">
+  <!-- Page 1: Group Name Input -->
+  <div id="page1" class="page-container flex flex-col items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
+      <h1 class="text-3xl font-bold text-blue-700 mb-4">
+        <i class="fas fa-home text-blue-800 mr-2"></i>기와집 건축 경영 게임<span class="text-sm font-normal text-blue-500">(feat 경매)</span>
+      </h1>
+      
+      <p class="mb-6 text-gray-600">Host가 알려준 단체명을 입력합니다.<br>대소문자 구분해서 정확히 입력해 주세요.</p>
+      
+      <div class="mb-6">
+        <input type="text" id="groupName" class="w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="단체명을 입력하세요">
+      </div>
+      
+      <button onmouseup="nextPage(1)" class="btn bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg font-bold">
+        다음 <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page 2: Team Name Selection -->
+  <div id="page2" class="page-container hidden flex flex-col items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
+      <h1 class="text-3xl font-bold text-blue-700 mb-2">
+        <i class="fas fa-home text-blue-800 mr-2"></i>기와집 건축 경영 게임
+      </h1>
+      
+      <p id="groupDisplay2" class="text-xl text-blue-600 mb-6"></p>
+      
+      <p class="mb-4 text-gray-600">팀을 선택해 주세요.</p>
+      
+      <div class="mb-6">
+        <select id="teamName" class="select-custom w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <option value="" disabled selected>팀을 선택하세요</option>
+        </select>
+      </div>
+      
+      <div class="flex justify-between">
+        <button onmouseup="prevPage(2)" class="btn bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-bold">
+          <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+        </button>
+        
+        <button onmouseup="nextPage(2)" class="btn bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg font-bold">
+          다음 <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 3: Round Selection -->
+  <div id="page3" class="page-container hidden flex flex-col items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
+      <h1 class="text-3xl font-bold text-blue-700 mb-2">
+        <i class="fas fa-home text-blue-800 mr-2"></i>기와집 건축 경영 게임
+      </h1>
+      
+      <p id="groupTeamDisplay3" class="text-xl text-blue-600 mb-6"></p>
+      
+      <p class="mb-4 text-gray-600">라운드를 선택해 주세요.</p>
+      
+      <div class="mb-6">
+        <select id="roundName" class="select-custom w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <option value="" disabled selected>라운드를 선택하세요</option>
+        </select>
+      </div>
+      
+      <div class="flex justify-between">
+        <button onmouseup="prevPage(3)" class="btn bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-bold">
+          <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+        </button>
+        
+        <button onmouseup="nextPage(3)" class="btn bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg font-bold">
+          다음 <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 4: Purchase Count Selection -->
+  <div id="page4" class="page-container hidden flex flex-col items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
+      <h1 class="text-3xl font-bold text-blue-700 mb-2">
+        <i class="fas fa-home text-blue-800 mr-2"></i>기와집 건축 경영 게임
+      </h1>
+      
+      <p id="groupTeamRoundDisplay4" class="text-xl text-blue-600 mb-6"></p>
+      
+      <p class="mb-4 text-gray-600">몇 개를 구매하겠습니까?</p>
+      
+      <div class="mb-6">
+        <select id="purchaseCount" class="select-custom w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <option value="" disabled selected>구매 개수를 선택하세요</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+      
+      <div class="flex justify-between">
+        <button onmouseup="prevPage(4)" class="btn bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-bold">
+          <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+        </button>
+        
+        <button onmouseup="nextPage(4)" class="btn bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg font-bold">
+          다음 <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 5: Purchase Price Selection -->
+  <div id="page5" class="page-container hidden flex flex-col items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8 text-center">
+      <h1 class="text-3xl font-bold text-blue-700 mb-2">
+        <i class="fas fa-home text-blue-800 mr-2"></i>기와집 건축 경영 게임
+      </h1>
+      
+      <p id="groupTeamRoundDisplay5" class="text-xl text-blue-600 mb-6"></p>
+      
+      <p class="mb-4 text-gray-600">개당 얼마에 구매하겠습니까?</p>
+      
+      <div class="mb-6">
+        <select id="purchasePrice" class="select-custom w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <option value="" disabled selected>구매 가격을 선택하세요</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+        </select>
+      </div>
+      
+      <div class="flex justify-between">
+        <button onmouseup="prevPage(5)" class="btn bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-bold">
+          <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+        </button>
+        
+        <button id="submitBtn" onmouseup="nextPage(5)" class="btn bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg font-bold">
+          제출하기 <i class="fas fa-paper-plane ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="spinner" class="spinner-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Modal/Popup -->
+  <div id="popup" class="modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold text-blue-700 mb-4">
+        <span id="popupMessage"></span>
+      </h2>
+      <button onmouseup="closePopup()" class="btn bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-bold mt-4">
+        확인
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let currentRoundNumber = 1;
+    const TOTAL_ROUNDS = 18;
+    let isSubmitting = false;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let purchaseCount = '';
+    let purchasePrice = '';
+
+    // Populate dropdown options
+    function populateOptions() {
+      const teamSelect = document.getElementById('teamName');
+      teamSelect.innerHTML = '<option value="" disabled selected>팀을 선택하세요</option>';
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      roundSelect.innerHTML = '<option value="" disabled selected>라운드를 선택하세요</option>';
+      for (let i = 1; i <= TOTAL_ROUNDS; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+    }
+
+    // Page navigation
+    function showPage(page) {
+      document.querySelectorAll('.page-container').forEach(div => div.classList.add('hidden'));
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+    }
+
+    function nextPage(page) {
+      if (page === 1) {
+        groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          showPopup('단체명을 입력해주세요.');
+          return;
+        }
+        document.getElementById('groupDisplay2').textContent = groupName;
+        showPage(2);
+      } else if (page === 2) {
+        teamName = document.getElementById('teamName').value;
+        if (!teamName) {
+          showPopup('팀을 선택해주세요.');
+          return;
+        }
+        document.getElementById('groupTeamDisplay3').textContent = `${groupName} - ${teamName}`;
+        const roundOption = document.getElementById('roundName').querySelector(`option[value="${currentRoundNumber}라운드"]`);
+        if (roundOption) roundOption.selected = true;
+        showPage(3);
+      } else if (page === 3) {
+        roundName = document.getElementById('roundName').value;
+        if (!roundName) {
+          showPopup('라운드를 선택해주세요.');
+          return;
+        }
+        currentRoundNumber = parseInt(roundName.match(/\d+/)[0]);
+        document.getElementById('groupTeamRoundDisplay4').textContent = `${groupName} - ${teamName} - ${roundName}`;
+        showPage(4);
+      } else if (page === 4) {
+        purchaseCount = document.getElementById('purchaseCount').value;
+        if (purchaseCount === '') {
+          showPopup('구매 개수를 선택해주세요.');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay5').textContent = `${groupName} - ${teamName} - ${roundName}`;
+        showPage(5);
+      } else if (page === 5) {
+        purchasePrice = document.getElementById('purchasePrice').value;
+        if (purchasePrice === '') {
+          showPopup('구매 가격을 선택해주세요.');
+          return;
+        }
+        submitData();
+      }
+    }
+
+    function prevPage(page) {
+      showPage(page - 1);
+    }
+
+    // Data submission
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      // Re-fetch values from DOM
+      groupName = document.getElementById('groupName').value.trim();
+      teamName = document.getElementById('teamName').value;
+      roundName = document.getElementById('roundName').value;
+      purchaseCount = document.getElementById('purchaseCount').value;
+      purchasePrice = document.getElementById('purchasePrice').value;
+
+      // Validate fields
+      const missingFields = [];
+      if (!groupName) missingFields.push('단체명');
+      if (!teamName) missingFields.push('팀명');
+      if (!roundName) missingFields.push('라운드');
+      if (purchaseCount === '') missingFields.push('구매 개수');
+      if (purchasePrice === '') missingFields.push('구매 가격');
+
+      if (missingFields.length > 0) {
+        console.log('Missing fields:', missingFields);
+        showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'flex';
+      submitBtn.disabled = true;
+
+      const data = { groupName, teamName, roundName, purchaseCount, purchasePrice };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbxeFa57J2Xky8o1AH3epTsHebzadCqB36bd_FyqQaxHiXt0N0iHjv6kucV_JfcwgvT0uQ/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    // Handle successful submission
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (currentRoundNum < TOTAL_ROUNDS) {
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        currentRoundNumber = currentRoundNum + 1;
+        const nextRound = `${currentRoundNumber}라운드`;
+        document.getElementById('roundName').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+        currentRoundNumber = 1;
+        groupName = '';
+        teamName = '';
+        document.getElementById('groupName').value = '';
+        document.getElementById('teamName').value = '';
+      }
+
+      // Reset fields for next round
+      document.getElementById('purchaseCount').value = '';
+      document.getElementById('purchasePrice').value = '';
+      purchaseCount = '';
+      purchasePrice = '';
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    // Show popup
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'flex';
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      showPage(nextPage);
+    }
+
+    // Initialization
+    window.onload = function() {
+      populateOptions();
+      showPage(1);
+    };
+  </script>
+</body>
+</html>
