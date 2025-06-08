@@ -262,7 +262,7 @@ function submitData() {
 //  if (isSubmitting) return;
 //  isSubmitting = true;
 
-  const groupName = document.getElementById('groupName').value.trim();
+  const name = document.getElementById('groupName').value.trim();
   const team = document.getElementById('teamName').value;
   const round = document.getElementById('round').value;
   const choice = document.getElementById('myChoice').value;
@@ -270,7 +270,7 @@ function submitData() {
   const bet = document.getElementById('betting').value;
 
   // Validate all fields
-  if (!name || !team || !round || !choice || !bet) {
+  if (!name || !team || !round || !choice || !percentagePrediction || !bet) {
     alert('모든 필드를 입력해주세요.');
     isSubmitting = false;
     return;
