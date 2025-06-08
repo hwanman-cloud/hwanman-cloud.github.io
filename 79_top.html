@@ -262,13 +262,18 @@ function submitData() {
   if (isSubmitting) return;
   isSubmitting = true;
 
-  formData.bet = document.getElementById('bet').value;
-  if (!formData.bet) {
-    alert('베팅을 선택해주세요.');
+  const groupName = document.getElementById('groupName').value.trim();
+  const team = document.getElementById('teamName').value;
+  const round = document.getElementById('round').value;
+  const choice = document.getElementById('myChoice').value;
+  const bet = document.getElementById('betting').value;
+
+  // Validate all fields
+  if (!name || !team || !round || !choice || !bet) {
+    alert('모든 필드를 입력해주세요.');
     isSubmitting = false;
     return;
   }
-
   const spinner = document.getElementById('spinner-overlay');
   const submitBtn = document.getElementById('submitBtn');
   spinner.style.display = 'flex';
@@ -280,37 +285,33 @@ function submitData() {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(formData)
+    body: JSON.stringify({ name, team, round, choice, bet })
   })
   .then(() => {
-    handleSubmissionSuccess();
+    handleSubmissionSuccess(name, team, round);
   })
   .catch(() => {
-    handleSubmissionSuccess(); // Handle as success due to no-cors
+    handleSubmissionSuccess(name, team, round); // Handle as success due to no-cors
   });
 }
 
-function handleSubmissionSuccess() {
+function handleSubmissionSuccess(name, team, round) {
   const spinner = document.getElementById('spinner-overlay');
   const submitBtn = document.getElementById('submitBtn');
   spinner.style.display = 'none';
 
-  const currentRoundNum = parseInt(formData.round.match(/\d+/)[0]);
+  const currentRoundNum = parseInt(round.match(/\d+/)[0]);
   if (currentRoundNum < 10) {
-    showPopup(`${formData.groupName}, ${formData.teamName}, ${formData.round} 내용이 잘 입력됐습니다.`);
+    showPopup(`${name}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
     document.getElementById('popup').dataset.nextPage = 3;
     const nextRound = `라운드 ${currentRoundNum + 1}`;
     document.getElementById('round').value = nextRound;
-    formData.round = nextRound; // Update formData for next round
   } else {
     showPopup('모든 입력이 완료되었습니다!');
     document.getElementById('popup').dataset.nextPage = 1;
   }
 
   // Reset fields for next round
-  formData.choice = '';
-  formData.prediction = '';
-  formData.bet = '';
   document.getElementById('choice').value = '';
   document.getElementById('prediction').value = '';
   document.getElementById('bet').value = '';
