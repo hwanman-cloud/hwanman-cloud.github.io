@@ -120,34 +120,34 @@
             <h1 class="text-2xl font-bold text-blue-700 mb-2">공정무역 게임</h1>
             <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay4" class="font-semibold text-blue-600"></span></p>
             <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay3" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay2" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay2"></span></p>
             <p class="text-gray-600 mb-4">노동력 착취 여부</p>
-            <select id="laborExploitation" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="laborExploitation" class="w-full p-1 border border-blue-300 rounded mb-1 focus:outline-none">
                 <option value="">선택</option>
                 <option value="아동노동 착취">아동노동 착취</option>
                 <option value="성인노동 활용">성인노동 활용</option>
             </select>
             <div class="flex justify-between gap-2">
-                <button onmouseup="prevPage(5)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(5)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+                <button onmouseup="prevPage(5)" class="btn bg-gray-500 text-white p-2 rounded hover:bg-gray-600">뒤로 가기</button>
+                <button class="btn bg-blue-600 text-white p-1 rounded hover:bg-blue-700" onmouseup="nextPage(5)">다음 페이지로 가기</button>
             </div>
         </div>
 
         <!-- Page 6: 불공정 노동 계약 여부 -->
-        <div id="page6" class="page bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-2xl font-bold text-blue-700 mb-2">공정무역 게임</h1>
-            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay5" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay4" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay3" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-4">불공정 노동 계약 여부</p>
-            <select id="unfairContract" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div id="page6" class="page bg-white p-6 rounded-lg shadow-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold-bold text-blue-700 mb-4">공정무역 게임임</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay5" class="font-semibold-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay4" class="font-semibold-semibold"></span></p>
+            <p class="text-gray-600 mb-4">라운드:: <span id="roundDisplay3" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">불공정 노동 계약 여부부</p>
+            <select id="unfairContract" class="w-full p-2 border-blue-300 rounded mb-4 focus:outline-none-none focus:ring-2 focus:ring-blue-500">
                 <option value="">선택</option>
-                <option value="불공정 노동계약">불공정 노동계약</option>
+                <option value="불공정 노동계약">불공정 노동계약약</option>
                 <option value="공정 노동계약">공정 노동계약</option>
             </select>
             <div class="flex justify-between gap-2">
-                <button onmouseup="prevPage(6)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(6)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+                <button onmouseup="prevPage(6)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기기</button>
+                <button class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700" onclick="nextPage(6)">다음</button>
             </div>
         </div>
 
@@ -155,8 +155,8 @@
         <div id="page7" class="page bg-white p-6 rounded-lg shadow-lg text-center">
             <h1 class="text-2xl font-bold text-blue-700 mb-2">공정무역 게임</h1>
             <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay6" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay5" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay4" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay5" class="font-semibold"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay4"></span></p>
             <p class="text-gray-600 mb-4">국제사회 지원금 착복 여부</p>
             <select id="aidMisuse" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">선택</option>
@@ -165,7 +165,7 @@
             </select>
             <div class="flex justify-between gap-2">
                 <button onmouseup="prevPage(7)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(7)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+                <button class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700" onmouseup="nextPage(7)">다음</button>
             </div>
         </div>
 
@@ -183,7 +183,7 @@
             </select>
             <div class="flex justify-between gap-2">
                 <button onmouseup="prevPage(8)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(8)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+                <button onmouseup="nextPage(8)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
             </div>
         </div>
 
@@ -201,7 +201,7 @@
             </select>
             <div class="flex justify-between gap-2">
                 <button onmouseup="prevPage(9)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(9)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+                <button onmouseup="nextPage(9)" class="btn bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">다음</button>
             </div>
         </div>
 
@@ -225,7 +225,7 @@
             <p class="text-gray-600 mb-4">소비자의 선택 내용: 공정무역 강력 요구(1), 싼 물건만 구입(2), 직거래만 요구(3), 친환경유기농만 요구(4), 불법행위 구속(5), 불법행위 집행유예(6), 공정무역 느슨한 요구(7)</p>
             <div class="flex justify-between gap-2">
                 <button onmouseup="prevPage(10)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button id="submitBtn" onmouseup="submitData()" class="btn bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">제출하기</button>
+                <button id="submitBtn" onmouseup="nextPage(10)" class="btn bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">제출하기</button>
             </div>
         </div>
 
@@ -389,8 +389,34 @@
             if (isSubmitting) return;
             isSubmitting = true;
 
-            if (!groupName || !teamName || !round || !product || !laborExploitation || !unfairContract || !aidMisuse || !middleman || !pesticide || !consumerChoice) {
-                showPopup('모든 필드를 입력해주세요.');
+            // Re-fetch values from DOM to ensure synchronization
+            groupName = document.getElementById('groupName').value.trim();
+            teamName = document.getElementById('teamName').value;
+            round = document.getElementById('round').value;
+            product = document.getElementById('product').value;
+            laborExploitation = document.getElementById('laborExploitation').value;
+            unfairContract = document.getElementById('unfairContract').value;
+            aidMisuse = document.getElementById('aidMisuse').value;
+            middleman = document.getElementById('middleman').value;
+            pesticide = document.getElementById('pesticide').value;
+            consumerChoice = document.getElementById('consumerChoice').value;
+
+            // Debug missing fields
+            const missingFields = [];
+            if (!groupName) missingFields.push('단체명');
+            if (!teamName) missingFields.push('팀명');
+            if (!round) missingFields.push('라운드');
+            if (!product) missingFields.push('판매제품');
+            if (!laborExploitation) missingFields.push('노동력 착취 여부');
+            if (!unfairContract) missingFields.push('불공정 노동 계약 여부');
+            if (!aidMisuse) missingFields.push('국제사회 지원금 착복 여부');
+            if (!middleman) missingFields.push('피라미드식 중간 판매상 이용 여부');
+            if (!pesticide) missingFields.push('농약 사용 여부');
+            if (!consumerChoice) missingFields.push('소비자의 선택');
+
+            if (missingFields.length > 0) {
+                console.log('Missing fields:', missingFields);
+                showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
                 isSubmitting = false;
                 return;
             }
