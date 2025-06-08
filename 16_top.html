@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사막(메마른 지구)의 역습 게임</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    .btn-hover:hover {
+      transform: scale(1.05);
+      transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+      background-color: #3b82f6;
+    }
+    .btn-active:active {
+      transform: scale(0.95);
+      background-color: #1d4ed8;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 10000;
+      text-align: center;
+      max-width: 90%;
+    }
+    .page-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #e0f2fe, #bfdbfe);
+    }
+  </style>
+</head>
+<body class="page-container text-gray-800">
+  <!-- Page 1: Group Name Input -->
+  <div id="page1" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-4 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+    <input id="groupName" type="text" class="w-full p-2 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+    <button onclick="goToPage(2)" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+      다음 <i class="fas fa-arrow-right ml-2"></i>
+    </button>
+  </div>
+
+  <!-- Page 2: Team Name Selection -->
+  <div id="page2" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4" id="groupNameDisplay2"></p>
+    <select id="teamName" class="w-full p-2 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500">
+      <option value="">팀 선택</option>
+    </select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(1)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+      </button>
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        다음 <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page 3: Round Selection -->
+  <div id="page3" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4" id="groupTeamDisplay3"></p>
+    <select id="roundName" class="w-full p-2 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500">
+      <option value="">라운드 선택</option>
+    </select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(2)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+      </button>
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        다음 <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page 4: Deforestation Area Selection -->
+  <div id="page4" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay4"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2 font-medium">산림 벌목 면적</label>
+      <select id="deforestationArea" class="p-2 border rounded-lg flex-1 focus:ring-2 focus:ring-blue-500">
+        <option value="">선택</option>
+      </select>
+    </div>
+    <p class="text-sm text-gray-600 text-center mb-4">산림을 많이 벌목하면 이익이 많음. 그러나 지나치게 벌목하면 황무지가 될 수도 있음.</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+      </button>
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        다음 <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page 5: Climate Selection -->
+  <div id="page5" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay5"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2 font-medium">무작위 기후 선택</label>
+      <select id="climate" class="p-2 border rounded-lg flex-1 focus:ring-2 focus:ring-blue-500">
+        <option value="">선택</option>
+      </select>
+    </div>
+    <p class="text-sm text-gray-600 text-center">기후와 날씨 종류: 가뭄, 평범한 날씨, 간헐적 비, 메마름, 풍족한 강수량</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+      </button>
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        다음 <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page 6: Dust Storm Damage Selection -->
+  <div id="page6" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay6"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2 font-medium">무작위 황사 피해 발생</label>
+      <select id="dustStormDamage" class="p-2 border rounded-lg flex-1 focus:ring-2 focus:ring-blue-500">
+        <option value="">선택</option>
+      </select>
+    </div>
+    <p class="text-sm text-gray-600 text-center">황사 피해의 내용/피해비용: 1번: 반도체 불량률 증가/10, 2번: 식물 식생 감소/20, 3번: 중금속 흡입/30, 4번: 천식 유발/40, 5번: 호흡기 질환 유발/50, 6번: 폐조직 손상/60, 7번: 만성 폐쇄성 질환 유발/70</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+      </button>
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        다음 <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page 7: Forest Degradation Behavior Selection -->
+  <div id="page7" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2 flex items-center justify-center">
+      <i class="fas fa-globe-americas mr-2"></i> 사막(메마른 지구)의 역습 게임
+    </h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay7"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2 font-medium">무작위 산림 훼손 행동과 습관</label>
+      <select id="forestDegradation" class="p-2 border rounded-lg flex-1 focus:ring-2 focus:ring-blue-500">
+        <option value="">선택</option>
+      </select>
+    </div>
+    <p class="text-sm text-gray-600 text-center mb-4">무작위 산림 훼손 행동과 습관과 피해액: 1번: 팜유로 튀긴 음식 좋아!/3, 2번: 고기가 좋아, 특히 소고기!/6, 3번: 담배 피우는 습관! 산불 발생의 주요 원인/9, 4번: 문명 생활이 좋아! 신도시 개발 찬성/12, 5번: 경제가 우선이지! 산업단지 조성/15, 6번: 빈부 격차 심화! 나무 베어서 가난 탈피/18</p>
+    <div class="flex space-x-2 mb-4">
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> 뒤로 가기
+      </button>
+    </div>
+    <button id="submitBtn" onclick="submitData()" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active flex items-center justify-center">
+      제출하기 <i class="fas fa-check ml-2"></i>
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="spinner" class="spinner flex">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup">
+    <p id="popupMessage" class="text-lg text-blue-800 mb-4"></p>
+    <button onclick="closePopup()" class="p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">확인</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let deforestationArea = 0;
+    let climate = 0;
+    let dustStormDamage = 0;
+    let forestDegradation = 0;
+    let isSubmitting = false;
+
+    function initializeDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      for (let i = 1; i <= 13; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+
+      const deforestationSelect = document.getElementById('deforestationArea');
+      for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        deforestationSelect.appendChild(option);
+      }
+
+      const climateSelect = document.getElementById('climate');
+      for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        climateSelect.appendChild(option);
+      }
+
+      const dustStormSelect = document.getElementById('dustStormDamage');
+      for (let i = 1; i <= 7; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        dustStormSelect.appendChild(option);
+      }
+
+      const forestDegradationSelect = document.getElementById('forestDegradation');
+      for (let i = 1; i <= 6; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        forestDegradationSelect.appendChild(option);
+      }
+    }
+
+    function goToPage(page) {
+      if (page === currentPage) return;
+
+      if (page === 2) {
+        groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          showPopup('단체명을 입력해주세요!');
+          return;
+        }
+        document.getElementById('groupNameDisplay2').textContent = groupName;
+      } else if (page === 3) {
+        teamName = document.getElementById('teamName').value;
+        if (!teamName) {
+          showPopup('팀명을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamDisplay3').textContent = `${groupName} - ${teamName}`;
+      } else if (page === 4) {
+        roundName = document.getElementById('roundName').value;
+        if (!roundName) {
+          showPopup('라운드를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay4').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 5) {
+        deforestationArea = document.getElementById('deforestationArea').value;
+        if (!deforestationArea) {
+          showPopup('산림 벌목 면적을 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay5').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 6) {
+        climate = document.getElementById('climate').value;
+        if (!climate) {
+          showPopup('무작위 기후를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay6').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 7) {
+        dustStormDamage = document.getElementById('dustStormDamage').value;
+        if (!dustStormDamage) {
+          showPopup('무작위 황사 피해를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay7').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      }
+
+      document.getElementById(`page${currentPage}`).classList.add('hidden');
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+    }
+
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      forestDegradation = document.getElementById('forestDegradation').value;
+      if (!groupName || !teamName || !roundName || !deforestationArea || !climate || !dustStormDamage || !forestDegradation) {
+        showPopup('모든 항목을 입력해주세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'flex';
+      submitBtn.disabled = true;
+
+      const data = {
+        groupName,
+        teamName,
+        roundName,
+        deforestationArea,
+        climate,
+        dustStormDamage,
+        forestDegradation
+      };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbx7caUYBsgVq-dajHsWTH28wn0c_4gsfZwX8pdOhsvXOTHIWxabP-qFkYu9M1L83izB/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const roundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (roundNum < 13) {
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력되었습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        const nextRound = `${roundNum + 1}라운드`;
+        document.getElementById('roundName').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+      }
+
+      // Reset fields for next round
+      document.getElementById('deforestationArea').value = '';
+      document.getElementById('climate').value = '';
+      document.getElementById('dustStormDamage').value = '';
+      document.getElementById('forestDegradation').value = '';
+      deforestationArea = 0;
+      climate = 0;
+      dustStormDamage = 0;
+      forestDegradation = 0;
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      goToPage(nextPage);
+    }
+
+    window.onload = function() {
+      initializeDropdowns();
+      document.getElementById('spinner').style.display = 'none';
+      goToPage(1);
+    };
+  </script>
+</body>
+</html>
