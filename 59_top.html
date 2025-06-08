@@ -55,7 +55,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 1001; /* Increased to be topmost layer */
+            z-index: 1001;
             align-items: center;
             justify-content: center;
         }
@@ -96,8 +96,7 @@
 
         <!-- Page 3 -->
         <div id="page3" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4">
-            </p>
+            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4"></h2>
             <select id="roundName" class="w-full p-2 border rounded mb-4">
                 <option value="">라운드 선택</option>
             </select>
@@ -125,13 +124,13 @@
                 <option value="3 수돗물과 전기 가격은 싸니까 낭비해도 괜찮다~~">3 수돗물과 전기 가격은 싸니까 낭비해도 괜찮다~~</option>
                 <option value="4 공유 경제도 좋지만, 남이 쓴 물건은 꺼려진다.~~">4 공유 경제도 좋지만, 남이 쓴 물건은 꺼려진다.~~</option>
                 <option value="5 나는 얼리 어답터다. 신상 물건을 좋아한다~">5 나는 얼리 어답터다. 신상 물건을 좋아한다~</option>
-                <option value="6 해외 여행 / 외국 제품을 좋아한다.~~">6 해외 여행 / 외국 제품을 좋아한다.~~</option>
-                <option value="7 배달음식, 일회용품을 애용하는 편이다.!!">7 배달음식, 일회용품을 애용하는 편이다.!!</option>
-                <option value="8 자가용 운전을 좋아한다. 버스, 지하철, 기차는 불편하다!!">8 자가용 운전을 좋아한다. 버스, 지하철, 기차는 불편하다!!</option>
-                <option value="9 남들에게 기 죽는 건 싫어한다. 허례허식하는 편이다~~">9 남들에게 기 죽는 건 싫어한다. 허례허식하는 편이다~~</option>
+                <option value="6 해외 여행 / 외국 제품을 좋아한다.~~">6 해외 여행</option>
+                <option value="7 배달음식, 일회용품을 애용하는 편이다!!">7 배달음식, 일회용품을 애용하는 편이다!!</option>
+                <option value="8 자가용 운전을 한다">8 자가용 운전을 자주 한다!!</option>
+                <option value="9 남에게 기죽는 걸 싫어한다. 허례허식도 좋다~~">9 남에게 기죽는 걸 싫다. 허례허식도 괜찮다~~</option>
             </select>
             <div class="flex justify-between">
-                <button onclick="prevPage(3)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                <button onclick="prevPage(3)" class="btn bg-gray-500 text-white px-2 py-2 rounded hover:bg-gray-600">
                     <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
                 </button>
                 <button onclick="nextPage(5)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -146,7 +145,7 @@
                 <i class="fas fa-balance-scale mr-2"></i>UN 일괄 세금 징수 찬반 여부
             </h2>
             <select id="opponentTeam" class="w-full p-2 border rounded mb-4">
-                <option value="">선택하세요</option>
+                <option value="">Select an option</option>
                 <option value="찬성">찬성</option>
                 <option value="반대">반대</option>
             </select>
@@ -161,12 +160,12 @@
         </div>
 
         <!-- Page 6 -->
-        <div id="page6" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold mb-4">
+        <div id="page6" class="page bg-white">
+            <h2 class="text-xl font-bold mb-4">
                 <i class="fas fa-hand-holding-usd mr-2"></i>나의 재난 기부 금액
             </h2>
             <select id="myBet" class="w-full p-2 border rounded mb-4">
-                <option value="">선택하세요</option>
+                <option value="">Select an amount</option>
                 <option value="0">0</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -217,14 +216,24 @@
     <script>
         let currentPage = 1;
         let isSubmitting = false;
+        let savedGroupName = '';
+        let savedTeamName = '';
 
         function nextPage(pageNum) {
-            if (pageNum === 2 && !document.getElementById('groupName').value.trim()) {
-                alert('단체명을 입력해주세요.');
-                return;
-            } else if (pageNum === 3 && !document.getElementById('teamName').value) {
-                alert('팀명을 선택해주세요.');
-                return;
+            if (pageNum === 2) {
+                const groupName = document.getElementById('groupName').value.trim();
+                if (!groupName) {
+                    alert('단체명을 입력해주세요.');
+                    return;
+                }
+                savedGroupName = groupName;
+            } else if (pageNum === 3) {
+                const teamName = document.getElementById('teamName').value;
+                if (!teamName) {
+                    alert('팀명을 선택해주세요.');
+                    return;
+                }
+                savedTeamName = teamName;
             } else if (pageNum === 4 && !document.getElementById('roundName').value) {
                 alert('라운드를 선택해주세요.');
                 return;
@@ -251,9 +260,11 @@
         }
 
         function updateDisplays() {
-            const groupName = document.getElementById('groupName').value.trim() || 'N/A';
-            const teamName = document.getElementById('teamName').value || 'N/A';
+            const groupName = savedGroupName || document.getElementById('groupName').value.trim() || 'N/A';
+            const teamName = savedTeamName || document.getElementById('teamName').value || 'N/A';
             const roundName = document.getElementById('roundName').value || 'N/A';
+
+            console.log('Updating displays:', { groupName, teamName, roundName }); // Debug
 
             document.getElementById('groupNameDisplay').textContent = `단체명: ${groupName}`;
             document.getElementById('teamNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}`;
@@ -264,8 +275,8 @@
             if (isSubmitting) return;
             isSubmitting = true;
 
-            const groupName = document.getElementById('groupName').value.trim();
-            const teamName = document.getElementById('teamName').value;
+            const groupName = savedGroupName;
+            const teamName = savedTeamName;
             const roundName = document.getElementById('roundName').value;
             const myChoice = document.getElementById('myChoice').value;
             const opponentTeam = document.getElementById('opponentTeam').value;
@@ -280,7 +291,6 @@
                 return;
             }
 
-            // Log data for debugging
             console.log('Submitting:', { groupName, teamName, roundName, myChoice, opponentTeam, myBet });
 
             const spinner = document.getElementById('loadingSpinner');
@@ -314,8 +324,10 @@
             const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
             const nextRoundNum = currentRoundNum < 12 ? currentRoundNum + 1 : 1;
 
-            // Set next round before showing popup
-            document.getElementById('roundName').value = `${nextRoundNum}라운드`;
+            // Set next round
+            const roundSelect = document.getElementById('roundName');
+            roundSelect.value = `${nextRoundNum}라운드`;
+            console.log('Set round to:', roundSelect.value); // Debug
 
             if (currentRoundNum < 12) {
                 showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
@@ -344,7 +356,7 @@
         function closePopup() {
             document.getElementById('popup').classList.add('hidden');
             const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
-            console.log('Navigating to page:', nextPage); // Debug navigation
+            console.log('Navigating to page:', nextPage); // Debug
             if (nextPage && nextPage !== currentPage) {
                 document.getElementById(`page${currentPage}`).classList.remove('active');
                 document.getElementById(`page${nextPage}`).classList.add('active');
