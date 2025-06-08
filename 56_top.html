@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1억 투자 타임머신 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+    .spinner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-blue-100 min-h-screen flex items-center justify-center">
+  <div id="app" class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600">1억 투자 타임머신 게임</h1>
+    
+    <!-- Page 1: Group Name -->
+    <div id="page1" class="space-y-4">
+      <p class="text-center text-gray-700">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input type="text" id="groupName" class="w-full p-2 border rounded" placeholder="단체명 입력">
+      <button onclick="nextPage(1)" class="w-full bg-blue-500 text-white p-2 rounded btn-hover">다음</button>
+    </div>
+
+    <!-- Page 2: Team Name -->
+    <div id="page2" class="hidden space-y-4">
+      <p id="groupNameDisplay" class="text-center font-semibold"></p>
+      <select id="teamName" class="w-full p-2 border rounded">
+        <option value="">팀명 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(2)" class="w-1/2 bg-gray-300 text-gray-700 p-2 rounded btn-hover">뒤로 가기</button>
+        <button onclick="nextPage(2)" class="w-1/2 bg-blue-500 text-white p-2 rounded btn-hover">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="hidden space-y-4">
+      <p id="teamNameDisplay" class="text-center font-semibold"></p>
+      <select id="round" class="w-full p-2 border rounded">
+        <option value="">라운드 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(3)" class="w-1/2 bg-gray-300 text-gray-700 p-2 rounded btn-hover">뒤로 가기</button>
+        <button onclick="nextPage(3)" class="w-1/2 bg-blue-500 text-white p-2 rounded btn-hover">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 4: Investment Choice -->
+    <div id="page4" class="hidden space-y-4">
+      <p id="roundDisplay" class="text-center font-semibold"></p>
+      <p class="text-center text-gray-700">나의 투자 선택은?</p>
+      <select id="investmentChoice" class="w-full p-2 border rounded">
+        <option value="">선택</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(4)" class="w-1/2 bg-gray-300 text-gray-700 p-2 rounded btn-hover">뒤로 가기</button>
+        <button id="submitBtn" onclick="submitData()" class="w-1/2 bg-green-500 text-white p-2 rounded btn-hover">제출하기</button>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="spinner"></div>
+
+    <!-- Popup -->
+    <div id="popup" class="hidden">
+      <p id="popup-message" class="text-gray-700 mb-4"></p>
+      <button onclick="closePopup()" class="btn bg-blue-600 text-white p-2 rounded btn-hover">확인</button>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let round = '';
+    let investmentChoice = '';
+    let isSubmitting = false;
+
+    // Initialize dropdowns
+    function populateOptions() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('round');
+      for (let i = 1; i <= 14; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+    }
+
+    // Show page
+    function showPage(page) {
+      document.querySelectorAll('#app > div:not(#spinner):not(#popup)').forEach(div => div.classList.add('hidden'));
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+    }
+
+    // Next page
+    function nextPage(page) {
+      if (page === 1) {
+        groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          showPopup('단체명을 입력해주세요.');
+          return;
+        }
+        document.getElementById('groupNameDisplay').textContent = `단체명: ${groupName}`;
+        showPage(2);
+      } else if (page === 2) {
+        teamName = document.getElementById('teamName').value;
+        if (!teamName) {
+          showPopup('팀명을 선택해주세요.');
+          return;
+        }
+        document.getElementById('teamNameDisplay').textContent = `팀명: ${teamName}`;
+        showPage(3);
+      } else if (page === 3) {
+        round = document.getElementById('round').value;
+        if (!round) {
+          showPopup('라운드를 선택해주세요.');
+          return;
+        }
+        document.getElementById('roundDisplay').textContent = `라운드: ${round}`;
+        showPage(4);
+      }
+    }
+
+    // Previous page
+    function prevPage(page) {
+      showPage(page - 1);
+    }
+
+    // Submit data
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      // Re-fetch values from DOM
+      groupName = document.getElementById('groupName').value.trim();
+      teamName = document.getElementById('teamName').value;
+      round = document.getElementById('round').value;
+      investmentChoice = document.getElementById('investmentChoice').value;
+
+      // Validate fields
+      const missingFields = [];
+      if (!groupName) missingFields.push('단체명');
+      if (!teamName) missingFields.push('팀명');
+      if (!round) missingFields.push('라운드');
+      if (!investmentChoice) missingFields.push('투자 선택');
+
+      if (missingFields.length > 0) {
+        console.log('Missing fields:', missingFields);
+        showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'block';
+      submitBtn.disabled = true;
+
+      const data = { groupName, teamName, round, investmentChoice };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbz8VQIWo_SIcE4jjVeYgYEXfZWl3iKLbRtnePY9ZRAflp5a_BZ3Ie4ol45v9lfec9fKOw/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, round);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, round); // Handle as success due to no-cors
+      });
+    }
+
+    // Handle submission success
+    function handleSubmissionSuccess(groupName, teamName, round) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const currentRoundNum = parseInt(round.match(/\d+/)[0]);
+      if (currentRoundNum < 14) {
+        showPopup(`${groupName}, ${teamName}, ${round} 내용이 잘 입력됐습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        const nextRound = `${currentRoundNum + 1}라운드`;
+        document.getElementById('round').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+        groupName = '';
+        teamName = '';
+        document.getElementById('groupName').value = '';
+        document.getElementById('teamName').value = '';
+      }
+
+      // Reset fields for next round
+      document.getElementById('investmentChoice').value = '';
+      investmentChoice = '';
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    // Show popup
+    function showPopup(message) {
+      document.getElementById('popup-message').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      showPage(nextPage);
+    }
+
+    // Initialization
+    window.onload = function() {
+      populateOptions();
+      showPage(1);
+    };
+  </script>
+</body>
+</html>
