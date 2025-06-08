@@ -55,7 +55,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
+            z-index: 1001; /* Increased to be topmost layer */
             align-items: center;
             justify-content: center;
         }
@@ -96,7 +96,8 @@
 
         <!-- Page 3 -->
         <div id="page3" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4"></h2>
+            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4">
+            </p>
             <select id="roundName" class="w-full p-2 border rounded mb-4">
                 <option value="">라운드 선택</option>
             </select>
@@ -274,6 +275,8 @@
             if (!groupName || !teamName || !roundName || !myChoice || !opponentTeam || !myBet) {
                 alert('모든 필드를 입력해주세요.');
                 isSubmitting = false;
+                document.getElementById('loadingSpinner').classList.add('hidden');
+                document.getElementById('submitBtn').disabled = false;
                 return;
             }
 
@@ -294,9 +297,11 @@
                 body: JSON.stringify({ groupName, teamName, roundName, myChoice, opponentTeam, myBet })
             })
             .then(() => {
+                console.log('Fetch succeeded');
                 handleSubmissionSuccess(groupName, teamName, roundName);
             })
-            .catch(() => {
+            .catch((error) => {
+                console.error('Fetch failed:', error);
                 handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
             });
         }
