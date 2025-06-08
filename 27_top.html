@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주식투자 게임(6종목)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover {
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .btn-hover:hover {
+      transform: scale(1.1);
+      background-color: #2563eb;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+    .spinner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div id="app" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <!-- Page 1: Group Name -->
+    <div id="page1" class="page flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-4">주식투자 게임(6종목)</h1>
+      <p class="text-center text-gray-700 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border rounded mb-4" placeholder="단체명 입력">
+      <button onclick="goToPage(2)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+    </div>
+
+    <!-- Page 2: Team Name -->
+    <div id="page2" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">주식투자 게임(6종목)</h1>
+      <p class="text-gray-700 mb-4">단체명: <span id="groupDisplay2"></span></p>
+      <select id="teamName" class="w-full p-2 border rounded mb-4">
+        <option value="" disabled selected>팀명 선택</option>
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(1)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button onclick="goToPage(3)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">주식투자 게임(6종목)</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupDisplay3"></span></p>
+      <p class="text-gray-700 mb-4">팀명: <span id="teamDisplay3"></span></p>
+      <select id="roundName" class="w-full p-2 border rounded mb-4">
+        <option value="" disabled selected>라운드 선택</option>
+      </select>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(2)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button onclick="goToPage(4)" class="btn-hover bg-blue-500 text-white px-4 py-2 rounded">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 4: Stock Input -->
+    <div id="page4" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">주식투자 게임(6종목)</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupDisplay4"></span></p>
+      <p class="text-gray-700 mb-2">팀명: <span id="teamDisplay4"></span></p>
+      <p class="text-gray-700 mb-4">라운드: <span id="roundDisplay4"></span></p>
+      <div class="w-full space-y-2 mb-4">
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">A 전자</label>
+          <select id="A_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">B 엔터</label>
+          <select id="B_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">C 자동차</label>
+          <select id="C_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">D 테크</label>
+          <select id="D_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">E 바이오</label>
+          <select id="E_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700">F 2차전지</label>
+          <select id="F_stock" class="w-2/3 p-2 border rounded"></select>
+        </div>
+      </div>
+      <div id="roundInfo" class="w-full text-sm text-gray-600 mb-4"></div>
+      <div class="flex space-x-4">
+        <button onclick="goToPage(3)" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded">뒤로 가기</button>
+        <button id="submitBtn" onclick="submitData()" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded">제출하기</button>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="spinner"></div>
+
+    <!-- Popup -->
+    <div id="popup" class="hidden">
+      <div class="bg-white p-6 rounded-lg">
+        <p id="text" class="text-gray-600 mb-4"></p>
+        <button onclick="closePopup()" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let isSubmitting = false;
+
+    const stockOptions = [100, 85, 70, 55, 50, 45, 30, 15, 0, -15, -30, -45, -50, -55, -70, -85, -100];
+    const roundInfo = {
+      '1라운드': `
+        A 전자: 10대 여학생들의 경쟁사 애플제품에 대한 팬덤 문화 발생<br>
+        B 엔터: BTS, 블랙핑크 급 대형 Boy, Girl 그룹 탄생<br>
+        C 자동차: 가치 있는 신규 사업 진출 위해 전환사채 발행으로 자금 조달하여 주가 상승<br>
+        D 테크: 미국 금리 상승으로 인한 전세계적 유동성 축소<br>
+        E 바이오: 코로나 종식 선언으로 인한 제약주 버블 붕괴<br>
+        F 2차전지: 전기자동차 판매 실적의 어닝쇼크 발생
+      `,
+      '2라운드': `
+        A 전자: AI GPU 선두주자인 엔비디아에 HBM3 고대역폭 메모리 공급업체로 선정<br>
+        B 엔터: 소속 아티스트들의 활약에 힘입어 콘서트, 굿즈, 앨범 등의 판매량 증가<br>
+        C 자동차: 자율주행차의 레벨3 기술 확보 실패<br>
+        D 테크: LK-99가 초전도체 또는 신물질일 가능성 대두<br>
+        E 바이오: 코로나19로 인한 독감 환자 감소<br>
+        F 2차전지: 아이엘사이언스 전고체배터리 양산 기술 특허 출원
+      `,
+      '3라운드': `
+        A 전자: 결혼 인구 감소로 인한 가전 시장 매출 감소<br>
+        B 엔터: 소속사 배우와 가수의 마약 연루 찌라시 기사 터짐<br>
+        C 자동차: 경쟁사인 중국전기차 BYD의 폭발적 성장으로 인한 자동차 판매 대수 하락<br>
+        D 테크: 서빙 로봇과 요리 로봇 그리고 배달 로봇의 대중화<br>
+        E 바이오: 코로나 19 백신 부작용으로 인한 대규모 백신 접종 거부<br>
+        F 2차전지: 미국의 초거대 리튬 광산의 개발로 인한 리튬 가격의 급격한 하락
+      `,
+      '4라운드': `
+        A 전자: 경기가 점차 호전될 것이라는 관측 우세해짐<br>
+        B 엔터: 타 엔터그룹에서 보아와 아이유를 닮은 초대형 여가수 등장<br>
+        C 자동차: 테슬라 전기차의 약진으로 인한 국내 자동차 인기 하락<br>
+        D 테크: 슈퍼컴보다 30조배 빠른 양자컴퓨팅 기술 확보<br>
+        E 바이오: 기업 오너 리스크 발생. 오너 아들의 파렴치한 학교 폭력으로 인한 국민 불매운동 시작<br>
+        F 2차전지: 전기자동차 폐배터리에서의 리튬, 코발트 추출 원천 기술 확보
+      `,
+      '5라운드': `
+        A 전자: 10대 여학생들의 경쟁사 애플제품에 대한 팬덤 문화 발생<br>
+        B 엔터: BTS, 블랙핑크 급 대형 Boy, Girl 그룹 탄생<br>
+        C 자동차: 가치 있는 신규 사업 진출 위해 전환사채 발행으로 자금 조달하여 주가 상승<br>
+        D 테크: 미국 금리 상승으로 인한 전세계적 유동성 축소<br>
+        E 바이오: 코로나 종식 선언으로 인한 제약주 버블 붕괴<br>
+        F 2차전지: 전기자동차 판매 실적의 어닝쇼크 발생
+      `,
+      '6라운드': `
+        A 전자: 정부의 친미반중 정책으로 인한 중국 내 한국제품 불매운동<br>
+        B 엔터: SM엔터 소속 아티스트들의 활동 지연 장기화<br>
+        C 자동차: 자동차 안정성 인증 통과와 연비 우수로 인한 미국에서의 판매 호조<br>
+        D 테크: 인공지능의 대중화로 인한 인공지능 기능 탑재된 제품들의 판매 실적 증가<br>
+        E 바이오: 비만치료제 위고비, 15% 체중감량...심장마비·뇌졸중 사망 발생률 20% 감소 확인<br>
+        F 2차전지: 2차 전지 지나친 기대감에 대한 피로도 발생
+      `,
+      '7라운드': `
+        A 전자: 메모리 반도체 수요 부진 장기화로 인한 반도체 감산 결정<br>
+        B 엔터: SM엔터 인수를 위한 카카오뱅크와 하이브의 경쟁<br>
+        C 자동차: 유럽에서의 모든 자동차에 대한 친환경 RE100 적용 의무화<br>
+        D 테크: 네이버 신성장동력인 인공지능(AI) 플랫폼 CLOVA 공개로 승부수<br>
+        E 바이오: 장단기 금리차 역전으로 인한 미래 경기 불투명성 확대<br>
+        F 2차전지: 폐배터리 재활용 비용의 증가로 인한 이익 감소 예상됨
+      `,
+      '8라운드': `
+        A 전자: 인공지능 자동 번역 기능 탑재된 스마트폰 출시<br>
+        B 엔터: K-팝 가수들의 인지도 확산과 엔데믹에 따른 콘서트 가격 상승<br>
+        C 자동차: 신규 사업 진출 위한 인수 합병 성공<br>
+        D 테크: 카카오에 대해 정부가 시세조종·불공정거래 의혹을 조사하면서 오너 리스크 발생<br>
+        E 바이오: 미국 10년물 국채금리 상승으로 인한 은행 금리 인상으로 은행 예금으로 자금 유입 급증<br>
+        F 2차전지: 리튬이온배터리 제조원가의 35%를 차지하는 양극재 생산 공장 증설
+      `,
+      '9라운드': `
+        A 전자: 광범위한 휴대폰의 보급으로 인한 TV, 컴퓨터 판매 하락<br>
+        B 엔터: 미국 걸그룹 육성 프로젝트 ‘A2K’ 프로젝트 론칭<br>
+        C 자동차: 차량용 반도체 수급난 완화로 인한 완성차 재고 감소<br>
+        D 테크: 비트코인과 인공지능 유행으로 인한 채굴을 위한 그래픽카드 수요 증가<br>
+        E 바이오: DNA에서 특정 유전자를 잘라내 교정하는 유전자가위 기술을 활용한 최초의 의약품 Caseevy FDA 승인<br>
+        F 2차전지: 공모주 청약 방식을 통한 유상증자로 기업 자금 조달과 이로 인한 주식 가치 급락
+      `,
+      '10라운드': `
+        A 전자: 미국의 소비자물가지수(CPI) 상승률이 시장 예상치를 하회해서 금리 동결 가능성 커짐<br>
+        B 엔터: 지속되는 K-팝 아티스트들의 성장세와 4세대 아이돌 그룹의 세대교체가 성공<br>
+        C 자동차: 장단기 금리차 역전으로 인한 미래 경기 불투명성 확대<br>
+        D 테크: 신규 사업을 위한 전환사채와 신주인수권 발행<br>
+        E 바이오: 어닝 서프라이즈-영업실적 예상 외 호조<br>
+        F 2차전지: 흑연계 음극재보다 에너지 밀도가 10배 높은 실리콘 음극재 개발 성공
+      `,
+      '11라운드': `
+        A 전자: 미래 핵심 트렌드가 되는 사업에 해당하는 기술 보유<br>
+        B 엔터: 블랙핑크, 트레저의 투어 성과로 콘서트, MD, 로열티 매출 크게 증가<br>
+        C 자동차: 테슬라 전기자동차의 폭발적 인기로 인한 기존 엔진자동차 수요 대폭 감소<br>
+        D 테크: 미국 금리 상승으로 인한 전세계적 유동성 축소<br>
+        E 바이오: 피 한방울로 암 조기진단하는 액체생검 염기서열분석 인기<br>
+        F 2차전지: 실리콘 음극재의 부피 팽창을 완화해주는 탄소나노튜브 도전재 수익 악화
+      `,
+      '12라운드': `
+        A 전자: 전쟁으로 인한 반도체 경기 불황의 장기화<br>
+        B 엔터: BTS 군입대 최종 확정<br>
+        C 자동차: 차량용 반도체 공급 부족으로 인한 차량 출고 지연<br>
+        D 테크: 경쟁사인 MS와 OpenAI의 ChatGPT 협업으로 인한 AZURE 클라우드 시장 점유율 증가<br>
+        E 바이오: 버블 붕괴로 인한 기업 미래가치 하락<br>
+        F 2차전지: 2차전지의 코발트 대체 기술 개발 성공
+      `
+    };
+
+    // Initialize dropdowns
+    function initDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.text = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.text = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드'; // Default to 1라운드
+
+      ['A_stock', 'B_stock', 'C_stock', 'D_stock', 'E_stock', 'F_stock'].forEach(id => {
+        const select = document.getElementById(id);
+        stockOptions.forEach(value => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.text = value;
+          select.appendChild(option);
+        });
+      });
+    }
+
+    // Navigate to page
+    function goToPage(page) {
+      if (page === 2 && !document.getElementById('groupName').value.trim()) {
+        showPopup('단체명을 입력해주세요.');
+        return;
+      }
+      if (page === 3 && !document.getElementById('teamName').value) {
+        showPopup('팀명을 선택해주세요.');
+        return;
+      }
+      if (page === 4 && !document.getElementById('roundName').value) {
+        showPopup('라운드를 선택해주세요.');
+        return;
+      }
+
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+
+      if (page === 2) {
+        groupName = document.getElementById('groupName').value.trim();
+        document.getElementById('groupDisplay2').textContent = groupName;
+      }
+      if (page === 3) {
+        teamName = document.getElementById('teamName').value;
+        document.getElementById('groupDisplay3').textContent = groupName;
+        document.getElementById('teamDisplay3').textContent = teamName;
+      }
+      if (page === 4) {
+        roundName = document.getElementById('roundName').value;
+        document.getElementById('groupDisplay4').textContent = groupName;
+        document.getElementById('teamDisplay4').textContent = teamName;
+        document.getElementById('roundDisplay4').textContent = roundName;
+        document.getElementById('roundInfo').innerHTML = roundInfo[roundName] || '';
+      }
+    }
+
+    // Submit data
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      // Re-fetch values from DOM
+      groupName = document.getElementById('groupName').value.trim();
+      teamName = document.getElementById('teamName').value;
+      roundName = document.getElementById('roundName').value;
+      const A_stock = document.getElementById('A_stock').value;
+      const B_stock = document.getElementById('B_stock').value;
+      const C_stock = document.getElementById('C_stock').value;
+      const D_stock = document.getElementById('D_stock').value;
+      const E_stock = document.getElementById('E_stock').value;
+      const F_stock = document.getElementById('F_stock').value;
+
+      // Validate fields
+      const missingFields = [];
+      if (!groupName) missingFields.push('단체명');
+      if (!teamName) missingFields.push('팀명');
+      if (!roundName) missingFields.push('라운드');
+      if (!A_stock) missingFields.push('A 전자');
+      if (!B_stock) missingFields.push('B 엔터');
+      if (!C_stock) missingFields.push('C 자동차');
+      if (!D_stock) missingFields.push('D 테크');
+      if (!E_stock) missingFields.push('E 바이오');
+      if (!F_stock) missingFields.push('F 2차전지');
+
+      if (missingFields.length > 0) {
+        console.log('Missing fields:', missingFields);
+        showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'block';
+      submitBtn.disabled = true;
+
+      const data = {
+        groupName,
+        teamName,
+        roundName,
+        A_stock,
+        B_stock,
+        C_stock,
+        D_stock,
+        E_stock,
+        F_stock
+      };
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbzSQZtc3JTFXZz7LD_itGi86aTN0XEkWo0WgTutLA28FZGg0qvslNRq0pkljCMQjVdY/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    // Handle submission success
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (currentRoundNum < 12) {
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        const nextRound = `${currentRoundNum + 1}라운드`;
+        document.getElementById('roundName').value = nextRound;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+        groupName = '';
+        teamName = '';
+        roundName = '';
+        document.getElementById('groupName').value = '';
+        document.getElementById('teamName').value = '';
+        document.getElementById('roundName').value = '';
+      }
+
+      // Reset fields for next round
+      ['A_stock', 'B_stock', 'C_stock', 'D_stock', 'E_stock', 'F_stock'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    // Show popup
+    function showPopup(message) {
+      document.getElementById('text').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      goToPage(nextPage);
+    }
+
+    // Initialize
+    window.onload = function() {
+      initDropdowns();
+      goToPage(1);
+    };
+  </script>
+</body>
+</html>
