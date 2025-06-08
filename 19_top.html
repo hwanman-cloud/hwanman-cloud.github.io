@@ -1,4 +1,3 @@
-아래 프로그램은 run 형태로 앱스스크립트를 이용해 스프레드시트에 데이터를 저장하는 형태로서 이전의 잘 작동하는 프로그램이야.
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -94,7 +93,7 @@
       <select id="dustSource" class="p-2 border rounded-lg flex-1"></select>
     </div>
     <p class="text-sm text-gray-600 mt-2">환경 정책 번호-미세먼지 배출 형태/배출량/이익<br>
-      1번: 차량 배기가스/400/160, 2번: 석탄화력 발전 매연/370/148, 3번: 공장 굴뚝 연기/330/132, 4번: 건설 현장 먼지/300/120, 5번: 쓰레기 소각장 먼지/270/108, 6번: 경유 선박 매연/250/100, 7번: 농업 활동 발생 먼지/220/88, 8번: 주방 요리 연기/200/80</p>
+      1번: 차량 배기가스/400/160, 2번: 석탄화력 발전 매연/370/148, 3번: 공장 굴뚝 연기/330/132, 4번: 건설 현장 먼지/300/120, 5번: 쓰레기 소각주방 요리 연설/270/108, 6번: 경유 선박 매연/250/100, 7번: 농업 활동 발생 먼지/220/88, 8번 제거: 주방 요리 연기/200/80</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(3)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(5)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
@@ -103,13 +102,13 @@
 
   <!-- Page 5: External Inflow Selection -->
   <div id="page5" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay5"></p>
     <div class="flex items-center mb-4">
       <label class="mr-2"><i class="fas fa-cloud mr-1 text-blue-600"></i>무작위 외부유입 기상 환경</label>
       <select id="externalInflow" class="p-2 border rounded-lg flex-1"></select>
     </div>
-    <p class="text-sm text-gray-600 mt-2">외부유입 형태: 북한 공해 유입, 몽골 황사 유입, 중국 공해 유입, 대기 정체, 미풍 발생, 약풍 발생, 중풍 발생, 강풍(태풍) 발생</p>
+    <p class="text-sm text-gray-600 mt-2">외부유입 형태: 북한 공해 유입, 몽골 황사, 중국 공해 유입, 대기 정체, 미풍 발생, 약풍 발생, 중풍 발생, 강풍(태풍) 발생</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(4)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(6)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
@@ -118,7 +117,7 @@
 
   <!-- Page 6: Enforced Team Selection -->
   <div id="page6" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay6"></p>
     <div class="flex items-center mb-4">
       <label class="mr-2"><i class="fas fa-user-shield mr-1 text-blue-600"></i>미세먼지 배출 억제를 강제할 팀</label>
@@ -132,14 +131,14 @@
 
   <!-- Page 7: Dust Reduction Policy Selection -->
   <div id="page7" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay7"></p>
     <div class="flex items-center mb-4">
       <label class="mr-2"><i class="fas fa-leaf mr-1 text-blue-600"></i>미세먼지 감소 정책 번호 선택</label>
       <select id="dustReductionPolicy" class="p-2 border rounded-lg flex-1"></select>
     </div>
     <p class="text-sm text-gray-600 mt-2">강제할 미세먼지 감소 정책/미세먼지 제거량/이익 감소량<br>
-      1번: 고속철도 건설/-70/-20, 2번: 경유차 생산 금지/-60/-40, 3번: 미세먼지 저감 장치 설치 의무화/-45/-50, 4번: 가정용 태양광 설치 의무화/-35/-30, 5번: 인공 강우 실험 비용 지출/-30/0, 6번: 도심에 초대형 공기청정기 설치/-25/-5, 7번: 도시 숲 건설/-20/-25, 8번: 도로에 살수차 뿌리기/-10/-10, 9번: 노후 경유차 운행 금지/-5/-30, 10번: 일회용 플라스틱 사용 규제/0/-25</p>
+      1번: 고속철도 건설/-70/-20, 2번: 경유차 생산 금지/-60/-40, 3번: 미세먼지 저감 장치 설치 의무화/-45/-30, 4번: 가정용 태양광 설치 의무화/-35/-30, 5번: 인공 강우 실험 비용 지출/-30/0, 6번: 도심에 초대형 공기청정기 설치/-25/-5, 7번: 도시 숲 건설/-20/-25, 8번: 도로에 살수차 뿌리기/-10/-10, 9번: 노후 경유차 운행 금지/-5/-30, 10번: 일회용 플라스틱 사용 규제/0/-25</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(6)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(8)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
@@ -148,7 +147,7 @@
 
   <!-- Page 8: Dust Habit Selection -->
   <div id="page8" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay8"></p>
     <div class="flex items-center mb-4">
       <label class="mr-2"><i class="fas fa-lungs mr-1 text-blue-600"></i>무작위 미세먼지 흡입과 나의 습관</label>
@@ -277,7 +276,7 @@
       } else if (page === 6) {
         externalInflow = document.getElementById('externalInflow').value;
         if (!externalInflow) {
-          showPopup('무생위 외부유입 기상 환경을 선택해주세요!');
+          showPopup('무작위 외부유입 기상 환경을 선택해주세요!');
           return;
         }
         document.getElementById('groupTeamRoundDisplay6').textContent = `${groupName} - ${teamName} - ${roundName}`;
@@ -330,7 +329,7 @@
       };
       console.log('Submitting:', data);
 
-      fetch('https://script.google.com/macros/s/AKfycbw8B2b0N5p8vS5M8G2W4YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbwEcmJLe032Ev1ACTsxOZbnP7KzOveczcpgy6XEBy1HyeoHCAa4GoSb4mHgbMl6p74Y/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -353,7 +352,7 @@
 
       const roundNum = parseInt(roundName.match(/\d+/)[0]);
       if (roundNum < 12) {
-        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
+        showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력되었습니다.`);
         document.getElementById('popup').dataset.nextPage = 3;
         const nextRound = `${roundNum + 1}라운드`;
         document.getElementById('roundName').value = nextRound;
@@ -394,95 +393,8 @@
     window.onload = function() {
       initializeDropdowns();
       document.getElementById('spinner').style.display = 'none';
+      goToPage(1);
     };
   </script>
-</body>
-</html>
-그런데 위 프로그램을 fetch를 이용해서 앱스스크립트로 입력하려고 해. 모든 기능은 그대로 유지하고 .fetch를 사용해서 잘 작동한 프로그램은 아래와 같아. 두 프로그램을 결합하여 잘 작동하는 프로그램으로 만들어 줘.
-        // 데이터 제출
-        function submitData() {
-            if (isSubmitting) return;
-            isSubmitting = true;
-
-            const name = document.getElementById('groupName').value.trim();
-            const team = document.getElementById('teamName').value;
-            const round = document.getElementById('round').value;
-            const choice = document.getElementById('myChoice').value;
-            const percentagePrediction = document.getElementById('percentagePrediction').value;
-            const bet = document.getElementById('betting').value;
-
-            // Validate 물부족과 수자원 관련 fields
-            if (!name || !team || !round || !choice || !percentagePrediction || !bet) {
-                alert('모든 필드를 입력해주세요.');
-                isSubmitting = false;
-                return;
-            }
-
-            // Log data for debugging
-            console.log('Submitting:', { name, team, round, choice, percentagePrediction, bet });
-
-            const spinner = document.getElementById('spinner');
-            const submitBtn = document.getElementById('submitBtn');
-            spinner.style.display = 'block';
-            submitBtn.disabled = true;
-
-            fetch('https://script.google.com/macros/s/AKfycbxdb0KctVNkJ8n6ADKhTJsG2YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
-            })
-            .then(() => {
-                handleSubmissionSuccess(name, team, round);
-            })
-            .catch(() => {
-                handleSubmissionSuccess(name, team, round); // Handle as success due to no-cors
-            });
-        }
-
-        function handleSubmissionSuccess(name, team, round) {
-            const spinner = document.getElementById('spinner');
-            const submitBtn = document.getElementById('submitBtn');
-            spinner.style.display = 'none';
-
-            const currentRoundNum = parseInt(round.match(/\d+/)[0]);
-            if (currentRoundNum < 10) {
-                showPopup(`${name}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
-                document.getElementById('popup').dataset.nextPage = 3;
-                const nextRound = `${currentRoundNum + 1}라운드`;
-                document.getElementById('round').value = nextRound;
-            } else {
-                showPopup('모든 입력이 완료되었습니다!');
-                document.getElementById('popup').dataset.nextPage = 1;
-            }
-
-            // Reset fields for next round
-            document.getElementById('myChoice').value = '';
-            document.getElementById('percentagePrediction').value = '';
-            document.getElementById('betting').value = '';
-
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                isSubmitting = false;
-            }, 3000);
-        }
-
-        function showPopup(message) {
-            document.getElementById('popup-message').textContent = message;
-            document.getElementById('popup').style.display = 'block';
-        }
-
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
-            showPage(nextPage);
-        }
-
-        // 초기화
-        populateOptions();
-        showPage(1);
-    </script>
 </body>
 </html>
