@@ -225,10 +225,10 @@
             gameData.betting = document.getElementById('betting').value;
 
             document.getElementById('groupNameDisplay').textContent = `단체명: ${gameData.groupName}`;
-            document.getElementById('teamNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}`;
-            document.getElementById('roundNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}, 라운드: ${gameData.roundName}`;
-            document.getElementById('myCardDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}, 라운드: ${gameData.roundName}, 카드: ${gameData.myCard}`;
-            document.getElementById('opponentTeamDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}, 라운드: ${gameData.roundName}, 카드: ${gameData.myCard}, 상대팀: ${gameData.opponentTeam}`;
+            document.getElementById('teamNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? gameData.teamName + '팀' : ''}`;
+            document.getElementById('roundNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? gameData.teamName + '팀' : ''}, 라운드: ${gameData.roundName ? gameData.roundName + '라운드' : ''}`;
+            document.getElementById('myCardDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? gameData.teamName + '팀' : ''}, 라운드: ${gameData.roundName ? gameData.roundName + '라운드' : ''}, 카드: ${gameData.myCard}`;
+            document.getElementById('opponentTeamDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? gameData.teamName + '팀' : ''}, 라운드: ${gameData.roundName ? gameData.roundName + '라운드' : ''}, 카드: ${gameData.myCard}, 상대팀: ${gameData.opponentTeam ? gameData.opponentTeam + '팀' : ''}`;
         }
 
         async function submitData() {
@@ -267,13 +267,13 @@
             const submitBtn = document.getElementById('submitBtn');
             spinner.classList.add('hidden');
 
-            const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
+            const currentRoundNum = parseInt(roundName);
             if (currentRoundNum < 10) {
-                showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
+                showPopup(`${groupName}, ${teamName}팀, ${currentRoundNum}라운드 내용이 잘 입력됐습니다.`);
                 document.getElementById('popup').dataset.nextPage = 3;
-                const nextRound = `${currentRoundNum + 1}라운드`;
-                document.getElementById('roundName').value = nextRound;
-                gameData.roundName = nextRound;
+                const nextRoundNum = currentRoundNum + 1;
+                document.getElementById('roundName').value = nextRoundNum; // Set the select value to the next round number
+                gameData.roundName = nextRoundNum.toString();
             } else {
                 showPopup('모든 입력이 완료되었습니다!');
                 document.getElementById('popup').dataset.nextPage = 1;
@@ -302,6 +302,7 @@
                 document.getElementById(`page${currentPage}`).classList.remove('active');
                 document.getElementById(`page${nextPage}`).classList.add('active');
                 currentPage = nextPage;
+                updateDisplays(); // Update displays to reflect the new round selection
             }
         }
 
