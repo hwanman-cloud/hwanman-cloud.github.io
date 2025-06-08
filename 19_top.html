@@ -1,3 +1,4 @@
+아래 프로그램은 run 형태로 앱스스크립트를 이용해 스프레드시트에 데이터를 저장하는 형태로서 이전의 잘 작동하는 프로그램이야.
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,6 +7,8 @@
   <title>미세먼지 게임(내 몸을 보호하라)</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome CDN for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     .btn-hover:hover {
       transform: scale(1.05);
@@ -13,7 +16,7 @@
     }
     .btn-active:active {
       transform: scale(0.95);
-      background-color: #2563eb;
+      background-color: #1e40af;
     }
     .spinner {
       display: none;
@@ -43,98 +46,129 @@
   </style>
 </head>
 <body class="bg-blue-50 min-h-screen flex items-center justify-center text-gray-800">
-  <!-- 페이지들 -->
+  <!-- Page 1: Group Name Input -->
   <div id="page1" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-4">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-4"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
-    <input id="groupName" type="text" class="w-full p-2 border rounded-lg mb-4" placeholder="단체명 입력">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-building mr-2 text-blue-600"></i>
+      <input id="groupName" type="text" class="w-full p-2 border rounded-lg" placeholder="단체명 입력">
+    </div>
     <button onclick="goToPage(2)" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
   </div>
 
+  <!-- Page 2: Team Name Selection -->
   <div id="page2" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupNameDisplay2"></p>
-    <select id="teamName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex items-center mb-4">
+      <i class="fas fa-users mr-2 text-blue-600"></i>
+      <select id="teamName" class="w-full p-2 border rounded-lg"></select>
+    </div>
     <div class="flex space-x-2">
       <button onclick="goToPage(1)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(3)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
     </div>
   </div>
 
+  <!-- Page 3: Round Selection -->
   <div id="page3" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamDisplay3"></p>
-    <select id="roundName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex items-center mb-4">
+      <i class="fas fa-calendar-alt mr-2 text-blue-600"></i>
+      <select id="roundName" class="w-full p-2 border rounded-lg"></select>
+    </div>
     <div class="flex space-x-2">
       <button onclick="goToPage(2)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(4)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
     </div>
   </div>
 
+  <!-- Page 4: Dust Source Selection -->
   <div id="page4" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay4"></p>
     <div class="flex items-center mb-4">
-      <label class="mr-2">산림 벌목 면적</label>
-      <select id="deforestationArea" class="p-2 border rounded-lg flex-1"></select>
+      <label class="mr-2"><i class="fas fa-industry mr-1 text-blue-600"></i>미세먼지 발생원</label>
+      <select id="dustSource" class="p-2 border rounded-lg flex-1"></select>
     </div>
-    <p class="text-sm text-gray-600 mt-2">산림을 많이 벌목하면 이익이 많음. 그러나 지나치게 벌목하면 황무지가 될 수도 있음</p>
+    <p class="text-sm text-gray-600 mt-2">환경 정책 번호-미세먼지 배출 형태/배출량/이익<br>
+      1번: 차량 배기가스/400/160, 2번: 석탄화력 발전 매연/370/148, 3번: 공장 굴뚝 연기/330/132, 4번: 건설 현장 먼지/300/120, 5번: 쓰레기 소각장 먼지/270/108, 6번: 경유 선박 매연/250/100, 7번: 농업 활동 발생 먼지/220/88, 8번: 주방 요리 연기/200/80</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(3)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(5)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
     </div>
   </div>
 
+  <!-- Page 5: External Inflow Selection -->
   <div id="page5" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay5"></p>
     <div class="flex items-center mb-4">
-      <label class="mr-2">무작위 기후 선택</label>
-      <select id="randomClimate" class="p-2 border rounded-lg flex-1"></select>
+      <label class="mr-2"><i class="fas fa-cloud mr-1 text-blue-600"></i>무작위 외부유입 기상 환경</label>
+      <select id="externalInflow" class="p-2 border rounded-lg flex-1"></select>
     </div>
-    <p class="text-sm text-gray-600 mt-2">기후와 날씨 종류: 가뭄, 평범한 날씨, 간헐적 비, 메마름, 풍족한 강수량</p>
+    <p class="text-sm text-gray-600 mt-2">외부유입 형태: 북한 공해 유입, 몽골 황사 유입, 중국 공해 유입, 대기 정체, 미풍 발생, 약풍 발생, 중풍 발생, 강풍(태풍) 발생</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(4)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(6)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
     </div>
   </div>
 
+  <!-- Page 6: Enforced Team Selection -->
   <div id="page6" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay6"></p>
     <div class="flex items-center mb-4">
-      <label class="mr-2">무작위 황사 피해 발생</label>
-      <select id="randomDustDamage" class="p-2 border rounded-lg flex-1"></select>
+      <label class="mr-2"><i class="fas fa-user-shield mr-1 text-blue-600"></i>미세먼지 배출 억제를 강제할 팀</label>
+      <select id="enforcedTeam" class="p-2 border rounded-lg flex-1"></select>
     </div>
-    <p class="text-sm text-gray-600 mt-2">황사 피해의 내용/피해비용: 1번: 반도체 불량률 증가/10, 2번: 식물 식생 감소/20, 3번: 중금속 흡입/30, 4번: 천식 유발/40, 5번: 호흡기 질환 유발/50, 6번: 폐조직 손상/60, 7번: 만성 폐쇄성 질환 유발/70</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(5)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
       <button onclick="goToPage(7)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
     </div>
   </div>
 
+  <!-- Page 7: Dust Reduction Policy Selection -->
   <div id="page7" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">미세먼지 게임(내 몸을 보호하라)</h1>
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
     <p class="text-center mb-4" id="groupTeamRoundDisplay7"></p>
     <div class="flex items-center mb-4">
-      <label class="mr-2">무작위 산림 훼손 행동과 습관</label>
-      <select id="randomDeforestation" class="p-2 border rounded-lg flex-1"></select>
+      <label class="mr-2"><i class="fas fa-leaf mr-1 text-blue-600"></i>미세먼지 감소 정책 번호 선택</label>
+      <select id="dustReductionPolicy" class="p-2 border rounded-lg flex-1"></select>
     </div>
-    <p class="text-sm text-gray-600 mt-2">무작위 산림 훼손 행동과 습관과 피해액: 1번: 팜유로 튀긴 음식 좋아!/3, 2번: 고기가 좋아, 특히 소고기!/6, 3번: 담배 피우는 습관! 산불 발생의 주요 원인/9, 4번: 문명 생활이 좋아! 신도시 개발 찬성/12, 5번: 경제가 우선이지! 산업단지 조성/15, 6번: 빈부 격차 심화! 나무 베어서 가난 탈피/18</p>
+    <p class="text-sm text-gray-600 mt-2">강제할 미세먼지 감소 정책/미세먼지 제거량/이익 감소량<br>
+      1번: 고속철도 건설/-70/-20, 2번: 경유차 생산 금지/-60/-40, 3번: 미세먼지 저감 장치 설치 의무화/-45/-50, 4번: 가정용 태양광 설치 의무화/-35/-30, 5번: 인공 강우 실험 비용 지출/-30/0, 6번: 도심에 초대형 공기청정기 설치/-25/-5, 7번: 도시 숲 건설/-20/-25, 8번: 도로에 살수차 뿌리기/-10/-10, 9번: 노후 경유차 운행 금지/-5/-30, 10번: 일회용 플라스틱 사용 규제/0/-25</p>
     <div class="flex space-x-2">
       <button onclick="goToPage(6)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(8)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
     </div>
-    <button id="submitBtn" onclick="submitData()" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active mt-4">제출하기</button>
   </div>
 
-  <!-- 로딩 스피너 -->
+  <!-- Page 8: Dust Habit Selection -->
+  <div id="page8" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2"><i class="fas fa-smog mr-2"></i>미세먼지 게임(내 몸을 보호하라)</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay8"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2"><i class="fas fa-lungs mr-1 text-blue-600"></i>무작위 미세먼지 흡입과 나의 습관</label>
+      <select id="dustHabit" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">1번: 과소비 습관, 2번: 소각 쓰레기장 주변에 거주, 3번: 대중 교통 기피, 4번: 공장 굴뚝 연기 방치, 5번: 자동차 매연 방치, 6번: 건설 공사장 먼지 방치, 7번: 산림 벌채, 8번: 전기 절약 안함</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+    </div>
+    <button id="submitBtn" onclick="submitData()" class="w-full p-2 bg-blue-600 text-white rounded-lg btn-hover btn-active mt-4">제출하기</button>
+  </div>
+
+  <!-- Loading Spinner -->
   <div id="spinner" class="spinner flex">
     <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
   </div>
 
-  <!-- 팝업 -->
+  <!-- Popup -->
   <div id="popup" class="popup">
-    <p id="popupMessage"></p>
+    <p id="popupMessage" class="text-lg text-blue-800 mb-4"></p>
     <button onclick="closePopup()" class="mt-4 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">확인</button>
   </div>
 
@@ -143,10 +177,11 @@
     let groupName = '';
     let teamName = '';
     let roundName = '';
-    let deforestationArea = 0;
-    let randomClimate = 0;
-    let randomDustDamage = 0;
-    let randomDeforestation = 0;
+    let dustSource = 0;
+    let externalInflow = 0;
+    let enforcedTeam = '';
+    let dustReductionPolicy = 0;
+    let dustHabit = 0;
     let isSubmitting = false;
 
     function initializeDropdowns() {
@@ -159,49 +194,58 @@
       }
 
       const roundSelect = document.getElementById('roundName');
-      for (let i = 1; i <= 13; i++) {
+      for (let i = 1; i <= 12; i++) {
         const option = document.createElement('option');
         option.value = `${i}라운드`;
         option.textContent = `${i}라운드`;
         roundSelect.appendChild(option);
       }
+      roundSelect.value = '1라운드'; // Default to 1라운드
 
-      const deforestationAreaSelect = document.getElementById('deforestationArea');
-      for (let i = 1; i <= 5; i++) {
+      const dustSourceSelect = document.getElementById('dustSource');
+      for (let i = 1; i <= 8; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = i;
-        deforestationAreaSelect.appendChild(option);
+        dustSourceSelect.appendChild(option);
       }
 
-      const randomClimateSelect = document.getElementById('randomClimate');
-      for (let i = 1; i <= 5; i++) {
+      const externalInflowSelect = document.getElementById('externalInflow');
+      for (let i = 1; i <= 8; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = i;
-        randomClimateSelect.appendChild(option);
+        externalInflowSelect.appendChild(option);
       }
 
-      const randomDustDamageSelect = document.getElementById('randomDustDamage');
-      for (let i = 1; i <= 7; i++) {
+      const enforcedTeamSelect = document.getElementById('enforcedTeam');
+      for (let i = 1; i <= 60; i++) {
         const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i;
-        randomDustDamageSelect.appendChild(option);
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        enforcedTeamSelect.appendChild(option);
       }
 
-      const randomDeforestationSelect = document.getElementById('randomDeforestation');
-      for (let i = 1; i <= 6; i++) {
+      const dustReductionPolicySelect = document.getElementById('dustReductionPolicy');
+      for (let i = 1; i <= 10; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = i;
-        randomDeforestationSelect.appendChild(option);
+        dustReductionPolicySelect.appendChild(option);
+      }
+
+      const dustHabitSelect = document.getElementById('dustHabit');
+      for (let i = 1; i <= 8; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        dustHabitSelect.appendChild(option);
       }
     }
 
     function goToPage(page) {
       if (page === currentPage) return;
-      
+
       if (page === 2) {
         groupName = document.getElementById('groupName').value.trim();
         if (!groupName) {
@@ -224,26 +268,33 @@
         }
         document.getElementById('groupTeamRoundDisplay4').textContent = `${groupName} - ${teamName} - ${roundName}`;
       } else if (page === 5) {
-        deforestationArea = document.getElementById('deforestationArea').value;
-        if (!deforestationArea) {
-          showPopup('산림 벌목 면적을 선택해주세요!');
+        dustSource = document.getElementById('dustSource').value;
+        if (!dustSource) {
+          showPopup('미세먼지 발생원을 선택해주세요!');
           return;
         }
         document.getElementById('groupTeamRoundDisplay5').textContent = `${groupName} - ${teamName} - ${roundName}`;
       } else if (page === 6) {
-        randomClimate = document.getElementById('randomClimate').value;
-        if (!randomClimate) {
-          showPopup('무작위 기후를 선택해주세요!');
+        externalInflow = document.getElementById('externalInflow').value;
+        if (!externalInflow) {
+          showPopup('무생위 외부유입 기상 환경을 선택해주세요!');
           return;
         }
         document.getElementById('groupTeamRoundDisplay6').textContent = `${groupName} - ${teamName} - ${roundName}`;
       } else if (page === 7) {
-        randomDustDamage = document.getElementById('randomDustDamage').value;
-        if (!randomDustDamage) {
-          showPopup('무작위 황사 피해를 선택해주세요!');
+        enforcedTeam = document.getElementById('enforcedTeam').value;
+        if (!enforcedTeam) {
+          showPopup('미세먼지 배출 억제를 강제할 팀을 선택해주세요!');
           return;
         }
         document.getElementById('groupTeamRoundDisplay7').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 8) {
+        dustReductionPolicy = document.getElementById('dustReductionPolicy').value;
+        if (!dustReductionPolicy) {
+          showPopup('미세먼지 감소 정책 번호를 선택해주세요!');
+          return;
+        }
+        document.getElementById('groupTeamRoundDisplay8').textContent = `${groupName} - ${teamName} - ${roundName}`;
       }
 
       document.getElementById(`page${currentPage}`).classList.add('hidden');
@@ -255,8 +306,8 @@
       if (isSubmitting) return;
       isSubmitting = true;
 
-      randomDeforestation = document.getElementById('randomDeforestation').value;
-      if (!groupName || !teamName || !roundName || !deforestationArea || !randomClimate || !randomDustDamage || !randomDeforestation) {
+      dustHabit = document.getElementById('dustHabit').value;
+      if (!groupName || !teamName || !roundName || !dustSource || !externalInflow || !enforcedTeam || !dustReductionPolicy || !dustHabit) {
         showPopup('모든 항목을 입력해주세요.');
         isSubmitting = false;
         return;
@@ -271,14 +322,15 @@
         groupName,
         teamName,
         roundName,
-        deforestationArea,
-        randomClimate,
-        randomDustDamage,
-        randomDeforestation
+        dustSource,
+        externalInflow,
+        enforcedTeam,
+        dustReductionPolicy,
+        dustHabit
       };
       console.log('Submitting:', data);
 
-      fetch('https://script.google.com/macros/s/AKfycbwSz5LWT4a43AST7vCpMxhtM4wuorcLnIY6fkqADYAnSphuouFsqh6b_u9-sZ9qW4kQ/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbw8B2b0N5p8vS5M8G2W4YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -300,7 +352,7 @@
       spinner.style.display = 'none';
 
       const roundNum = parseInt(roundName.match(/\d+/)[0]);
-      if (roundNum < 13) {
+      if (roundNum < 12) {
         showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
         document.getElementById('popup').dataset.nextPage = 3;
         const nextRound = `${roundNum + 1}라운드`;
@@ -311,14 +363,16 @@
       }
 
       // Reset fields for next round
-      document.getElementById('deforestationArea').value = '';
-      document.getElementById('randomClimate').value = '';
-      document.getElementById('randomDustDamage').value = '';
-      document.getElementById('randomDeforestation').value = '';
-      deforestationArea = 0;
-      randomClimate = 0;
-      randomDustDamage = 0;
-      randomDeforestation = 0;
+      document.getElementById('dustSource').value = '';
+      document.getElementById('externalInflow').value = '';
+      document.getElementById('enforcedTeam').value = '';
+      document.getElementById('dustReductionPolicy').value = '';
+      document.getElementById('dustHabit').value = '';
+      dustSource = 0;
+      externalInflow = 0;
+      enforcedTeam = '';
+      dustReductionPolicy = 0;
+      dustHabit = 0;
 
       setTimeout(() => {
         submitBtn.disabled = false;
@@ -342,5 +396,93 @@
       document.getElementById('spinner').style.display = 'none';
     };
   </script>
+</body>
+</html>
+그런데 위 프로그램을 fetch를 이용해서 앱스스크립트로 입력하려고 해. 모든 기능은 그대로 유지하고 .fetch를 사용해서 잘 작동한 프로그램은 아래와 같아. 두 프로그램을 결합하여 잘 작동하는 프로그램으로 만들어 줘.
+        // 데이터 제출
+        function submitData() {
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const name = document.getElementById('groupName').value.trim();
+            const team = document.getElementById('teamName').value;
+            const round = document.getElementById('round').value;
+            const choice = document.getElementById('myChoice').value;
+            const percentagePrediction = document.getElementById('percentagePrediction').value;
+            const bet = document.getElementById('betting').value;
+
+            // Validate 물부족과 수자원 관련 fields
+            if (!name || !team || !round || !choice || !percentagePrediction || !bet) {
+                alert('모든 필드를 입력해주세요.');
+                isSubmitting = false;
+                return;
+            }
+
+            // Log data for debugging
+            console.log('Submitting:', { name, team, round, choice, percentagePrediction, bet });
+
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            fetch('https://script.google.com/macros/s/AKfycbxdb0KctVNkJ8n6ADKhTJsG2YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
+            })
+            .then(() => {
+                handleSubmissionSuccess(name, team, round);
+            })
+            .catch(() => {
+                handleSubmissionSuccess(name, team, round); // Handle as success due to no-cors
+            });
+        }
+
+        function handleSubmissionSuccess(name, team, round) {
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'none';
+
+            const currentRoundNum = parseInt(round.match(/\d+/)[0]);
+            if (currentRoundNum < 10) {
+                showPopup(`${name}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
+                document.getElementById('popup').dataset.nextPage = 3;
+                const nextRound = `${currentRoundNum + 1}라운드`;
+                document.getElementById('round').value = nextRound;
+            } else {
+                showPopup('모든 입력이 완료되었습니다!');
+                document.getElementById('popup').dataset.nextPage = 1;
+            }
+
+            // Reset fields for next round
+            document.getElementById('myChoice').value = '';
+            document.getElementById('percentagePrediction').value = '';
+            document.getElementById('betting').value = '';
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            }, 3000);
+        }
+
+        function showPopup(message) {
+            document.getElementById('popup-message').textContent = message;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+            showPage(nextPage);
+        }
+
+        // 초기화
+        populateOptions();
+        showPage(1);
+    </script>
 </body>
 </html>
