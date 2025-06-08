@@ -36,6 +36,19 @@
             0% { transform: translate(-50%, -50%) rotate(0deg); } 
             100% { transform: translate(-50%, -50%) rotate(360deg); } 
         }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
     </style>
 </head>
 <body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
@@ -153,12 +166,18 @@
             </select>
             <div class="flex justify-between gap-2">
                 <button onclick="prevPage(6)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onclick="submitData()" class="btn bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">제출하기</button>
+                <button id="submitBtn" onclick="submitData()" class="btn bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">제출하기</button>
             </div>
         </div>
 
         <!-- 로딩 스피너 -->
         <div id="spinner" class="spinner"></div>
+
+        <!-- 팝업 -->
+        <div id="popup" class="hidden">
+            <p id="popup-message" class="text-gray-700 mb-4"></p>
+            <button onclick="closePopup()" class="btn bg-blue-600 text-white p-2 rounded hover:bg-blue-700">확인</button>
+        </div>
     </div>
 
     <script>
@@ -169,6 +188,7 @@
         let myChoice = '';
         let percentagePrediction = '';
         let betting = '';
+        let isSubmitting = false;
 
         // 드롭다운 옵션 동적 생성
         function populateOptions() {
@@ -258,73 +278,89 @@
         }
 
         // 데이터 제출
-function submitData() {
-//  if (isSubmitting) return;
-//  isSubmitting = true;
+        function submitData() {
+            if (isSubmitting) return;
+            isSubmitting = true;
 
-  const name = document.getElementById('groupName').value.trim();
-  const team = document.getElementById('teamName').value;
-  const round = document.getElementById('round').value;
-  const choice = document.getElementById('myChoice').value;
-  const percentagePrediction = document.getElementById('percentagePrediction').value;
-  const bet = document.getElementById('betting').value;
+            const name = document.getElementById('groupName').value.trim();
+            const team = document.getElementById('teamName').value;
+            const round = document.getElementById('round').value;
+            const choice = document.getElementById('myChoice').value;
+            const percentagePrediction = document.getElementById('percentagePrediction').value;
+            const bet = document.getElementById('betting').value;
 
-  // Validate all fields
-  if (!name || !team || !round || !choice || !percentagePrediction || !bet) {
-    alert('모든 필드를 입력해주세요.');
-    isSubmitting = false;
-    return;
-  }
-  const spinner = document.getElementById('spinner-overlay');
-  const submitBtn = document.getElementById('submitBtn');
-  spinner.style.display = 'flex';
-  submitBtn.disabled = true;
+            // Validate all fields
+            if (!name || !team || !round || !choice || !percentagePrediction || !bet) {
+                alert('모든 필드를 입력해주세요.');
+                isSubmitting = false;
+                return;
+            }
 
-  fetch('https://script.google.com/macros/s/AKfycbw4A91SDwd8qgwub9KS_jT7DU57YeUjtZUcPyAfZ2jzjnqxRXN323b5jxdheFZtYget/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
-  })
-  .then(() => {
-    handleSubmissionSuccess(name, team, round);
-  })
-  .catch(() => {
-    handleSubmissionSuccess(name, team, round); // Handle as success due to no-cors
-  });
-}
+            // Log data for debugging
+            console.log('Submitting:', { name, team, round, choice, percentagePrediction, bet });
 
-function handleSubmissionSuccess(name, team, round) {
-  const spinner = document.getElementById('spinner-overlay');
-  const submitBtn = document.getElementById('submitBtn');
-  spinner.style.display = 'none';
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
 
-  const currentRoundNum = parseInt(round.match(/\d+/)[0]);
-  if (currentRoundNum < 10) {
-    showPopup(`${name}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
-    document.getElementById('popup').dataset.nextPage = 3;
-    const nextRound = `라운드 ${currentRoundNum + 1}`;
-    document.getElementById('round').value = nextRound;
-  } else {
-    showPopup('모든 입력이 완료되었습니다!');
-    document.getElementById('popup').dataset.nextPage = 1;
-  }
+            fetch('https://script.google.com/macros/s/AKfycbw4A91SDwd8qgwub9KS_jT7DU57YeUjtZUcPyAfZ2jzjnqxRXN323b5jxdheFZtYget/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
+            })
+            .then(() => {
+                handleSubmissionSuccess(name, team, round);
+            })
+            .catch(() => {
+                handleSubmissionSuccess(name, team, round); // Handle as success due to no-cors
+            });
+        }
 
-  // Reset fields for next round
-  document.getElementById('choice').value = '';
-  document.getElementById('percentagePrediction').value = '';
-  document.getElementById('bet').value = '';
+        function handleSubmissionSuccess(name, team, round) {
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'none';
 
-  setTimeout(() => {
-    submitBtn.disabled = false;
-    isSubmitting = false;
-  }, 3000);
-}
+            const currentRoundNum = parseInt(round.match(/\d+/)[0]);
+            if (currentRoundNum < 10) {
+                showPopup(`${name}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
+                document.getElementById('popup').dataset.nextPage = 3;
+                const nextRound = `${currentRoundNum + 1}라운드`;
+                document.getElementById('round').value = nextRound;
+            } else {
+                showPopup('모든 입력이 완료되었습니다!');
+                document.getElementById('popup').dataset.nextPage = 1;
+            }
+
+            // Reset fields for next round
+            document.getElementById('myChoice').value = '';
+            document.getElementById('percentagePrediction').value = '';
+            document.getElementById('betting').value = '';
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            }, 3000);
+        }
+
+        function showPopup(message) {
+            document.getElementById('popup-message').textContent = message;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+            showPage(nextPage);
+        }
 
         // 초기화
         populateOptions();
+        showPage(1);
     </script>
 </body>
 </html>
