@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지구온난화 딜레마 게임</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover:hover {
+      transform: scale(1.05);
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-active:active {
+      transform: scale(0.95);
+      background-color: #2563eb;
+    }
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 10000;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center text-gray-800">
+  <!-- 페이지들 -->
+  <div id="page1" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-4">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+    <input id="groupName" type="text" class="w-full p-2 border rounded-lg mb-4" placeholder="단체명 입력">
+    <button onclick="goToPage(2)" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+  </div>
+
+  <div id="page2" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupNameDisplay2"></p>
+    <select id="teamName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(1)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page3" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamDisplay3"></p>
+    <select id="roundName" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(2)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page4" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay4"></p>
+    <select id="carbonEmissionRate" class="w-full p-2 border rounded-lg mb-4"></select>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(3)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page5" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay5"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">무작위 정치적 위기</label>
+      <select id="politicalCrisis" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">정치적 위기: 유가 인상으로 화물 노동자 총파업, 전기요금 인상으로 정부 지지율 하락, 생산비용 증가로 물가상승/경제성장률 하락, 환경세 도입 반대하는 대통령 후보의 약진, 기후협약 탈퇴 주장하는 대통령 당선</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(4)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page6" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay6"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">무작위 지구온난화 피해</label>
+      <select id="globalWarmingDamage" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">지구온난화 피해: 폭설과 한파, 초대형 태풍, 폭염과 오랜 가뭄, 긴 장마, 대형 산불, 이상 기후, 폭우와 홍수</p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(5)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page7" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay7"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">환경 정책을 강제할 팀</label>
+      <select id="forcedTeam" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(6)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(8)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page8" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay8"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">강제할 환경 정책</label>
+      <select id="environmentalPolicy" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(7)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(9)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page9" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay9"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">퀴즈 정답</label>
+      <select id="quizAnswer" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <p id="quizContent" class="text-sm text-gray-600 mt-2"></p>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(8)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+      <button onclick="goToPage(10)" class="flex-1 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">다음</button>
+    </div>
+  </div>
+
+  <div id="page10" class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg hidden">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">지구온난화 딜레마 게임</h1>
+    <p class="text-center mb-4" id="groupTeamRoundDisplay10"></p>
+    <div class="flex items-center mb-4">
+      <label class="mr-2">퀴즈를 맞췄다고 가정할 때 내가 선택할 점수</label>
+      <select id="quizScore" class="p-2 border rounded-lg flex-1"></select>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="goToPage(9)" class="flex-1 p-2 bg-gray-500 text-white rounded-lg btn-hover btn-active">뒤로 가기</button>
+    </div>
+    <button id="submitBtn" onclick="submitData()" class="w-full p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active mt-4">제출하기</button>
+  </div>
+
+  <!-- 로딩 스피너 -->
+  <div id="spinner" class="spinner flex">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <!-- 팝업 -->
+  <div id="popup" class="popup">
+    <p id="popupMessage"></p>
+    <button onclick="closePopup()" class="mt-4 p-2 bg-blue-500 text-white rounded-lg btn-hover btn-active">확인</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let roundName = '';
+    let carbonEmissionRate = '';
+    let politicalCrisis = '';
+    let globalWarmingDamage = '';
+    let forcedTeam = '';
+    let environmentalPolicy = '';
+    let quizAnswer = '';
+    let quizScore = '';
+    let isSubmitting = false;
+
+    function initializeDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('roundName');
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+
+      const carbonSelect = document.getElementById('carbonEmissionRate');
+      ['0.200-화석연료 발전소 가동으로 인한 이산화탄소 배출', '0.100-동물의 트림과 배설물에서의 메테인 가스 배출', '0.050-산림 파괴 및 자동차 연료 연소', '0.000-탄소 제로 정책(태양광/전기자동차)', '-0.05-육류 소비 억제 정책 및 탄소 제거 장치 개발'].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        carbonSelect.appendChild(option);
+      });
+
+      const crisisSelect = document.getElementById('politicalCrisis');
+      [1, 2, 3, 4, 5].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        crisisSelect.appendChild(option);
+      });
+
+      const damageSelect = document.getElementById('globalWarmingDamage');
+      [1, 2, 3, 4, 5, 6, 7].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        damageSelect.appendChild(option);
+      });
+
+      const forcedTeamSelect = document.getElementById('forcedTeam');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        forcedTeamSelect.appendChild(option);
+      }
+
+      const policySelect = document.getElementById('environmentalPolicy');
+      ['-10 기후협약 가입 강제', '-12 탄소세 도입 강제', '-14 친환경 발전 강제', '-16 EU의 탄소 국경세 납부 강제', '-18 이산화탄소 흡수 장치 강제', '-20 녹색기금 강제 납부', '20 플라스틱 쓰레기 수입 강제 및 소각'].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        policySelect.appendChild(option);
+      });
+
+      const quizAnswerSelect = document.getElementById('quizAnswer');
+      [1, 2, 3, 4, 5].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        quizAnswerSelect.appendChild(option);
+      });
+
+      const quizScoreSelect = document.getElementById('quizScore');
+      [20, 15, 10, 5, 0, -5, -10, -15, -20].forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        quizScoreSelect.appendChild(option);
+      });
+    }
+
+    function updateQuizContent() {
+      const roundNum = parseInt(roundName.match(/\d+/)[0]);
+      const quizContent = document.getElementById('quizContent');
+      const quizzes = {
+        1: '나라간 기후 협의체(IPCC)에서는 이대로 지구온난화가 지속된다면 1880년 이후로 +1.5도가 되는 시점은 대략 몇 년도라고 예측하고 있을까요? ① 2040년 ② 2045년 ③ 2050년',
+        2: '1993~2003년에 지구의 평균 해수면은 대략 어느 정도 높아졌을까요? ① 1.1mm/yr ② 3.1mm/yr ③ 6.1mm/yr',
+        3: '제품의 생산과 판매의 전 과정에 걸쳐서 배출되는 물의 양을 물발자국이라고 한다. 다음 중 물발자국 크기가 가장 큰 것은? ① 소고기 1Kg ② 돼지고기 1Kg ③ 초콜릿 1Kg',
+        4: '전기흡혈귀(Power Vampire)라고 불리는 대기전력은 가정에서 사용되는 전기에너지의 약 몇 %를 차지할까요? ① 5% ② 10% ③ 15% ④ 20% ⑤ 25%',
+        5: '세계에서 가장 많이 재배하는 농작물은? ① 옥수수 ② 밀 ③ 사탕수수 ④ 쌀',
+        6: '미국에서 생산하는 옥수수의 40%는 여기에 사용됩니다. 이것은? ① 연료 ② 동물 사료 ③ 빵 원료',
+        7: '형광등의 전력사용량은 백열등의 전력사용량의 몇 배일까? ① 1/2 ② 1/3 ③ 1/4',
+        8: '다음의 온실가스 중 이산화탄소보다 온실효과율이 23000배 높은 가스는? ① 프레온가스의 일종인 HFC(수소불화탄소) ② 메탄가스(CH4) ③ 육불화황(SF6)',
+        9: '다음 중 1컵을 하수로 흘려 보냈을 때 가장 물을 많이 오염시키는 것은? ① 우유 ② 소주 ③ 식용유',
+        10: '2008년도 전 세계의 온실가스 배출 총량을 살펴보면 1위는 중국이고 2위는 미국이고 3위는 러시아이다. 우리나라는 몇 위인가? ① 9위 ② 13위',
+        11: '1880년도 1980년까지 지구 평균기온 상승은 0.7도이다. 1980년부터 2020년까지 40년간 지구 평균 기온은 대략 몇 도 상승했을까요? ① 0.32도 ② 0.52도 ③ 0.64도',
+        12: '2005년도 전 세계의 국토 면적당 온실가스 배출 총량에서 한국은 전 세계에서 몇 위일까요? ① 1위 ② 2위 ③ 3위 ④ 4위 ⑤ 5위'
+      };
+      quizContent.textContent = quizzes[roundNum] || '';
+    }
+
+    function goToPage(page) {
+      if (page === currentPage) return;
+      document.getElementById(`page${currentPage}`).classList.add('hidden');
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+
+      if (page === 2) {
+        groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          alert('단체명을 입력해주세요!');
+          goToPage(1);
+          return;
+        }
+        document.getElementById('groupNameDisplay2').textContent = groupName;
+      } else if (page === 3) {
+        teamName = document.getElementById('teamName').value;
+        document.getElementById('groupTeamDisplay3').textContent = `${groupName} - ${teamName}`;
+      } else if (page === 4) {
+        roundName = document.getElementById('roundName').value;
+        document.getElementById('groupTeamRoundDisplay4').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 5) {
+        carbonEmissionRate = document.getElementById('carbonEmissionRate').value;
+        document.getElementById('groupTeamRoundDisplay5').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 6) {
+        politicalCrisis = document.getElementById('politicalCrisis').value;
+        document.getElementById('groupTeamRoundDisplay6').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 7) {
+        globalWarmingDamage = document.getElementById('globalWarmingDamage').value;
+        document.getElementById('groupTeamRoundDisplay7').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 8) {
+        forcedTeam = document.getElementById('forcedTeam').value;
+        document.getElementById('groupTeamRoundDisplay8').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      } else if (page === 9) {
+        environmentalPolicy = document.getElementById('environmentalPolicy').value;
+        document.getElementById('groupTeamRoundDisplay9').textContent = `${groupName} - ${teamName} - ${roundName}`;
+        updateQuizContent();
+      } else if (page === 10) {
+        quizAnswer = document.getElementById('quizAnswer').value;
+        document.getElementById('groupTeamRoundDisplay10').textContent = `${groupName} - ${teamName} - ${roundName}`;
+      }
+    }
+
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+      document.getElementById('spinner').style.display = 'flex';
+      document.getElementById('submitBtn').disabled = true;
+
+      quizScore = document.getElementById('quizScore').value;
+      const data = {
+        groupName,
+        teamName,
+        roundName,
+        carbonEmissionRate,
+        politicalCrisis,
+        globalWarmingDamage,
+        forcedTeam,
+        environmentalPolicy,
+        quizAnswer,
+        quizScore
+      };
+
+      // Validate all fields
+      if (!groupName || !teamName || !roundName || !carbonEmissionRate || !politicalCrisis || !globalWarmingDamage || !forcedTeam || !environmentalPolicy || !quizAnswer || !quizScore) {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('popupMessage').textContent = '모든 필드를 입력해주세요.';
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('submitBtn').disabled = false;
+        isSubmitting = false;
+        return;
+      }
+
+      // Log data for debugging
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycby_j_6fApwBVvRvwtJdJGgFNO1PZGWCv63vs9k18T2i9GTOZx0NlopRdvwLQk4DB6iK/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, roundName); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess(groupName, teamName, roundName) {
+      document.getElementById('spinner').style.display = 'none';
+      const roundNum = parseInt(roundName.match(/\d+/)[0]);
+      if (roundNum < 12) {
+        document.getElementById('popupMessage').textContent = `${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`;
+        document.getElementById('popup').dataset.nextPage = 3;
+        document.getElementById('roundName').value = `${roundNum + 1}라운드`;
+      } else {
+        document.getElementById('popupMessage').textContent = '모든 입력이 완료되었습니다!';
+        document.getElementById('popup').dataset.nextPage = 1;
+      }
+      document.getElementById('popup').style.display = 'block';
+
+      // Reset fields for next round
+      carbonEmissionRate = '';
+      politicalCrisis = '';
+      globalWarmingDamage = '';
+      forcedTeam = '';
+      environmentalPolicy = '';
+      quizAnswer = '';
+      quizScore = '';
+      document.getElementById('carbonEmissionRate').value = '';
+      document.getElementById('politicalCrisis').value = '';
+      document.getElementById('globalWarmingDamage').value = '';
+      document.getElementById('forcedTeam').value = '';
+      document.getElementById('environmentalPolicy').value = '';
+      document.getElementById('quizAnswer').value = '';
+      document.getElementById('quizScore').value = '';
+
+      setTimeout(() => {
+        document.getElementById('submitBtn').disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      goToPage(nextPage);
+    }
+
+    window.onload = function() {
+      initializeDropdowns();
+      document.getElementById('spinner').style.display = 'none';
+    };
+  </script>
+</body>
+</html>
