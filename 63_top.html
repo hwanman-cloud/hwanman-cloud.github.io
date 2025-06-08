@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>진로선택과목(고교학점제) 경매 게임-(15가지)</title>
+    <title>직업 가치관 경매 게임-(15가지)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
@@ -67,7 +67,7 @@
 <body class="bg-blue-100">
     <div id="app" class="container mx-auto px-4 py-8 max-w-md">
         <h1 class="text-3xl font-bold text-center text-blue-800 mb-8">
-            <i class="fas fa-gavel mr-2"></i>진로선택과목(고교학점제) 경매 게임-(15가지)
+            <i class="fas fa-gavel mr-2"></i>직업 가치관 경매 게임-(15가지)
         </h1>
 
         <!-- Page 1 -->
@@ -259,7 +259,7 @@
 
             console.log('Submitting:', gameData);
 
-            fetch('https://script.google.com/macros/s/AKfycbzwu6UroEqB3vNC2tDmHCZaVR2dxYa3E7IN11oLekQl3YqsZAOfmuJgTLaSIi81O5DASw/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbzhSoELVubHhMi_NWxgRojOlji1wTKXQ3T-Rm7Pn7JlKRLnDgyDjj3owSHX2xg-RblhiQ/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {
@@ -284,13 +284,19 @@
             const currentRoundNum = parseInt(roundName.replace('라운드', ''));
             if (currentRoundNum < 15) {
                 showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
-                document.getElementById('popup').dataset.nextPage = 3;
                 const nextRound = `${currentRoundNum + 1}라운드`;
                 document.getElementById('roundName').value = nextRound;
                 gameData.roundName = nextRound;
+                // Navigate directly to page 3
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                document.getElementById('page3').classList.add('active');
+                currentPage = 3;
             } else {
                 showPopup('모든 입력이 완료되었습니다!');
-                document.getElementById('popup').dataset.nextPage = 1;
+                // Navigate directly to page 1
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                document.getElementById('page1').classList.add('active');
+                currentPage = 1;
                 gameData.groupName = '';
                 gameData.teamName = '';
                 gameData.roundName = '';
@@ -298,7 +304,7 @@
                 gameData.betting = '';
                 document.getElementById('groupName').value = '';
                 document.getElementById('teamName').value = '';
-                document.getElementById('roundName').value = '';
+                document.getElementById('roundName').value = '1라운드';
             }
 
             // Reset fields for next round
@@ -324,10 +330,6 @@
         // Close popup
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
-            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
-            if (nextPage) {
-                nextPage(nextPage);
-            }
         }
 
         // Initialize dropdowns
@@ -350,7 +352,7 @@
             roundSelect.value = '1라운드'; // Default to 1라운드
 
             const bidAmountSelect = document.getElementById('bidAmount');
-            for (let i = 1; i <= 30; i++) {
+            for (let i = 0; i <= 30; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = i;
