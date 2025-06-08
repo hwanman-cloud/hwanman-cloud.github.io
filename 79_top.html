@@ -266,6 +266,7 @@ function submitData() {
   const team = document.getElementById('teamName').value;
   const round = document.getElementById('round').value;
   const choice = document.getElementById('myChoice').value;
+  const percentagePrediction = document.getElementById('percentagePrediction').value;
   const bet = document.getElementById('betting').value;
 
   // Validate all fields
@@ -285,7 +286,7 @@ function submitData() {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ name, team, round, choice, bet })
+    body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
   })
   .then(() => {
     handleSubmissionSuccess(name, team, round);
@@ -313,7 +314,7 @@ function handleSubmissionSuccess(name, team, round) {
 
   // Reset fields for next round
   document.getElementById('choice').value = '';
-  document.getElementById('prediction').value = '';
+  document.getElementById('percentagePrediction').value = '';
   document.getElementById('bet').value = '';
 
   setTimeout(() => {
