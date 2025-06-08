@@ -220,9 +220,9 @@
             gameData.betting = document.getElementById('betting').value;
 
             document.getElementById('groupNameDisplay').textContent = `단체명: ${gameData.groupName}`;
-            document.getElementById('teamNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? `${gameData.teamName}팀` : ''}`;
-            document.getElementById('roundNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? `${gameData.teamName}팀` : ''}, 라운드: ${gameData.roundName ? `${gameData.roundName}라운드` : ''}`;
-            document.getElementById('bidAmountDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName ? `${gameData.teamName}팀` : ''}, 라운드: ${gameData.roundName ? `${gameData.roundName}라운드` : ''}, 입찰 금액: ${gameData.bidAmount}`;
+            document.getElementById('teamNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName || ''}`;
+            document.getElementById('roundNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName || ''}, 라운드: ${gameData.roundName || ''}`;
+            document.getElementById('bidAmountDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName || ''}, 라운드: ${gameData.roundName || ''}, 입찰 금액: ${gameData.bidAmount}`;
         }
 
         // Submit data
@@ -281,11 +281,11 @@
             const submitBtn = document.getElementById('submitBtn');
             spinner.style.display = 'none';
 
-            const currentRoundNum = parseInt(roundName);
+            const currentRoundNum = parseInt(roundName.replace('라운드', ''));
             if (currentRoundNum < 15) {
-                showPopup(`${groupName}, ${teamName}팀, ${roundName}라운드 내용이 잘 입력됐습니다.`);
+                showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
                 document.getElementById('popup').dataset.nextPage = 3;
-                const nextRound = (currentRoundNum + 1).toString();
+                const nextRound = `${currentRoundNum + 1}라운드`;
                 document.getElementById('roundName').value = nextRound;
                 gameData.roundName = nextRound;
             } else {
@@ -335,7 +335,7 @@
             const teamSelect = document.getElementById('teamName');
             for (let i = 1; i <= 60; i++) {
                 const option = document.createElement('option');
-                option.value = i;
+                option.value = `${i}팀`;
                 option.textContent = `${i}팀`;
                 teamSelect.appendChild(option);
             }
@@ -343,11 +343,11 @@
             const roundSelect = document.getElementById('roundName');
             for (let i = 1; i <= 15; i++) {
                 const option = document.createElement('option');
-                option.value = i;
+                option.value = `${i}라운드`;
                 option.textContent = `${i}라운드`;
                 roundSelect.appendChild(option);
             }
-            roundSelect.value = '1'; // Default to 1라운드
+            roundSelect.value = '1라운드'; // Default to 1라운드
 
             const bidAmountSelect = document.getElementById('bidAmount');
             for (let i = 1; i <= 30; i++) {
