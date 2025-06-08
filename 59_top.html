@@ -246,12 +246,13 @@
             document.getElementById(`page${currentPage}`).classList.remove('active');
             document.getElementById(`page${pageNum}`).classList.add('active');
             currentPage = pageNum;
+            updateDisplays();
         }
 
         function updateDisplays() {
-            const groupName = document.getElementById('groupName').value.trim();
-            const teamName = document.getElementById('teamName').value;
-            const roundName = document.getElementById('roundName').value;
+            const groupName = document.getElementById('groupName').value.trim() || 'N/A';
+            const teamName = document.getElementById('teamName').value || 'N/A';
+            const roundName = document.getElementById('roundName').value || 'N/A';
 
             document.getElementById('groupNameDisplay').textContent = `단체명: ${groupName}`;
             document.getElementById('teamNameDisplay').textContent = `단체명: ${groupName}, 팀명: ${teamName}`;
@@ -306,15 +307,17 @@
             spinner.classList.add('hidden');
 
             const currentRoundNum = parseInt(roundName.match(/\d+/)[0]);
+            const nextRoundNum = currentRoundNum < 12 ? currentRoundNum + 1 : 1;
+
+            // Set next round before showing popup
+            document.getElementById('roundName').value = `${nextRoundNum}라운드`;
+
             if (currentRoundNum < 12) {
                 showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
-                document.getElementById('popup').dataset.nextPage = 3;
-                const nextRoundNum = currentRoundNum + 1;
-                document.getElementById('roundName').value = `${nextRoundNum}라운드`;
+                document.getElementById('popup').dataset.nextPage = '3';
             } else {
                 showPopup('모든 입력이 완료되었습니다!');
-                document.getElementById('popup').dataset.nextPage = 1;
-                document.getElementById('roundName').value = '1라운드';
+                document.getElementById('popup').dataset.nextPage = '1';
             }
 
             // Reset fields for next round
@@ -336,7 +339,8 @@
         function closePopup() {
             document.getElementById('popup').classList.add('hidden');
             const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
-            if (nextPage) {
+            console.log('Navigating to page:', nextPage); // Debug navigation
+            if (nextPage && nextPage !== currentPage) {
                 document.getElementById(`page${currentPage}`).classList.remove('active');
                 document.getElementById(`page${nextPage}`).classList.add('active');
                 currentPage = nextPage;
