@@ -245,7 +245,17 @@
             spinner.classList.remove('hidden');
             submitBtn.disabled = true;
 
-            console.log('Submitting:', gameData);
+            // Prepare data with suffixes for POST request
+            const dataToSend = {
+                groupName: gameData.groupName,
+                teamName: gameData.teamName ? gameData.teamName + '팀' : '',
+                roundName: gameData.roundName ? gameData.roundName + '라운드' : '',
+                myCard: gameData.myCard,
+                opponentTeam: gameData.opponentTeam ? gameData.opponentTeam + '팀' : '',
+                betting: gameData.betting
+            };
+
+            console.log('Submitting:', dataToSend);
 
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycbzUsFTECf8QapCRl3J22FkRztBYqp0vfBhLuht_PjfUHxPUe1QFf8wdOJBuH26mUODK/exec', {
@@ -254,7 +264,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(gameData)
+                    body: JSON.stringify(dataToSend)
                 });
                 handleSubmissionSuccess(gameData.groupName, gameData.teamName, gameData.roundName);
             } catch (error) {
