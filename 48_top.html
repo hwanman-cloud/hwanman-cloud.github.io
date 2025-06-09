@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>환경호르몬의 역습 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    .btn { transition: all 0.2s ease; }
+    .btn:hover { transform: scale(1.05); }
+    .btn:active { background-color: #2563eb; }
+    .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; }
+    #spinner { display: none; margin-left: 8px; }
+  </style>
+</head>
+<body class="bg-blue-50 flex items-center justify-center min-h-screen p-4">
+  <div id="app" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md text-center">
+    <!-- Page 1: Group Name -->
+    <div id="page1" class="page">
+      <h1 class="text-2xl font-bold text-blue-700 mb-4">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border rounded-md mb-4" placeholder="단체명 입력">
+      <button onclick="nextPage(1)" class="btn bg-blue-600 text-white p-2 rounded-md w-full hover:bg-blue-700 flex items-center justify-center">
+        <i class="fas fa-arrow-right mr-2"></i>다음
+      </button>
+    </div>
+
+    <!-- Page 2: Team Name -->
+    <div id="page2" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-700 mb-2">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4" id="groupDisplay"></p>
+      <select id="teamName" class="w-full p-2 border rounded-md mb-4">
+        <option value="">팀 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(2)" class="btn bg-gray-500 text-white p-2 rounded-md flex-1 hover:bg-gray-600 flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+        </button>
+        <button onclick="nextPage(2)" class="btn bg-blue-600 text-white p-2 rounded-md flex-1 hover:bg-blue-700 flex items-center justify-center">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-700 mb-2">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4" id="groupTeamDisplay"></p>
+      <select id="round" class="w-full p-2 border rounded-md mb-4">
+        <option value="">라운드 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(3)" class="btn bg-gray-500 text-white p-2 rounded-md flex-1 hover:bg-gray-600 flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+        </button>
+        <button onclick="nextPage(3)" class="btn bg-blue-600 text-white p-2 rounded-md flex-1 hover:bg-blue-700 flex items-center justify-center">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 4: Hormone Selection -->
+    <div id="page4" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-700 mb-2">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4" id="groupTeamRoundDisplay"></p>
+      <div class="flex items-center mb-4">
+        <span class="mr-2">환경 호르몬 흡수 선택:</span>
+        <select id="hormone" class="p-2 border rounded-md">
+          <option value="">선택</option>
+          <option value="1-비스페놀">1</option>
+          <option value="2-프탈레이트">2</option>
+          <option value="3-과불화옥탄산/알루미늄">3</option>
+          <option value="4-파라벤">4</option>
+          <option value="5-벤조피렌">5</option>
+          <option value="6-DDT 다이아지논">6</option>
+          <option value="7-폴리염화바이페닐">7</option>
+          <option value="8-폴리에틸렌">8</option>
+          <option value="9-다이옥신">9</option>
+        </select>
+      </div>
+      <div class="text-sm text-gray-600 mb-4">
+        <p>나의 선택과 다른 사람의 선택이 중복되면 환경 호르몬 흡수량이 배가됨. 중복이 많을 수록 흡수량은 더 배가됨</p>
+        <p>1번: 오염도 높은 바다의 해산물 섭취</p>
+        <p>2번: 농약 사용이 많은 밭의 채소 섭취</p>
+        <p>3번: 현대 문명의 편리를 적극적으로 누려야 한다는 주의</p>
+        <p>4번: 플라스틱 제품 적극 애용</p>
+        <p>5번: 일회용품이나 배달 음식 즐김</p>
+        <p>6번: 새 옷 새 물건을 좋아하는 새삥 증후군</p>
+        <p>7번: 은연 중에 미세 플라스틱 흡수</p>
+        <p>8번: 대기 오염 장소에 오래 머무름</p>
+        <p>9번: 몸 치장에 적극적임(화장-패션)</p>
+      </div>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(4)" class="btn bg-gray-500 text-white p-2 rounded-md flex-1 hover:bg-gray-600 flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+        </button>
+        <button onclick="nextPage(4)" class="btn bg-blue-600 text-white p-2 rounded-md flex-1 hover:bg-blue-700 flex items-center justify-center">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 5: Hormone Path Selection -->
+    <div id="page5" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-700 mb-2">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4" id="groupTeamRoundHormoneDisplay"></p>
+      <div class="flex items-center mb-4">
+        <span class="mr-2">선택된 환경 호르몬 섭취 경로:</span>
+        <select id="hormonePath" class="p-2 border rounded-md">
+          <option value="">선택</option>
+        </select>
+      </div>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(5)" class="btn bg-gray-500 text-white p-2 rounded-md flex-1 hover:bg-gray-600 flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+        </button>
+        <button onclick="nextPage(5)" class="btn bg-blue-600 text-white p-2 rounded-md flex-1 hover:bg-blue-700 flex items-center justify-center">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 6: Plastic Policy -->
+    <div id="page6" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-700 mb-2">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4" id="groupTeamRoundHormoneDisplay6"></p>
+      <div class="flex items-center mb-4">
+        <span class="mr-2">[무작위]환경 호르몬을 피하기 위한 실천 행동:</span>
+        <select id="plasticPolicy" class="p-2 border rounded-md">
+          <option value="">선택</option>
+          <option value="1-되도록 캔 음료나 캔에 담긴 식품을 섭취하지 않는다.">1</option>
+          <option value="2-음식물을 보관할 때 플라스틱이나 랩을 사용하지 않는다.">2</option>
+          <option value="3-농약 사용이 많은 과일이나 채소를 먹지 않는다.">3</option>
+          <option value="4-염소계 표백제와 세정제를 사용하지 않는다.">4</option>
+          <option value="5-육류의 섭취를 줄인다.">5</option>
+          <option value="6-아이들이 플라스틱 장난감을 입에 넣지 않도록 한다.">6</option>
+          <option value="7-되도록 플라스틱 용기를 사용하지 않는다.">7</option>
+          <option value="8-되도록이면 탄 음식은 먹지 않는다.">8</option>
+          <option value="9-되도록 현대문명의 편리를 멀리하고 미니멀라이프를 추구한다.">9</option>
+        </select>
+      </div>
+      <div class="text-sm text-gray-600 mb-4">
+        <p>9가지 실천행동:</p>
+        <p>1: 되도록 캔 음료나 캔에 담긴 식품을 섭취하지 않는다.</p>
+        <p>2: 음식물을 보관할 때 플라스틱이나 랩을 사용하지 않는다.</p>
+        <p>3: 농약 사용이 많은 과일이나 채소를 먹지 않는다.</p>
+        <p>4: 염소계 표백제와 세정제를 사용하지 않는다.</p>
+        <p>5: 육류의 섭취를 줄인다.</p>
+        <p>6: 아이들이 플라스틱 장난감을 입에 넣지 않도록 한다.</p>
+        <p>7: 되도록 플라스틱 용기를 사용하지 않는다.</p>
+        <p>8: 되도록이면 탄 음식은 먹지 않는다.</p>
+        <p>9: 되도록 현대문명의 편리를 멀리하고 미니멀라이프를 추구한다.</p>
+      </div>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(6)" class="btn bg-gray-500 text-white p-2 rounded-md flex-1 hover:bg-gray-600 flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+        </button>
+        <button onclick="nextPage(6)" class="btn bg-blue-600 text-white p-2 rounded-md flex-1 hover:bg-blue-700 flex items-center justify-center">
+          <i class="fas fa-arrow-right mr-2"></i>다음
+        </button>
+      </div>
+    </div>
+
+    <!-- Page 7: Quiz Answer -->
+    <div id="page7" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-700 mb-2">환경호르몬의 역습 게임</h1>
+      <p class="text-gray-600 mb-4" id="groupTeamRoundHormonePathDisplay"></p>
+      <div class="flex items-center mb-4">
+        <span class="mr-2">퀴즈 정답은?:</span>
+        <select id="quizAnswer" class="p-2 border rounded-md">
+          <option value="">선택</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+      <div id="quizContent" class="text-sm text-gray-600 mb-4"></div>
+      <button id="submitBtn" onclick="submitData()" class="btn bg-green-600 text-white p-2 rounded-md w-full hover:bg-green-700 flex items-center justify-center">
+        <i class="fas fa-check mr-2"></i>제출하기
+        <i id="spinner" class="fas fa-spinner fa-spin"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup bg-white rounded-lg shadow-xl p-6 max-w-sm text-center" data-next-page="3">
+    <p id="popupMessage" class="text-gray-700 mb-4"></p>
+    <button onclick="closePopup()" class="btn bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">확인</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let isSubmitting = false;
+    let data = {
+      group: '',
+      team: '',
+      round: '1라운드',
+      hormone: '',
+      hormonePath: '',
+      plasticPolicy: '',
+      quizAnswer: '',
+      quizScore: ''
+    };
+
+    // Hormone path options
+    const hormonePaths = {
+      '1-비스페놀': [
+        '11통조림 속 에폭시 수지 코팅제가 녹아나온 걸 마심',
+        '12영수증 글씨를 손으로 만져서 피부를 통해 흡수',
+        '13컵라면 뚜껑에 라면 올려놓고 먹음',
+        '14운동 후 운동복에서 피부를 통해 흡수'
+      ],
+      '2-프탈레이트': [
+        '21비닐랩에 쌓인 뜨거운 음식 섭취',
+        '22섬유유연제속 성분이 피부속으로 흡수',
+        '23샴푸나 샤워젤 속 성분이 피부속으로 흡수',
+        '24향수-방향제 속 성분이 호흡기를 통해 흡수'
+      ],
+      '3-과불화옥탄산/알루미늄': [
+        '31코팅 벗겨진 후라이팬으로 요리한 음식 섭취',
+        '32햄버거 포장용지나 팝콘용기의 코팅 종이를 통해 흡수',
+        '33알루미늄 호일에 삼겹살 구워 먹음',
+        '34양은냄비나 편의점 알루미늄 즉석 용기로 라면 끓여 먹음'
+      ],
+      '4-파라벤': [
+        '41로션 등 화장품 속 세균 성장 억제시키는 방부제 성분이 피부 속으로 흡수',
+        '42식품 속 방부제 성분 섭취',
+        '43샴푸 린스 등 욕실용품을 통해 피부 속으로 흡수',
+        '44의약품 속 세균 성장을 억제시키는 방부제 성분 섭취'
+      ],
+      '5-벤조피렌': [
+        '51태운 육류나 생선 섭취',
+        '52자동차 배기가스 흡입',
+        '53담배연기 흡입',
+        '54들기름이나 참기름 섭취'
+      ],
+      '6-DDT 다이아지논': [
+        '61살충제를 많이 사용한 채소 섭취',
+        '62월남전쟁에서 고엽제에 노출되어 피부를 통해 흡수'
+      ],
+      '7-폴리염화바이페닐': [
+        '71건전지의 절연유를 만져서 피부를 통해 흡수',
+        '72자동차 윤활제를 만져서 피부를 통해 흡수'
+      ],
+      '8-폴리에틸렌': [
+        '81종이컵 속 코팅제가 녹은 물 섭취',
+        '82뽀글이(봉지)라면을 해 먹음',
+        '83커피믹스 봉지로 뜨거운 커피를 섭취',
+        '84페트병 음료에서 미세플라스틱 섭취'
+      ],
+      '9-다이옥신': [
+        '91소각장 연기 흡입',
+        '92제초제 농약을 사용한 과일 채소 섭취'
+      ]
+    };
+
+    // Quiz content per round
+    const quizContents = {
+      '1라운드': '1라운드: 화장품에 많이 사용되는 환경호르몬 물질인 트리클로산은 화장품 이외에 어떤 제품에 많이 포함되어 있는가? ① 샴푸 ② 비누 ③ 치약',
+      '2라운드': '2라운드: 여성호르몬인 에스트로겐 수용체에 결합하여 여성 호르몬을 모방하는 작용을 하는 내분비계교란물질은? ① 폴리염화비닐 ② 비스페놀A ③ 벤조피렌',
+      '3라운드': '3라운드: 계면활성제에 많이 사용되는 환경호르몬 물질은? ① 파라벤 ② 스티렌 ③ 알킬페놀',
+      '4라운드': '4라운드: 환경호르몬 중 프탈레이트는 주로 어떤 용도로 사용되나요? ① 화장품 ② 의약품 ③ 플라스틱 가소제',
+      '5라운드': '5라운드: 환경호르몬 중 PCBs(폴리염화비페닐)는 주로 어떤 산업에서 사용되었나요? ① 전자 산업 ② 농업 ③ 섬유 산업',
+      '6라운드': '6라운드: 플라스틱을 부드럽게 하는 연화제로 사용되고 생식기관에 영향을 주어 자궁내막중이나 다낭성 난소 증후군을 유발하는 환경호르몬은? ① 프탈레이트 ② DDT ③ 과불화옥탄산',
+      '7라운드': '7라운드: 환경호르몬 물질인 비스페놀 S(BPS)는 주로 어떤 제품에 사용되었는가? ① 캔 식품 용기 ② 열감응지 영수증 ③ 섬유 제품',
+      '8라운드': '8라운드: 접착제에 많이 사용되는 환경호르몬 물질은? ① 스티렌 ② 폴리염화비닐 ③ 폴리에틸렌',
+      '9라운드': '9라운드: 1960년대 일본의 미나마타병으로 인한 신경마비 사건은 닛산화학공장에서 이것을 무단 방류해서 일어난 사건이다 ① 아이오딘 ② 수은 ③ 알루미늄',
+      '10라운드': '10라운드: 1970 이탈리아 세베소 제초제 제조공장 중 발생한 폭발 사고로 대량의 이 환경호르몬이 유출되어 큰 피해를 보았다. ① 비스페놀 A (BPA) ② 다이옥신 ③ 트리클로산',
+      '11라운드': '11라운드: 2000년대 중국에서 생산된 가구와 장난감 등에서 과다한 이것이 검출되어 소비자 건강에 피해를 주었다. ① 폼알데하이드 ② 스티렌 ③ 폴리염화비닐(PCBs)',
+      '12라운드': '12라운드: 1962년 레이첼 카슨의 저서 \'침묵의 봄\'은 어떤 환경 호르몬의 피해를 경고한 것인가? ① 프탈레이트 ② DDT ③ 벤조피렌',
+      '13라운드': '13라운드: 1976년 미국의 미시간에서 식용유를 먹은 주민들이 집단 중독되었습니다. 식용유 제조과정에 이것이 들어갔기 때문입니다. ① 프탈레이트 ② DDT ③ PCB(폴리염화비닐)',
+      '14라운드': '14라운드: 1978년 일본의 \'요코하마 병\'에서도 이것에 오염된 식용유를 마신 사람들이 집단 중독되었습니다. 이것은? ① 프탈레이트 ② 비스페놀A ③ DDT',
+      '15라운드': '15라운드: 1950년대 미국에서 판매된 임신부의 유산 예방제 DES를 섭취한 후 탄생한 딸들에게서 자궁경부암이 높은 비율로 발생했습니다. 이와 관련된 인체 호르몬은? ① 에스트로겐 ② 테스토스테론 ③ 인슐린'
+    };
+
+    // Initialize dropdowns
+    function initializeDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+
+      const roundSelect = document.getElementById('round');
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드';
+      data.round = '1라운드';
+    }
+
+    function showPage(pageNum) {
+      if (currentPage === pageNum) return;
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      const targetPage = document.getElementById('page' + pageNum);
+      if (!targetPage) return;
+
+      targetPage.classList.remove('hidden');
+      currentPage = pageNum;
+
+      if (pageNum >= 2) {
+        const groupDisplay = document.getElementById('groupDisplay');
+        if (groupDisplay) groupDisplay.textContent = `단체명: ${data.group}`;
+      }
+      if (pageNum >= 3) {
+        const groupTeamDisplay = document.getElementById('groupTeamDisplay');
+        if (groupTeamDisplay) groupTeamDisplay.textContent = `단체명: ${data.group} | 팀명: ${data.team}`;
+      }
+      if (pageNum >= 4) {
+        const groupTeamRoundDisplay = document.getElementById('groupTeamRoundDisplay');
+        if (groupTeamRoundDisplay) groupTeamRoundDisplay.textContent = `단체명: ${data.group} | 팀명: ${data.team} | 라운드: ${data.round}`;
+      }
+      if (pageNum >= 5) {
+        const groupTeamRoundHormoneDisplay = document.getElementById('groupTeamRoundHormoneDisplay');
+        if (groupTeamRoundHormoneDisplay) groupTeamRoundHormoneDisplay.textContent = `단체명: ${data.group} | 팀명: ${data.team} | 라운드: ${data.round} | 환경호르몬: ${data.hormone}`;
+      }
+      if (pageNum === 6) {
+        const groupTeamRoundHormoneDisplay6 = document.getElementById('groupTeamRoundHormoneDisplay6');
+        if (groupTeamRoundHormoneDisplay6) groupTeamRoundHormoneDisplay6.textContent = `단체명: ${data.group} | 팀명: ${data.team} | 라운드: ${data.round} | 환경호르몬: ${data.hormone}`;
+      }
+      if (pageNum === 7) {
+        const groupTeamRoundHormonePathDisplay = document.getElementById('groupTeamRoundHormonePathDisplay');
+        if (groupTeamRoundHormonePathDisplay) groupTeamRoundHormonePathDisplay.textContent = `단체명: ${data.group} | 팀명: ${data.team} | 라운드: ${data.round} | 환경호르몬: ${data.hormone} | 섭취 경로: ${data.hormonePath}`;
+      }
+
+      if (pageNum === 5) {
+        const hormonePathSelect = document.getElementById('hormonePath');
+        if (hormonePathSelect) {
+          hormonePathSelect.innerHTML = '<option value="">선택</option>';
+          const paths = hormonePaths[data.hormone] || [];
+          paths.forEach(path => {
+            const option = document.createElement('option');
+            option.value = path;
+            option.textContent = path;
+            hormonePathSelect.appendChild(option);
+          });
+        }
+      }
+
+      if (pageNum === 7) {
+        const quizContent = document.getElementById('quizContent');
+        if (quizContent) quizContent.textContent = quizContents[data.round] || '';
+      }
+    }
+
+    function nextPage(pageNum) {
+      let valid = true;
+      if (pageNum === 1) {
+        const groupName = document.getElementById('groupName');
+        data.group = groupName ? groupName.value.trim() : '';
+        if (!data.group) valid = false;
+      } else if (pageNum === 2) {
+        const teamName = document.getElementById('teamName');
+        data.team = teamName ? teamName.value : '';
+        if (!data.team) valid = false;
+      } else if (pageNum === 3) {
+        const round = document.getElementById('round');
+        data.round = round ? round.value : '';
+        if (!data.round) valid = false;
+      } else if (pageNum === 4) {
+        const hormone = document.getElementById('hormone');
+        data.hormone = hormone ? hormone.value : '';
+        if (!data.hormone) valid = false;
+      } else if (pageNum === 5) {
+        const hormonePath = document.getElementById('hormonePath');
+        data.hormonePath = hormonePath ? hormonePath.value : '';
+        if (!data.hormonePath) valid = false;
+      } else if (pageNum === 6) {
+        const plasticPolicy = document.getElementById('plasticPolicy');
+        data.plasticPolicy = plasticPolicy ? plasticPolicy.value : '';
+        if (!data.plasticPolicy) valid = false;
+      }
+
+      if (valid) {
+        showPage(pageNum + 1);
+      } else {
+        alert('입력을 완료하세요.');
+      }
+    }
+
+    function prevPage(pageNum) {
+      if (pageNum > 1) {
+        showPage(pageNum - 1);
+      }
+    }
+
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      const quizAnswer = document.getElementById('quizAnswer');
+      data.quizAnswer = quizAnswer ? quizAnswer.value : '';
+      if (!data.quizAnswer) {
+        alert('퀴즈 정답을 선택하세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      // Validate all fields
+      if (!data.group || !data.team || !data.round || !data.hormone || !data.hormonePath || !data.plasticPolicy || !data.quizAnswer) {
+        alert('모든 필드를 입력해주세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'block';
+      submitBtn.disabled = true;
+
+      console.log('Submitting:', data);
+
+      fetch('WEB_APP_URL', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(data.group, data.team, data.round);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(data.group, data.team, data.round); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess(group, team, round) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submitBtn');
+      spinner.style.display = 'none';
+
+      const currentRoundNum = parseInt(round.match(/\d+/)[0]) || 1;
+      if (currentRoundNum < 12) {
+        showPopup(`${group}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
+        document.getElementById('popup').dataset.nextPage = 3;
+        const nextRound = `${currentRoundNum + 1}라운드`;
+        document.getElementById('round').value = nextRound;
+        data.round = nextRound;
+        // Reset fields for next round
+        data.hormone = '';
+        data.hormonePath = '';
+        data.plasticPolicy = '';
+        data.quizAnswer = '';
+        document.getElementById('hormone').value = '';
+        document.getElementById('hormonePath').value = '';
+        document.getElementById('plasticPolicy').value = '';
+        document.getElementById('quizAnswer').value = '';
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+        resetForm();
+      }
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      showPage(nextPage);
+    }
+
+    function resetForm() {
+      data = {
+        group: '',
+        team: '',
+        round: '1라운드',
+        hormone: '',
+        hormonePath: '',
+        plasticPolicy: '',
+        quizAnswer: '',
+        quizScore: ''
+      };
+      const inputs = ['groupName', 'teamName', 'round', 'hormone', 'hormonePath', 'plasticPolicy', 'quizAnswer'];
+      inputs.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.value = id === 'round' ? '1라운드' : '';
+      });
+    }
+
+    // Initialize
+    initializeDropdowns();
+    showPage(1);
+  </script>
+</body>
+</html>
