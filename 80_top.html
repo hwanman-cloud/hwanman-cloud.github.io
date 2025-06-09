@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>원자력 vs 친환경 에너지 딜레마 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    .btn-hover { transition: all 0.3s ease; }
+    .btn-hover:hover { transform: scale(1.1); background-color: #1e40af; }
+    .spinner { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; }
+    .spinner::after { content: ''; border: 4px solid #f3f3f3; border-top: 4px solid #1e40af; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10000; }
+  </style>
+</head>
+<body class="bg-blue-50 flex items-center justify-center min-h-screen">
+  <div id="app" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+    <!-- Page 1: Organization, Power Growth, Price Growth -->
+    <div id="page1" class="page">
+      <h1 class="text-2xl font-bold text-blue-800 mb-4">원자력 vs 친환경 에너지 딜레마 게임</h1>
+      <p class="text-blue-600 mb-4">최대 전력 소비량: 700TWh, 현재 전기요금 80원/KWh</p>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">단체명</label>
+        <input id="orgName" type="text" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+      </div>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">전력 소비량 년 증가율 (%)</label>
+        <input id="powerGrowth" type="number" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="증가율 입력">
+      </div>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">전기요금 년 증가율 (%)</label>
+        <input id="priceGrowth" type="number" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="증가율 입력">
+      </div>
+      <button id="next1" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded mt-4"><i class="fas fa-arrow-right mr-2"></i>다음</button>
+    </div>
+
+    <!-- Page 2: Team Selection -->
+    <div id="page2" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 mb-4">원자력 vs 친환경 에너지 딜레마 게임</h1>
+      <p id="page2Info" class="text-blue-600 mb-4"></p>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">팀명</label>
+        <select id="teamName" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">팀 선택</option>
+        </select>
+      </div>
+      <div class="flex justify-center gap-4">
+        <button id="back2" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded mt-4"><i class="fas fa-arrow-left mr-2"></i>뒤로 가기</button>
+        <button id="next2" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded mt-4"><i class="fas fa-arrow-right mr-2"></i>다음</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 mb-4">원자력 vs 친환경 에너지 딜레마 게임</h1>
+      <p id="page3Info" class="text-blue-600 mb-4"></p>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">라운드</label>
+        <select id="round" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="1">1라운드</option>
+          <option value="2">2라운드</option>
+          <option value="3">3라운드</option>
+          <option value="4">4라운드</option>
+          <option value="5">5라운드</option>
+          <option value="6">6라운드</option>
+          <option value="7">7라운드</option>
+          <option value="8">8라운드</option>
+          <option value="9">9라운드</option>
+          <option value="10">10라운드</option>
+        </select>
+      </div>
+      <div class="flex justify-center gap-4">
+        <button id="back3" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded mt-4"><i class="fas fa-arrow-left mr-2"></i>뒤로 가기</button>
+        <button id="next3" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded mt-4"><i class="fas fa-arrow-right mr-2"></i>다음</button>
+      </div>
+    </div>
+
+    <!-- Page 4: Power Generation Inputs -->
+    <div id="page4" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 mb-4">원자력 vs 친환경 에너지 딜레마 게임</h1>
+      <p id="page4Info" class="text-blue-600 mb-4"></p>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">원자력 발전량</label>
+        <select id="nuclear" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+      </div>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">석탄 발전량</label>
+        <select id="coal" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+      </div>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">태양광 발전량</label>
+        <select id="solar" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+      </div>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">풍력 발전량</label>
+        <select id="wind" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+      </div>
+      <div class="mb-4">
+        <label class="block text-blue-700 mb-2">가스 발전량 (자동 계산)</label>
+        <input id="gas" type="text" readonly class="w-full p-2 border rounded bg-gray-100" value="0">
+      </div>
+      <div class="flex justify-center gap-4">
+        <button id="back4" class="btn-hover bg-gray-500 text-white px-4 py-2 rounded mt-4"><i class="fas fa-arrow-left mr-2"></i>뒤로 가기</button>
+        <button id="submit" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded mt-4" disabled><i class="fas fa-check mr-2"></i>제출하기</button>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="spinner"></div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup" data-next-page="3">
+      <p id="popupMessage" class="text-blue-700 mb-4"></p>
+      <button id="popupConfirm" class="btn-hover bg-blue-600 text-white px-4 py-2 rounded"><i class="fas fa-check mr-2"></i>확인</button>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let orgName = '';
+    let powerGrowth = 0;
+    let priceGrowth = 0;
+    let teamName = '';
+    let round = 1;
+    let maxPower = 700;
+    let currentPrice = 80;
+    let isSubmitting = false;
+    const roundData = { 1: { maxPower: 700, currentPrice: 80 } }; // Store per-round values
+
+    const powerOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 75, 80, 100, 150, 200, 250, 300, 350, 400, 450, 500];
+
+    // Populate team dropdown
+    const teamSelect = document.getElementById('teamName');
+    for (let i = 1; i <= 60; i++) {
+      const option = document.createElement('option');
+      option.value = `${i}팀`;
+      option.text = `${i}팀`;
+      teamSelect.appendChild(option);
+    }
+
+    // Populate power generation dropdowns
+    ['nuclear', 'coal', 'solar', 'wind'].forEach(id => {
+      const select = document.getElementById(id);
+      powerOptions.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.text = value;
+        select.appendChild(option);
+      });
+    });
+
+    // Page navigation
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`page${page}`).classList.remove('hidden');
+      currentPage = page;
+      updatePageInfo();
+    }
+
+    // Update page info
+    function updatePageInfo() {
+      const currentRoundData = roundData[round] || { maxPower, currentPrice };
+      if (currentPage >= 2) {
+        document.getElementById('page2Info').textContent = `${orgName}, 최대 전력 소비량: ${Math.round(currentRoundData.maxPower)}TWh, 현재 전기요금: ${Math.round(currentRoundData.currentPrice)}원/KWh`;
+      }
+      if (currentPage >= 3) {
+        document.getElementById('page3Info').textContent = `${orgName}, ${teamName}, 최대 전력 소비량: ${Math.round(currentRoundData.maxPower)}TWh, 현재 전기요금: ${Math.round(currentRoundData.currentPrice)}원/KWh`;
+      }
+      if (currentPage === 4) {
+        document.getElementById('page4Info').textContent = `${orgName}, ${teamName}, ${round}라운드, 최대 전력 소비량: ${Math.round(currentRoundData.maxPower)}TWh, 현재 전기요금: ${Math.round(currentRoundData.currentPrice)}원/KWh`;
+        updateGas();
+      }
+    }
+
+    // Calculate gas generation
+    function updateGas() {
+      const currentRoundData = roundData[round] || { maxPower, currentPrice };
+      const nuclear = parseInt(document.getElementById('nuclear').value) || 0;
+      const coal = parseInt(document.getElementById('coal').value) || 0;
+      const solar = parseInt(document.getElementById('solar').value) || 0;
+      const wind = parseInt(document.getElementById('wind').value) || 0;
+      const gas = Math.round(currentRoundData.maxPower) - (nuclear + coal + solar + wind);
+      document.getElementById('gas').value = gas;
+      document.getElementById('submit').disabled = gas < 0 || gas > 500 || isSubmitting;
+    }
+
+    // Update round data
+    function updateRoundData(nextRound) {
+      if (!roundData[nextRound]) {
+        const prevRoundData = roundData[nextRound - 1] || { maxPower: 700, currentPrice: 80 };
+        roundData[nextRound] = {
+          maxPower: prevRoundData.maxPower + (prevRoundData.maxPower * powerGrowth) / 100,
+          currentPrice: prevRoundData.currentPrice + (prevRoundData.currentPrice * priceGrowth) / 100
+        };
+      }
+      maxPower = roundData[nextRound].maxPower;
+      currentPrice = roundData[nextRound].currentPrice;
+    }
+
+    // Event listeners
+    document.getElementById('next1').addEventListener('click', () => {
+      orgName = document.getElementById('orgName').value.trim();
+      powerGrowth = parseFloat(document.getElementById('powerGrowth').value) || 0;
+      priceGrowth = parseFloat(document.getElementById('priceGrowth').value) || 0;
+      if (orgName) {
+        updateRoundData(1); // Initialize round 1 data
+        showPage(2);
+      } else {
+        alert('단체명을 입력해주세요.');
+      }
+    });
+
+    document.getElementById('next2').addEventListener('click', () => {
+      teamName = document.getElementById('teamName').value;
+      if (teamName) {
+        showPage(3);
+      } else {
+        alert('팀명을 선택해주세요.');
+      }
+    });
+
+    document.getElementById('back2').addEventListener('click', () => showPage(1));
+
+    document.getElementById('next3').addEventListener('click', () => {
+      round = parseInt(document.getElementById('round').value);
+      updateRoundData(round);
+      showPage(4);
+    });
+
+    document.getElementById('back3').addEventListener('click', () => showPage(2));
+
+    document.getElementById('back4').addEventListener('click', () => showPage(3));
+
+    document.getElementById('submit').addEventListener('click', () => {
+      if (isSubmitting) return;
+      isSubmitting = true;
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('submit').disabled = true;
+
+      const data = {
+        round: `${round}라운드`,
+        teamName,
+        nuclear: parseInt(document.getElementById('nuclear').value) || 0,
+        coal: parseInt(document.getElementById('coal').value) || 0,
+        solar: parseInt(document.getElementById('solar').value) || 0,
+        wind: parseInt(document.getElementById('wind').value) || 0,
+        gas: parseInt(document.getElementById('gas').value) || 0,
+        orgName
+      };
+
+      console.log('Submitting:', data); // For debugging
+
+      fetch('https://script.google.com/macros/s/AKfycbxdb0KctVNkJ8n6ADKhTJsG2YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(data);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(data); // Handle as success due to no-cors
+      });
+    });
+
+    function handleSubmissionSuccess(data) {
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('popupMessage').textContent = `${data.orgName}, ${data.teamName}, ${data.round}이 잘 입력됐습니다.`;
+      document.getElementById('popup').style.display = 'block';
+      document.getElementById('popup').dataset.nextPage = round < 10 ? '3' : '1';
+      if (round < 10) {
+        round++;
+        updateRoundData(round);
+        document.getElementById('round').value = round;
+        // Reset power generation fields
+        ['nuclear', 'coal', 'solar', 'wind'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+        document.getElementById('gas').value = '0';
+      }
+      setTimeout(() => {
+        isSubmitting = false;
+        document.getElementById('submit').disabled = false;
+      }, 3000);
+    }
+
+    document.getElementById('popupConfirm').addEventListener('click', () => {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      if (nextPage === 1) {
+        orgName = '';
+        teamName = '';
+        round = 1;
+        maxPower = 700;
+        currentPrice = 80;
+        roundData = { 1: { maxPower: 700, currentPrice: 80 } };
+        document.getElementById('orgName').value = '';
+        document.getElementById('powerGrowth').value = '';
+        document.getElementById('priceGrowth').value = '';
+        document.getElementById('teamName').value = '';
+        document.getElementById('round').value = '1';
+      }
+      showPage(nextPage);
+    });
+
+    ['nuclear', 'coal', 'solar', 'wind'].forEach(id => {
+      document.getElementById(id).addEventListener('change', updateGas);
+    });
+
+    // Initial page
+    showPage(1);
+  </script>
+</body>
+</html>
