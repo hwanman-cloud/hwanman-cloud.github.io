@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genius - Investment and Donation Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    .btn {
+      transition: all 0.2s ease-in-out;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      background-color: #1d4ed8;
+    }
+    #loadingSpinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #2563eb;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center">
+  <div id="loadingSpinner" class="flex">
+    <div class="spinner"></div>
+  </div>
+  <div id="popup" class="text-center">
+    <p id="popupMessage" class="text-lg text-blue-800 mb-4"></p>
+    <button id="popupConfirm" class="btn bg-blue-600 text-white px-4 py-2 rounded">확인</button>
+  </div>
+  <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
+    <!-- Page 1: Group Name Input -->
+    <div id="page1" class="page">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-4">지니어스 - 투자와 기부 게임</h1>
+      <p class="text-blue-600 text-center mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 mb-4 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+      <button id="next1" class="btn bg-blue-500 text-white px-4 py-2 rounded w-full">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+    </div>
+
+    <!-- Page 2: Team Selection -->
+    <div id="page2" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">지니어스 - 투자와 기부 게임</h1>
+      <p class="text-blue-600 text-center mb-4">단체명: <span id="groupNameDisplay2" class="font-semibold"></span></p>
+      <label for="teamName" class="text-blue-600">팀 선택:</label>
+      <select id="teamName" class="w-full p-2 mb-4 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="" disabled selected>팀을 선택하세요</option>
+      </select>
+      <div class="flex justify-between">
+        <button id="back2" class="btn bg-gray-500 text-white px-4 py-2 rounded"><i class="fas fa-arrow-left mr-2"></i>뒤로 가기</button>
+        <button id="next2" class="btn bg-blue-500 text-white px-4 py-2 rounded">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">지니어스 - 투자와 기부 게임</h1>
+      <p class="text-blue-600 text-center mb-2">단체명: <span id="groupNameDisplay3" class="font-semibold"></span></p>
+      <p class="text-blue-600 text-center mb-4">팀명: <span id="teamNameDisplay3" class="font-semibold"></span></p>
+      <label for="round" class="text-blue-600">라운드 선택:</label>
+      <select id="round" class="w-full p-2 mb-4 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="" disabled selected>라운드를 선택하세요</option>
+      </select>
+      <div class="flex justify-between">
+        <button id="back3" class="btn bg-gray-500 text-white px-4 py-2 rounded"><i class="fas fa-arrow-left mr-2"></i>뒤로 가기</button>
+        <button id="next3" class="btn bg-blue-500 text-white px-4 py-2 rounded">다음 <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
+    </div>
+
+    <!-- Page 4: Investment and Donation Input -->
+    <div id="page4" class="page hidden">
+      <h1 class="text-2xl font-bold text-blue-800 text-center mb-2">지니어스 - 투자와 기부 게임</h1>
+      <p class="text-blue-600 text-center mb-2">단체명: <span id="groupNameDisplay4" class="font-semibold"></span></p>
+      <p class="text-blue-600 text-center mb-4">팀명: <span id="teamNameDisplay4" class="font-semibold"></span></p>
+      <div id="investmentA" class="mb-4">
+        <label for="investA" class="text-blue-600">A투자처에 투자할 금액:</label>
+        <select id="investA" class="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>금액 선택</option>
+        </select>
+      </div>
+      <div id="investmentB" class="mb-4">
+        <label for="investB" class="text-blue-600">B투자처에 투자할 금액:</label>
+        <select id="investB" class="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>금액 선택</option>
+        </select>
+      </div>
+      <div id="donationY" class="mb-4">
+        <label for="donateY" class="text-blue-600">Y기부처에 기부할 금액:</label>
+        <select id="donateY" class="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>금액 선택</option>
+        </select>
+      </div>
+      <div id="donationZ" class="mb-4">
+        <label for="donateZ" class="text-blue-600">Z기부처에 기부할 금액:</label>
+        <select id="donateZ" class="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>금액 선택</option>
+        </select>
+      </div>
+      <div class="flex justify-between">
+        <button id="back4" class="btn bg-gray-500 text-white px-4 py-2 rounded"><i class="fas fa-arrow-left mr-2"></i>뒤로 가기</button>
+        <button id="submit" class="btn bg-blue-500 text-white px-4 py-2 rounded">제출하기 <i class="fas fa-check ml-2"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let groupName = '';
+    let teamName = '';
+    let currentRound = 1;
+    let isSubmitting = false;
+
+    // Populate team dropdown dynamically
+    function populateTeamDropdown() {
+      const teamSelect = document.getElementById('teamName');
+      teamSelect.innerHTML = '<option value="" disabled selected>팀을 선택하세요</option>';
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.textContent = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+    }
+
+    // Populate round dropdown dynamically
+    function populateRoundDropdown() {
+      const roundSelect = document.getElementById('round');
+      roundSelect.innerHTML = '<option value="" disabled selected>라운드를 선택하세요</option>';
+      for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.textContent = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = `${currentRound}라운드`;
+    }
+
+    // Populate amount dropdowns dynamically
+    function populateAmountDropdowns() {
+      const selects = ['investA', 'investB', 'donateY', 'donateZ'];
+      selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="" disabled selected>금액 선택</option>';
+        for (let i = 1; i <= 50; i++) {
+          const option = document.createElement('option');
+          option.value = `${i}`;
+          option.textContent = `${i}`;
+          select.appendChild(option);
+        }
+      });
+    }
+
+    // Show/hide pages
+    function showPage(pageNum) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page${pageNum}`).classList.remove('hidden');
+      currentPage = pageNum;
+      if (pageNum === 2) {
+        populateTeamDropdown();
+      }
+      if (pageNum === 3) {
+        populateRoundDropdown();
+      }
+      if (pageNum === 4) {
+        populateAmountDropdowns();
+        const isEvenRound = currentRound % 2 === 0;
+        document.getElementById('investmentB').style.display = isEvenRound ? 'none' : 'block';
+        document.getElementById('donationZ').style.display = isEvenRound ? 'block' : 'none';
+      }
+    }
+
+    // Update displays
+    function updateDisplays() {
+      document.getElementById('groupNameDisplay2').textContent = groupName;
+      document.getElementById('groupNameDisplay3').textContent = groupName;
+      document.getElementById('teamNameDisplay3').textContent = teamName;
+      document.getElementById('groupNameDisplay4').textContent = groupName;
+      document.getElementById('teamNameDisplay4').textContent = teamName;
+    }
+
+    // Show popup
+    function showPopup(message, nextPage) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+      document.getElementById('popup').dataset.nextPage = nextPage;
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      showPage(nextPage);
+    }
+
+    // Page 1: Group Name
+    document.getElementById('next1').onclick = () => {
+      groupName = document.getElementById('groupName').value.trim();
+      if (!groupName) {
+        alert('단체명을 입력해 주세요.');
+        return;
+      }
+      updateDisplays();
+      showPage(2);
+    };
+
+    // Page 2: Team Selection
+    document.getElementById('next2').onclick = () => {
+      teamName = document.getElementById('teamName').value;
+      if (!teamName) {
+        alert('팀을 선택해 주세요.');
+        return;
+      }
+      updateDisplays();
+      document.getElementById('round').value = '1라운드';
+      showPage(3);
+    };
+    document.getElementById('back2').onclick = () => showPage(1);
+
+    // Page 3: Round Selection
+    document.getElementById('next3').onclick = () => {
+      currentRound = parseInt(document.getElementById('round').value);
+      showPage(4);
+    };
+    document.getElementById('back3').onclick = () => showPage(2);
+
+    // Page 4: Investment and Donation
+    document.getElementById('back4').onclick = () => {
+      document.getElementById('round').value = `${currentRound}라운드`;
+      showPage(3);
+    };
+
+    document.getElementById('submit').onclick = () => {
+      if (isSubmitting) return;
+
+      // Validate required fields
+      const investA = document.getElementById('investA').value;
+      const investB = currentRound % 2 === 0 ? '' : document.getElementById('investB').value;
+      const donateY = document.getElementById('donateY').value;
+      const donateZ = currentRound % 2 === 0 ? document.getElementById('donateZ').value : '';
+      
+      if (!investA || !donateY || (currentRound % 2 !== 0 && !investB) || (currentRound % 2 === 0 && !donateZ)) {
+        alert('모든 필수 금액을 선택해 주세요.');
+        isSubmitting = false;
+        return;
+      }
+
+      isSubmitting = true;
+      document.getElementById('loadingSpinner').style.display = 'flex';
+      document.getElementById('submit').disabled = true;
+
+      const data = {
+        groupName,
+        teamName,
+        round: document.getElementById('round').value,
+        investA,
+        investB,
+        donateY,
+        donateZ
+      };
+
+      console.log('Submitting:', data);
+
+      fetch('https://script.google.com/macros/s/AKfycbxdb0KctVNkJ8n6ADKhTJsG2YQmaujkJtJU9o1mPMfM3_DWm0wcuCDd2HmDwYd2-9s/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        handleSubmissionSuccess(data);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(data); // Handle as success due to no-cors
+      });
+    };
+
+    function handleSubmissionSuccess(data) {
+      document.getElementById('loadingSpinner').style.display = 'none';
+      const currentRoundNum = parseInt(data.round.match(/\d+/)[0]);
+      if (currentRoundNum < 12) {
+        showPopup(`${data.groupName}, ${data.teamName}, ${data.round} 내용이 잘 입력됐습니다.`, 3);
+        currentRound++;
+        document.getElementById('round').value = `${currentRound}라운드`;
+        document.getElementById('investA').value = '';
+        document.getElementById('investB').value = '';
+        document.getElementById('donateY').value = '';
+        document.getElementById('donateZ').value = '';
+      } else {
+        showPopup('모든 입력이 완료되었습니다!', 1);
+        groupName = '';
+        teamName = '';
+        currentRound = 1;
+        document.getElementById('groupName').value = '';
+        document.getElementById('teamName').value = '';
+      }
+      setTimeout(() => {
+        isSubmitting = false;
+        document.getElementById('submit').disabled = false;
+      }, 3000);
+    }
+
+    // Popup confirm button
+    document.getElementById('popupConfirm').onclick = closePopup;
+
+    // Initialize
+    showPage(1);
+    document.getElementById('round').value = '1라운드';
+  </script>
+</body>
+</html>
