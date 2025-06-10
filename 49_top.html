@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>멸종위기동물 보호 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'ocean-blue': '#1E3A8A',
+            'sky-blue': '#3B82F6',
+            'light-blue': '#BFDBFE',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .btn {
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    .btn:active {
+      transform: scale(0.95);
+      background-color: #2563EB;
+    }
+    #loadingSpinner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-light-blue min-h-screen flex items-center justify-center font-sans">
+  <div id="app" class="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+    <!-- Page 1: Group Name Input -->
+    <div id="page1" class="page">
+      <h1 class="text-2xl font-bold text-ocean-blue text-center mb-4">멸종위기동물 보호 게임</h1>
+      <p class="text-center text-gray-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-sky-blue" placeholder="단체명 입력">
+      <button onclick="nextPage(1)" class="btn w-full bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">다음</button>
+    </div>
+
+    <!-- Page 2: Team Selection -->
+    <div id="page2" class="page hidden">
+      <h1 class="text-2xl font-bold text-ocean-blue text-center mb-2">멸종위기동물 보호 게임</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="groupNameDisplay2"></span></p>
+      <p class="text-center text-gray-600 mb-4">팀명을 선택하세요.</p>
+      <select id="teamSelect" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-sky-blue">
+        <option value="" disabled selected>팀 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(2)" class="btn flex-1 bg-gray-300 text-gray-700 p-2 rounded hover:bg-gray-400">뒤로 가기</button>
+        <button onclick="nextPage(2)" class="btn flex-1 bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden">
+      <h1 class="text-2xl font-bold text-ocean-blue text-center mb-2">멸종위기동물 보호 게임</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="groupNameDisplay3"></span>, 팀명: <span id="teamDisplay3"></span></p>
+      <p class="text-center text-gray-600 mb-4">라운드를 선택하세요.</p>
+      <select id="roundSelect" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-sky-blue">
+        <option value="" disabled>라운드 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(3)" class="btn flex-1 bg-gray-300 text-gray-700 p-2 rounded hover:bg-gray-400">뒤로 가기</button>
+        <button onclick="nextPage(3)" class="btn flex-1 bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 4: Target Team Selection -->
+    <div id="page4" class="page hidden">
+      <h1 class="text-2xl font-bold text-ocean-blue text-center mb-2">멸종위기동물 보호 게임</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="groupNameDisplay4"></span>, 팀명: <span id="teamDisplay4"></span>, 라운드: <span id="roundDisplay4"></span></p>
+      <p class="text-center text-gray-600 mb-4">피해를 줄 팀을 선택하세요.</p>
+      <select id="targetTeamSelect" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-sky-blue">
+        <option value="" disabled selected>팀 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(4)" class="btn flex-1 bg-gray-300 text-gray-700 p-2 rounded hover:bg-gray-400">뒤로 가기</button>
+        <button onclick="nextPage(4)" class="btn flex-1 bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 5: Action Selection -->
+    <div id="page5" class="page hidden">
+      <h1 class="text-2xl font-bold text-ocean-blue text-center mb-2">멸종위기동물 보호 게임</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="groupNameDisplay5"></span>, 팀명: <span id="teamDisplay5"></span>, 라운드: <span id="roundDisplay5"></span></p>
+      <p class="text-center text-gray-600 mb-4">멸종 위기 동물 피해/보호 행위를 선택하세요.</p>
+      <select id="actionSelect" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-sky-blue">
+        <option value="" disabled selected>행위 선택</option>
+        <option value="골프장/스키장 건설">골프장/스키장 건설</option>
+        <option value="밀렵">밀렵</option>
+        <option value="기후위기 초래">기후위기 초래</option>
+        <option value="열대우림 파괴">열대우림 파괴</option>
+        <option value="산불">산불</option>
+        <option value="신도시 개발">신도시 개발</option>
+        <option value="고속도로 터널 공사">고속도로 터널 공사</option>
+        <option value="댐 건설 공사">댐 건설 공사</option>
+        <option value="환경보호 정책">환경보호 정책</option>
+        <option value="멸종위기 동물 보호 프로그램">멸종위기 동물 보호 프로그램</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(5)" class="btn flex-1 bg-gray-300 text-gray-700 p-2 rounded hover:bg-gray-400">뒤로 가기</button>
+        <button onclick="nextPage(5)" class="btn flex-1 bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 6: Animal Selection and Submission -->
+    <div id="page6" class="page hidden">
+      <h1 class="text-2xl font-bold text-ocean-blue text-center mb-2">멸종위기동물 보호 게임</h1>
+      <p class="text-center text-gray-600 mb-2">단체명: <span id="groupNameDisplay6"></span>, 팀명: <span id="teamDisplay6"></span>, 라운드: <span id="roundDisplay6"></span>, 행위: <span id="actionDisplay6"></span></p>
+      <p class="text-center text-gray-600 mb-4">멸종 또는 보호된 위기 동물을 선택하세요.</p>
+      <select id="animalSelect" class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-sky-blue">
+        <option value="" disabled selected>동물 선택</option>
+      </select>
+      <div class="flex space-x-2">
+        <button onclick="prevPage(6)" class="btn flex-1 bg-gray-300 text-gray-700 p-2 rounded hover:bg-gray-400">뒤로 가기</button>
+        <button id="submitBtn" onclick="submitForm()" class="btn flex-1 bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">제출하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="loadingSpinner">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-sky-blue"></div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" data-next-page="3">
+    <p id="popupMessage" class="text-gray-800 mb-4"></p>
+    <button onclick="closePopup()" class="btn bg-sky-blue text-white p-2 rounded hover:bg-ocean-blue">확인</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let formData = {
+      group: '',
+      team: '',
+      round: '1라운드',
+      targetTeam: '',
+      action: '',
+      animal: ''
+    };
+    let isSubmitting = false;
+
+    // Initialize dropdowns
+    function initializeDropdowns() {
+      const teamSelect = document.getElementById('teamSelect');
+      const targetTeamSelect = document.getElementById('targetTeamSelect');
+      const roundSelect = document.getElementById('roundSelect');
+
+      // Populate team dropdowns (1팀 to 60팀)
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.text = `${i}팀`;
+        teamSelect.appendChild(option.cloneNode(true));
+        targetTeamSelect.appendChild(option);
+      }
+
+      // Populate round dropdowns (1라운드 to 100라운드)
+      for (let i = 1; i <= 100; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}라운드`;
+        option.text = `${i}라운드`;
+        roundSelect.appendChild(option);
+      }
+      roundSelect.value = '1라운드';
+    }
+
+    // Update animal dropdown based on action
+    function updateAnimalDropdown() {
+      const action = formData.action;
+      const animalSelect = document.getElementById('animalSelect');
+      animalSelect.innerHTML = '<option value="" disabled selected>동물 선택</option>';
+
+      const animals = {
+        '골프장/스키장 건설': ['까막딱따구리', '두루미', '솔개'],
+        '밀렵': ['시베리아호랑이', '사향고양이', '반달가슴곰'],
+        '기후위기 초래': ['북극곰', '산호초'],
+        '열대우림 파괴': ['오가피', '아프리카치타', '벵갈호랑이'],
+        '산불': ['붉은박쥐', '산양'],
+        '신도시 개발': ['대륙사슴', '족제비'],
+        '고속도로 터널 공사': ['늑대', '삵', '하늘다람쥐'],
+        '댐 건설 공사': ['수달', '담비'],
+        '환경보호 정책': ['수달', '담비', '하늘다람쥐', '삵', '늑대', '대륙사슴', '족제비', '붉은박쥐', '산양', '오가피'],
+        '멸종위기 동물 보호 프로그램': ['아프리카치타', '벵갈호랑이', '북극곰', '산호초', '시베리아호랑이', '사향고양이', '반달가슴곰', '두루미', '솔개', '까막딱따구리']
+      };
+
+      (animals[action] || []).forEach(animal => {
+        const option = document.createElement('option');
+        option.value = animal;
+        option.text = animal;
+        animalSelect.appendChild(option);
+      });
+    }
+
+    // Navigate to next page
+    function nextPage(pageNum) {
+      if (!validateInputs(pageNum)) return;
+
+      // Save form data
+      if (pageNum === 1) {
+        formData.group = document.getElementById('groupName').value.trim();
+      } else if (pageNum === 2) {
+        formData.team = document.getElementById('teamSelect').value;
+      } else if (pageNum === 3) {
+        formData.round = document.getElementById('roundSelect').value;
+      } else if (pageNum === 4) {
+        formData.targetTeam = document.getElementById('targetTeamSelect').value;
+      } else if (pageNum === 5) {
+        formData.action = document.getElementById('actionSelect').value;
+        updateAnimalDropdown();
+      }
+
+      // Update displays
+      updateDisplays();
+
+      // Hide current page and show next
+      document.getElementById(`page${pageNum}`).classList.add('hidden');
+      document.getElementById(`page${pageNum + 1}`).classList.remove('hidden');
+      currentPage = pageNum + 1;
+    }
+
+    // Navigate to previous page
+    function prevPage(pageNum) {
+      document.getElementById(`page${pageNum}`).classList.add('hidden');
+      document.getElementById(`page${pageNum - 1}`).classList.remove('hidden');
+      currentPage = pageNum - 1;
+      updateDisplays();
+    }
+
+    // Update display fields
+    function updateDisplays() {
+      for (let i = 2; i <= 6; i++) {
+        document.getElementById(`groupNameDisplay${i}`).textContent = formData.group;
+      }
+      for (let i = 3; i <= 6; i++) {
+        document.getElementById(`teamDisplay${i}`).textContent = formData.team;
+      }
+      for (let i = 4; i <= 6; i++) {
+        document.getElementById(`roundDisplay${i}`).textContent = formData.round;
+      }
+      if (document.getElementById('actionDisplay6')) {
+        document.getElementById('actionDisplay6').textContent = formData.action;
+      }
+    }
+
+    // Validate inputs
+    function validateInputs(pageNum) {
+      if (pageNum === 1) {
+        const groupName = document.getElementById('groupName').value.trim();
+        if (!groupName) {
+          showPopup('단체명을 입력해주세요.');
+          return false;
+        }
+      } else if (pageNum === 2 && !document.getElementById('teamSelect').value) {
+        showPopup('팀명을 선택해주세요.');
+        return false;
+      } else if (pageNum === 3 && !document.getElementById('roundSelect').value) {
+        showPopup('라운드를 선택해주세요.');
+        return false;
+      } else if (pageNum === 4 && !document.getElementById('targetTeamSelect').value) {
+        showPopup('피해를 줄 팀을 선택해주세요.');
+        return false;
+      } else if (pageNum === 5 && !document.getElementById('actionSelect').value) {
+        showPopup('행위를 선택해주세요.');
+        return false;
+      }
+      return true;
+    }
+
+    // Show popup
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    // Close popup
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      const message = document.getElementById('popupMessage').textContent;
+
+      if (message.includes('내용이 잘 입력됐습니다.')) {
+        const roundNum = parseInt(formData.round);
+        if (roundNum >= 100) {
+          showPopup('모든 입력이 완료되었습니다!');
+          document.getElementById('popup').dataset.nextPage = '1';
+        } else {
+          document.getElementById('roundSelect').value = `${roundNum + 1}라운드`;
+          document.getElementById('popup').dataset.nextPage = '3';
+          goToPage(3);
+        }
+      } else if (message === '모든 입력이 완료되었습니다!') {
+        resetForm();
+        goToPage(1);
+      }
+    }
+
+    // Go to specific page
+    function goToPage(pageNum) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page${pageNum}`).classList.remove('hidden');
+      currentPage = pageNum;
+      updateDisplays();
+    }
+
+    // Reset form
+    function resetForm() {
+      formData = {
+        group: '',
+        team: '',
+        round: '1라운드',
+        targetTeam: '',
+        action: '',
+        animal: ''
+      };
+      document.getElementById('groupName').value = '';
+      document.getElementById('teamSelect').value = '';
+      document.getElementById('roundSelect').value = '1라운드';
+      document.getElementById('targetTeamSelect').value = '';
+      document.getElementById('actionSelect').value = '';
+      document.getElementById('animalSelect').innerHTML = '<option value="" disabled selected>동물 선택</option>';
+    }
+
+    // Submit form
+    function submitForm() {
+      if (isSubmitting) return;
+      formData.animal = document.getElementById('animalSelect').value;
+      if (!formData.animal) {
+        showPopup('동물을 선택해주세요.');
+        return;
+      }
+
+      isSubmitting = true;
+      document.getElementById('loadingSpinner').style.display = 'block';
+      document.getElementById('submitBtn').disabled = true;
+
+      fetch('https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(() => {
+        handleSubmissionSuccess(formData.group, formData.team, formData.round);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(formData.group, formData.team, formData.round); // Handle as success due to no-cors
+      });
+    }
+
+    function handleSubmissionSuccess(group, team, round) {
+      document.getElementById('loadingSpinner').style.display = 'none';
+      showPopup(`${group}, ${team}, ${round} 내용이 잘 입력됐습니다.`);
+
+      // Reset fields for next round
+      formData.action = '';
+      formData.animal = '';
+      formData.targetTeam = '';
+      document.getElementById('actionSelect').value = '';
+      document.getElementById('animalSelect').innerHTML = '<option value="" disabled selected>동물 선택</option>';
+      document.getElementById('targetTeamSelect').value = '';
+
+      setTimeout(() => {
+        document.getElementById('submitBtn').disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
+
+    // Initialize
+    initializeDropdowns();
+  </script>
+</body>
+</html>
