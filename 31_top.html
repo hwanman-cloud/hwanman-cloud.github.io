@@ -291,19 +291,30 @@
 
       console.log('Submitting:', data);
 
-      fetch('https://script.google.com/macros/s/AKfycbwDh7QMDJm_L5E8ejC21AchN26ZmhzlwnowbrwCR1v6h_o8rdQV7zYh156BEGQiTBF8yQ/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+      // Timeout to prevent infinite spinner
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timed out')), 10000);
+      });
+
+      Promise.race([
+        fetch('https://script.google.com/macros/s/AKfycbwDh7QMDJm_L5E8ejC21AchN26ZmhzlwnowbrwCR1v6h_o8rdQV7zYh156BEGQiTBF8yQ/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }),
+        timeoutPromise
+      ])
       .then(() => {
         handleSubmissionSuccess(data);
       })
-      .catch(() => {
-        handleSubmissionSuccess(data); // Handle as success due to no-cors
+      .catch((error) => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('submit').disabled = false;
+        isSubmitting = false;
+        showPopup(`제출 중 오류가 발생했습니다: ${error.message}`, currentPage);
       });
     };
 
