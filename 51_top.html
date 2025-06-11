@@ -1,392 +1,396 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>인생 가치관 경매 게임-(15가지)</title>
-        <!-- adsense AD -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
-     crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #e6f3ff;
-        }
-        .page {
-            display: none;
-        }
-        .active {
-            display: block;
-        }
-        .btn {
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-        .spinner {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-        }
-        .spinner::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 36px;
-            height: 36px;
-            border: 4px solid #fff;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        #popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10000;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>런닝맨-라이어 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn {
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      background-color: #1e40af;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #1e40af;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 50;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
 </head>
-<body class="bg-blue-100">
-      <!-- adsense AD -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
-     crossorigin="anonymous"></script>
-<!-- bottom -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-6889882135814929"
-     data-ad-slot="6428454153"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-      <!-- adsense AD -->
-    <div id="app" class="container mx-auto px-4 py-8 max-w-md">
-        <h1 class="text-3xl font-bold text-center text-blue-800 mb-8">
-            <i class="fas fa-gavel mr-2"></i>인생 가치관 경매 게임-(15가지)
-        </h1>
-
-        <!-- Page 1 -->
-        <div id="page1" class="page active bg-white rounded-lg shadow-md p-6">
-            <p class="mb-4 text-gray-700">
-                <i class="fas fa-info-circle mr-2"></i>Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.
-            </p>
-            <input type="text" id="groupName" class="w-full p-2 border rounded mb-4" placeholder="단체명 입력">
-            <button onclick="nextPage(2)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-                <i class="fas fa-arrow-right mr-2"></i>다음
-            </button>
-        </div>
-
-        <!-- Page 2 -->
-        <div id="page2" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="groupNameDisplay" class="text-xl font-semibold mb-4"></h2>
-            <select id="teamName" class="w-full p-2 border rounded mb-4">
-                <option value="">팀 선택</option>
-            </select>
-            <div class="flex justify-between">
-                <button onclick="prevPage(1)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="nextPage(3)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <i class="fas fa-arrow-right mr-2"></i>다음
-                </button>
-            </div>
-        </div>
-
-        <!-- Page 3 -->
-        <div id="page3" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4"></h2>
-            <select id="roundName" class="w-full p-2 border rounded mb-4">
-                <option value="">라운드 선택</option>
-            </select>
-            <div class="flex justify-between">
-                <button onclick="prevPage(2)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="nextPage(4)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <i class="fas fa-arrow-right mr-2"></i>다음
-                </button>
-            </div>
-        </div>
-
-        <!-- Page 4 -->
-        <div id="page4" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="roundNameDisplay" class="text-xl font-semibold mb-4"></h2>
-            <p class="mb-2">
-                <i class="fas fa-money-bill-wave mr-2"></i>경매 입찰 금액
-            </p>
-            <select id="bidAmount" class="w-full p-2 border rounded mb-4">
-                <option value="">선택하세요</option>
-            </select>
-            <div class="flex justify-between">
-                <button onclick="prevPage(3)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="nextPage(5)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <i class="fas fa-arrow-right mr-2"></i>다음
-                </button>
-            </div>
-        </div>
-
-        <!-- Page 5 -->
-        <div id="page5" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="bidAmountDisplay" class="text-xl font-semibold mb-4"></h2>
-            <p class="mb-2">
-                <i class="fas fa-dice mr-2"></i>낙찰 베팅
-            </p>
-            <select id="betting" class="w-full p-2 border rounded mb-4">
-                <option value="">선택하세요</option>
-                <option value="0">0</option>
-                <option value="3">3</option>
-            </select>
-            <div class="flex justify-between mb-4">
-                <button onclick="prevPage(4)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button id="submitBtn" onclick="submitData()" class="btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                    <i class="fas fa-paper-plane mr-2"></i>제출하기
-                </button>
-            </div>
-        </div>
-
-        <!-- Spinner -->
-        <div id="loadingSpinner" class="spinner"></div>
-
-        <!-- Popup -->
-        <div id="popup" class="hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <p id="popupMessage" class="text-xl mb-4"></p>
-                <button onclick="closePopup()" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-                    <i class="fas fa-check mr-2"></i>확인
-                </button>
-            </div>
-        </div>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center p-4">
+  <div id="app" class="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
+    <!-- Page 1: 단체명 입력 -->
+    <div id="page1" class="page flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-4">런닝맨-라이어 게임</h1>
+      <p class="text-center text-blue-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border border-blue-300 rounded mb-4" placeholder="단체명 입력">
+      <button id="next1" class="btn bg-blue-600 text-white py-2 px-4 rounded">다음</button>
     </div>
 
-    <script>
-        let currentPage = 1;
-        let isSubmitting = false;
-        let gameData = {
-            groupName: '',
-            teamName: '',
-            roundName: '',
-            bidAmount: '',
-            betting: ''
-        };
+    <!-- Page 2: 팀명 선택 -->
+    <div id="page2" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2">런닝맨-라이어 게임</h1>
+      <p id="groupDisplay2" class="text-blue-600 mb-4"></p>
+      <select id="teamName" class="w-full p-2 border border-blue-300 rounded mb-4">
+        <!-- Options will be populated dynamically -->
+      </select>
+      <div class="flex space-x-2">
+        <button id="back2" class="btn bg-gray-500 text-white py-2 px-4 rounded">뒤로 가기</button>
+        <button id="next2" class="btn bg-blue-600 text-white py-2 px-4 rounded">다음</button>
+      </div>
+    </div>
 
-        // Navigate to next page with validation
-        function nextPage(pageNum) {
-            if (pageNum === 2 && !document.getElementById('groupName').value.trim()) {
-                showPopup('단체명을 입력해주세요.');
-                return;
-            }
-            if (pageNum === 3 && !document.getElementById('teamName').value) {
-                showPopup('팀명을 선택해주세요.');
-                return;
-            }
-            if (pageNum === 4 && !document.getElementById('roundName').value) {
-                showPopup('라운드를 선택해주세요.');
-                return;
-            }
-            if (pageNum === 5 && !document.getElementById('bidAmount').value) {
-                showPopup('입찰 금액을 선택해주세요.');
-                return;
-            }
+    <!-- Page 3: 회차 선택 -->
+    <div id="page3" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2">런닝맨-라이어 게임</h1>
+      <p id="groupDisplay3" class="text-blue-600"></p>
+      <p id="teamDisplay3" class="text-blue-600 mb-4"></p>
+      <select id="session" class="w-full p-2 border border-blue-300 rounded mb-4">
+        <option value="1회차">1회차</option>
+        <option value="2회차">2회차</option>
+        <option value="3회차">3회차</option>
+        <option value="4회차">4회차</option>
+        <option value="5회차">5회차</option>
+        <option value="6회차">6회차</option>
+      </select>
+      <div class="flex space-x-2">
+        <button id="back3" class="btn bg-gray-500 text-white py-2 px-4 rounded">뒤로 가기</button>
+        <button id="next3" class="btn bg-blue-600 text-white py-2 px-4 rounded">다음</button>
+      </div>
+    </div>
 
-            document.getElementById(`page${currentPage}`).classList.remove('active');
-            document.getElementById(`page${pageNum}`).classList.add('active');
-            currentPage = pageNum;
-            updateDisplays();
-        }
+    <!-- Page 4: 라운드 선택 -->
+    <div id="page4" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2">런닝맨-라이어 게임</h1>
+      <p id="groupDisplay4" class="text-blue-600"></p>
+      <p id="teamDisplay4" class="text-blue-600 mb-4"></p>
+      <select id="round" class="w-full p-2 border border-blue-300 rounded mb-4">
+        <option value="1라운드">1라운드</option>
+        <option value="2라운드">2라운드</option>
+        <option value="3라운드">3라운드</option>
+        <option value="4라운드">4라운드</option>
+        <option value="5라운드">5라운드</option>
+        <option value="6라운드">6라운드</option>
+      </select>
+      <p id="wordDisplay" class="text-3xl font-bold text-blue-700 mb-4"></p>
+      <div class="flex space-x-2">
+        <button id="back4" class="btn bg-gray-500 text-white py-2 px-4 rounded">뒤로 가기</button>
+        <button id="next4" class="btn bg-blue-600 text-white py-2 px-4 rounded">다음</button>
+      </div>
+    </div>
 
-        // Navigate to previous page
-        function prevPage(pageNum) {
-            document.getElementById(`page${currentPage}`).classList.remove('active');
-            document.getElementById(`page${pageNum}`).classList.add('active');
-            currentPage = pageNum;
-            updateDisplays();
-        }
+    <!-- Page 5: 라이어 팀 선택 -->
+    <div id="page5" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2">런닝맨-라이어 게임</h1>
+      <p id="groupDisplay5" class="text-blue-600"></p>
+      <p id="teamDisplay5" class="text-blue-600 mb-4"></p>
+      <p class="text-blue-600 mb-2">라이어로 지목할 팀명은?</p>
+      <select id="liarTeam" class="w-full p-2 border border-blue-300 rounded mb-4">
+        <!-- Options will be populated dynamically -->
+      </select>
+      <div class="flex space-x-2">
+        <button id="back5" class="btn bg-gray-500 text-white py-2 px-4 rounded">뒤로 가기</button>
+        <button id="next5" class="btn bg-blue-600 text-white py-2 px-4 rounded">다음</button>
+      </div>
+    </div>
 
-        // Update display elements
-        function updateDisplays() {
-            gameData.groupName = document.getElementById('groupName').value.trim();
-            gameData.teamName = document.getElementById('teamName').value;
-            gameData.roundName = document.getElementById('roundName').value;
-            gameData.bidAmount = document.getElementById('bidAmount').value;
-            gameData.betting = document.getElementById('betting').value;
+    <!-- Page 6: 베팅 -->
+    <div id="page6" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-800 mb-2">런닝맨-라이어 게임</h1>
+      <p id="groupDisplay6" class="text-blue-600"></p>
+      <p id="teamDisplay6" class="text-blue-600 mb-4"></p>
+      <p class="text-blue-600 mb-2">라이어를 확신한다면 3을 베팅하세요</p>
+      <select id="bet" class="w-full p-2 border border-blue-300 rounded mb-4">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <div class="flex space-x-2">
+        <button id="back6" class="btn bg-gray-500 text-white py-2 px-4 rounded">뒤로 가기</button>
+        <button id="submit" class="btn bg-blue-600 text-white py-2 px-4 rounded">제출하기</button>
+      </div>
+    </div>
 
-            document.getElementById('groupNameDisplay').textContent = `단체명: ${gameData.groupName}`;
-            document.getElementById('teamNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName || ''}`;
-            document.getElementById('roundNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName || ''}, 라운드: ${gameData.roundName || ''}`;
-            document.getElementById('bidAmountDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName || ''}, 라운드: ${gameData.roundName || ''}, 입찰 금액: ${gameData.bidAmount}`;
-        }
+    <!-- Loading Spinner -->
+    <div id="spinner" class="hidden spinner"></div>
 
-        // Submit data
-        function submitData() {
-            if (isSubmitting) return;
-            isSubmitting = true;
+    <!-- Popup -->
+    <div id="popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <p id="popupMessage" class="text-blue-600 mb-4"></p>
+        <button id="popupConfirm" class="btn bg-blue-600 text-white py-2 px-4 rounded">확인</button>
+      </div>
+    </div>
+  </div>
 
-            // Re-fetch values from DOM
-            gameData.groupName = document.getElementById('groupName').value.trim();
-            gameData.teamName = document.getElementById('teamName').value;
-            gameData.roundName = document.getElementById('roundName').value;
-            gameData.bidAmount = document.getElementById('bidAmount').value;
-            gameData.betting = document.getElementById('betting').value;
+  <script>
+    // Data storage
+    let state = {
+      groupName: '',
+      teamName: '',
+      session: '1회차',
+      round: '1라운드',
+      liarTeam: '',
+      bet: '1'
+    };
 
-            // Validate fields
-            const missingFields = [];
-            if (!gameData.groupName) missingFields.push('단체명');
-            if (!gameData.teamName) missingFields.push('팀명');
-            if (!gameData.roundName) missingFields.push('라운드');
-            if (!gameData.bidAmount) missingFields.push('입찰 금액');
-            if (!gameData.betting) missingFields.push('낙찰 베팅');
+    // Liar data
+    const liarData = {
+      '1회차': {
+        '1라운드': { liarTeam: '5팀', word: '축구장' },
+        '2라운드': { liarTeam: '2팀', word: '세종대왕' },
+        '3라운드': { liarTeam: '3팀', word: '지우개' },
+        '4라운드': { liarTeam: '3팀', word: '카레' },
+        '5라운드': { liarTeam: '6팀', word: '스타벅스' },
+        '6라운드': { liarTeam: '1팀', word: '개그맨' }
+      },
+      '2회차': {
+        '1라운드': { liarTeam: '5팀', word: '롯데월드' },
+        '2라운드': { liarTeam: '6팀', word: '에디슨' },
+        '3라운드': { liarTeam: '3팀', word: '볼펜' },
+        '4라운드': { liarTeam: '1팀', word: '치킨' },
+        '5라운드': { liarTeam: '5팀', word: '아디다스' },
+        '6라운드': { liarTeam: '1팀', word: '판사' }
+      },
+      '3회차': {
+        '1라운드': { liarTeam: '3팀', word: '식물원' },
+        '2라운드': { liarTeam: '3팀', word: '김유신장군' },
+        '3라운드': { liarTeam: '5팀', word: '스피커' },
+        '4라운드': { liarTeam: '1팀', word: '마라탕' },
+        '5라운드': { liarTeam: '6팀', word: 'CU(편의점)' },
+        '6라운드': { liarTeam: '2팀', word: '간호사' }
+      },
+      '4회차': {
+        '1라운드': { liarTeam: '2팀', word: '과학실' },
+        '2라운드': { liarTeam: '5팀', word: '태조왕건' },
+        '3라운드': { liarTeam: '4팀', word: '냉장고' },
+        '4라운드': { liarTeam: '3팀', word: '비빔밥' },
+        '5라운드': { liarTeam: '5팀', word: '인스타그램' },
+        '6라운드': { liarTeam: '3팀', word: '모델' }
+      },
+      '5회차': {
+        '1라운드': { liarTeam: '4팀', word: '목욕탕' },
+        '2라운드': { liarTeam: '2팀', word: '김구선생' },
+        '3라운드': { liarTeam: '2팀', word: '가방' },
+        '4라운드': { liarTeam: '6팀', word: '돈까스' },
+        '5라운드': { liarTeam: '6팀', word: '코카콜라' },
+        '6라운드': { liarTeam: '1팀', word: '기자' }
+      },
+      '6회차': {
+        '1라운드': { liarTeam: '5팀', word: '경복궁' },
+        '2라운드': { liarTeam: '2팀', word: '뉴턴' },
+        '3라운드': { liarTeam: '1팀', word: '노트북' },
+        '4라운드': { liarTeam: '5팀', word: '콩국수' },
+        '5라운드': { liarTeam: '6팀', word: '마이크로소프트' },
+        '6라운드': { liarTeam: '2팀', word: '소방관' }
+      }
+    };
 
-            if (missingFields.length > 0) {
-                console.log('Missing fields:', missingFields);
-                showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
-                isSubmitting = false;
-                return;
-            }
+    // Populate team dropdowns
+    function populateTeamDropdowns() {
+      const teamSelect = document.getElementById('teamName');
+      for (let i = 1; i <= 60; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.text = `${i}팀`;
+        teamSelect.appendChild(option);
+      }
+      const liarTeamSelect = document.getElementById('liarTeam');
+      for (let i = 1; i <= 6; i++) {
+        const option = document.createElement('option');
+        option.value = `${i}팀`;
+        option.text = `${i}팀`;
+        liarTeamSelect.appendChild(option);
+      }
+    }
 
-            const spinner = document.getElementById('loadingSpinner');
-            const submitBtn = document.getElementById('submitBtn');
-            spinner.style.display = 'block';
-            submitBtn.disabled = true;
+    // Show page
+    function showPage(pageNumber) {
+      console.log(`Navigating to page ${pageNumber}`);
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page${pageNumber}`).classList.remove('hidden');
+    }
 
-            console.log('Submitting:', gameData);
+    // Update word display
+    function updateWordDisplay() {
+      const wordDisplay = document.getElementById('wordDisplay');
+      if (state.session && state.round && state.teamName) {
+        const liarInfo = liarData[state.session][state.round];
+        wordDisplay.textContent = state.teamName === liarInfo.liarTeam ? '라이어' : liarInfo.word;
+      } else {
+        wordDisplay.textContent = '';
+      }
+    }
 
-            fetch('https://script.google.com/macros/s/AKfycbyndZTEA4yC605NCmN94kj_OiPzM_kdfp7ZHCh5dnOXgW5HqqzXo9PuPG2gi0M_GJFI/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(gameData)
-            })
-            .then(() => {
-                handleSubmissionSuccess(gameData.groupName, gameData.teamName, gameData.roundName);
-            })
-            .catch(() => {
-                handleSubmissionSuccess(gameData.groupName, gameData.teamName, gameData.roundName); // Handle as success due to no-cors
-            });
-        }
+    // Update group and team displays
+    function updateDisplays() {
+      document.getElementById('groupDisplay2').textContent = `단체명: ${state.groupName}`;
+      document.getElementById('groupDisplay3').textContent = `단체명: ${state.groupName}`;
+      document.getElementById('teamDisplay3').textContent = `팀명: ${state.teamName}`;
+      document.getElementById('groupDisplay4').textContent = `단체명: ${state.groupName}`;
+      document.getElementById('teamDisplay4').textContent = `팀명: ${state.teamName}`;
+      document.getElementById('groupDisplay5').textContent = `단체명: ${state.groupName}`;
+      document.getElementById('teamDisplay5').textContent = `팀명: ${state.teamName}`;
+      document.getElementById('groupDisplay6').textContent = `단체명: ${state.groupName}`;
+      document.getElementById('teamDisplay6').textContent = `팀명: ${state.teamName}`;
+    }
 
-        // Handle submission success
-        function handleSubmissionSuccess(groupName, teamName, roundName) {
-            const spinner = document.getElementById('loadingSpinner');
-            const submitBtn = document.getElementById('submitBtn');
-            spinner.style.display = 'none';
+    // Submission handling
+    let isSubmitting = false;
+    function submitData() {
+      if (isSubmitting) return;
+      isSubmitting = true;
 
-            const currentRoundNum = parseInt(roundName.replace('라운드', ''));
-            if (currentRoundNum < 15) {
-                showPopup(`${groupName}, ${teamName}, ${roundName} 내용이 잘 입력됐습니다.`);
-                const nextRound = `${currentRoundNum + 1}라운드`;
-                document.getElementById('roundName').value = nextRound;
-                gameData.roundName = nextRound;
-                // Navigate directly to page 3
-                document.getElementById(`page${currentPage}`).classList.remove('active');
-                document.getElementById('page3').classList.add('active');
-                currentPage = 3;
-            } else {
-                showPopup('모든 입력이 완료되었습니다!');
-                // Navigate directly to page 1
-                document.getElementById(`page${currentPage}`).classList.remove('active');
-                document.getElementById('page1').classList.add('active');
-                currentPage = 1;
-                gameData.groupName = '';
-                gameData.teamName = '';
-                gameData.roundName = '';
-                gameData.bidAmount = '';
-                gameData.betting = '';
-                document.getElementById('groupName').value = '';
-                document.getElementById('teamName').value = '';
-                document.getElementById('roundName').value = '1라운드';
-            }
+      const { groupName, teamName, session, round, liarTeam, bet } = state;
 
-            // Reset fields for next round
-            document.getElementById('bidAmount').value = '';
-            document.getElementById('betting').value = '';
-            gameData.bidAmount = '';
-            gameData.betting = '';
+      // Validate all fields
+      if (!groupName || !teamName || !session || !round || !liarTeam || !bet) {
+        alert('모든 필드를 입력해주세요.');
+        isSubmitting = false;
+        return;
+      }
 
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                isSubmitting = false;
-            }, 3000);
+      // Log data for debugging
+      console.log('Submitting:', { groupName, teamName, session, round, liarTeam, bet });
 
-            updateDisplays();
-        }
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submit');
+      spinner.classList.remove('hidden');
+      submitBtn.disabled = true;
 
-        // Show popup
-        function showPopup(message) {
-            document.getElementById('popupMessage').textContent = message;
-            document.getElementById('popup').style.display = 'block';
-        }
+      fetch('https://script.google.com/macros/s/AKfycbw2Y0vt9a0zqOtaMETmAScOV5eptWueEzSOV8XXvEDHdAz3eXb1Z2U87ba_vzwMD4rb/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ groupName, teamName, session, round, liarTeam, bet })
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, session, round);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, session, round); // Handle as success due to no-cors
+      });
+    }
 
-        // Close popup
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
+    function handleSubmissionSuccess(groupName, teamName, session, round) {
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submit');
+      spinner.classList.add('hidden');
 
-        // Initialize dropdowns
-        function initDropdowns() {
-            const teamSelect = document.getElementById('teamName');
-            for (let i = 1; i <= 60; i++) {
-                const option = document.createElement('option');
-                option.value = `${i}팀`;
-                option.textContent = `${i}팀`;
-                teamSelect.appendChild(option);
-            }
+      const currentRoundNum = parseInt(round);
+      if (currentRoundNum < 6) {
+        showPopup(`${groupName}, ${teamName}, ${session}, ${round} 내용이 잘 입력됐습니다.`);
+        document.getElementById('popup').dataset.nextPage = 4;
+        state.round = `${currentRoundNum + 1}라운드`;
+        document.getElementById('round').value = state.round;
+      } else {
+        showPopup('모든 입력이 완료되었습니다!');
+        document.getElementById('popup').dataset.nextPage = 1;
+      }
 
-            const roundSelect = document.getElementById('roundName');
-            for (let i = 1; i <= 15; i++) {
-                const option = document.createElement('option');
-                option.value = `${i}라운드`;
-                option.textContent = `${i}라운드`;
-                roundSelect.appendChild(option);
-            }
-            roundSelect.value = '1라운드'; // Default to 1라운드
+      // Reset fields for next round
+      state.liarTeam = '';
+      state.bet = '1';
+      document.getElementById('liarTeam').value = '';
+      document.getElementById('bet').value = '1';
 
-            const bidAmountSelect = document.getElementById('bidAmount');
-            for (let i = 0; i <= 30; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                bidAmountSelect.appendChild(option);
-            }
-        }
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        isSubmitting = false;
+      }, 3000);
+    }
 
-        // Initialize
-        window.onload = function() {
-            initDropdowns();
-            updateDisplays();
-            document.getElementById('groupName').addEventListener('change', updateDisplays);
-            document.getElementById('teamName').addEventListener('change', updateDisplays);
-            document.getElementById('roundName').addEventListener('change', updateDisplays);
-            document.getElementById('bidAmount').addEventListener('change', updateDisplays);
-            document.getElementById('betting').addEventListener('change', updateDisplays);
-        };
-    </script>
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').classList.remove('hidden');
+    }
+
+    function closePopup() {
+      document.getElementById('popup').classList.add('hidden');
+      const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+      updateDisplays();
+      updateWordDisplay();
+      showPage(nextPage);
+    }
+
+    // Event listeners
+    document.getElementById('next1').addEventListener('click', () => {
+      console.log('Next1 button clicked');
+      state.groupName = document.getElementById('groupName').value.trim();
+      if (!state.groupName) {
+        alert('단체명을 입력해주세요.');
+        return;
+      }
+      updateDisplays();
+      showPage(2);
+    });
+
+    document.getElementById('next2').addEventListener('click', () => {
+      state.teamName = document.getElementById('teamName').value;
+      updateDisplays();
+      showPage(3);
+    });
+
+    document.getElementById('back2').addEventListener('click', () => showPage(1));
+
+    document.getElementById('next3').addEventListener('click', () => {
+      state.session = document.getElementById('session').value;
+      updateDisplays();
+      updateWordDisplay();
+      showPage(4);
+    });
+
+    document.getElementById('back3').addEventListener('click', () => showPage(2));
+
+    document.getElementById('next4').addEventListener('click', () => {
+      state.round = document.getElementById('round').value;
+      updateWordDisplay();
+      showPage(5);
+    });
+
+    document.getElementById('back4').addEventListener('click', () => {
+      document.getElementById('wordDisplay').textContent = '';
+      showPage(3);
+    });
+
+    document.getElementById('next5').addEventListener('click', () => {
+      state.liarTeam = document.getElementById('liarTeam').value;
+      showPage(6);
+    });
+
+    document.getElementById('back5').addEventListener('click', () => showPage(4));
+
+    document.getElementById('submit').addEventListener('click', () => {
+      state.bet = document.getElementById('bet').value;
+      submitData();
+    });
+
+    document.getElementById('back6').addEventListener('click', () => showPage(5));
+
+    document.getElementById('popupConfirm').addEventListener('click', () => {
+      closePopup();
+    });
+
+    // Initialize
+    populateTeamDropdowns();
+    showPage(1);
+  </script>
 </body>
 </html>
