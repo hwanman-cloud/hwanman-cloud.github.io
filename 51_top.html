@@ -273,7 +273,7 @@
       spinner.classList.remove('hidden');
       submitBtn.disabled = true;
 
-      fetch('https://script.google.com/macros/s/AKfycbw2Y0vt9a0zqOtaMETmAScOV5eptWueEzSOV8XXvEDHdAz3eXb1Z2U87ba_vzwMD4rb/exec', {
+      fetch('https://script.google.com/macros/s/YOUR_WEB_APP_URL/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -282,9 +282,11 @@
         body: JSON.stringify({ groupName, teamName, session, round, liarTeam, bet })
       })
       .then(() => {
+        console.log('Fetch request sent successfully');
         handleSubmissionSuccess(groupName, teamName, session, round);
       })
-      .catch(() => {
+      .catch(error => {
+        console.error('Fetch error:', error);
         handleSubmissionSuccess(groupName, teamName, session, round); // Handle as success due to no-cors
       });
     }
