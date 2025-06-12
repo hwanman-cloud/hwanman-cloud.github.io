@@ -69,7 +69,6 @@
         <option value="6회차">6회차</option>
       </select>
       <div class="flex space-x-2">
-        <button id="back3" class="btn bg-gray-500 text-white py-2 px-4 rounded">뒤로 가기</button>
         <button id="next3" class="btn bg-blue-600 text-white py-2 px-4 rounded">다음</button>
       </div>
     </div>
@@ -358,8 +357,6 @@
       updateWordDisplay();
       showPage(4);
     });
-
-    document.getElementById('back3').addEventListener('click', () => showPage(2));
 
     document.getElementById('next4').addEventListener('click', () => {
       state.round = document.getElementById('round').value;
