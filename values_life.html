@@ -1,287 +1,164 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
-     crossorigin="anonymous"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>인생 가치관 경매 게임-(15가지)</title>
+    <title>젠트리피케이션 게임</title>
+        <!-- adsense AD -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
+     crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #e6f3ff;
+        .page { display: none; }
+        .active { display: block; }
+        .btn { transition: all 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        .spinner { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9999; 
         }
-        .page {
+        .spinner::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid #fff; 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: translate(-50%, -50%) rotate(0deg); } 
+            100% { transform: translate(-50%, -50%) rotate(360deg); } 
+        }
+        #popup {
             display: none;
-        }
-        .active {
-            display: block;
-        }
-        .btn {
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: #09f;
-            animation: spin 1s ease infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
     </style>
 </head>
-<body class="bg-blue-100">
-    <div id="app" class="container mx-auto px-4 py-8 max-w-md">
-        <h1 class="text-3xl font-bold text-center text-blue-800 mb-8">
-            <i class="fas fa-gavel mr-2"></i>인생 가치관 경매 게임-(15가지)
-        </h1>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
+      <!-- adsense AD -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
+     crossorigin="anonymous"></script>
+<!-- bottom -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-6889882135814929"
+     data-ad-slot="6428454153"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+      <!-- adsense AD -->
+    <div class="container mx-auto p-4 max-w-md">우승조건
+<br>
+<br>
+이 게임의 우승 조건은 내가 잡은 갯수가 많은 순입니다. 그러나 목초지의 블록이 모두 사라졌을 때는 물고기(양떼)들도 모두 죽습니다. 이 경우는 역순위로 우승이 결정됩니다. 그러므로 게임 초반에 바다(양떼) 목장이 황폐화가 될까 그렇지 않을까로 우승 전략을 잘 세워야 합니다.
+<br>
+<br>
 
-        <!-- Page 1 -->
-        <div id="page1" class="page active bg-white rounded-lg shadow-md p-6">
-            <p class="mb-4 text-gray-700">
-                <i class="fas fa-info-circle mr-2"></i>Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.
-            </p>
-            <input type="text" id="groupName" class="w-full p-2 border rounded mb-4" placeholder="단체명 입력">
-            <button onclick="nextPage(2)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-                <i class="fas fa-arrow-right mr-2"></i>다음
-            </button>
-        </div>
 
-        <!-- Page 2 -->
-        <div id="page2" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="groupNameDisplay" class="text-xl font-semibold mb-4"></h2>
-            <select id="teamName" class="w-full p-2 border rounded mb-4">
-                <option value="">팀 선택</option>
-            </select>
-            <div class="flex justify-between">
-                <button onclick="prevPage(1)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="nextPage(3)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <i class="fas fa-arrow-right mr-2"></i>다음
-                </button>
-            </div>
-        </div>
+게임전략
+<br>
+1. 바다 목장(양떼 목장)이 황폐화가 될 지 그렇지 않게 될 지는 아무도 모릅니다. 그러나 사람의 심리와 인간의 욕심을 고려한다면 바다(목초지)가 활폐화될 가능성이 더 크지 않을까요? 만약 그렇게 생각하는 사람이 많다면, 초반부터 물고기(양떼)를 적게 보내 황무지를 보호하는 전략을 세우게 될 것입니다. 그러다보니 라운드가 진행될 수록 바다(목초지) 황폐화가 일어나지 않습니다.
+<br>
+2. 바다(목초지)가 황폐화가 될 것이라고 예측하고 전략을 세웠던 플레이어들이 당황합니다. 만약 바다(목초지)가 황폐화가 안된다면 우승 순위에게 밀리게 됩니다. 조금이나마 황무지로 만드는 데에 기여하고자 양떼를 많이 보내서 더 많은 목초지 블록을 먹게 해 봅니다. 자신의 예상대로 목초지가 심각하게 줄어든다면 작전 성공이지만 다른 플레이어들이 적게 낸다면 전략이 통하지 않게 되는 것입니다.
 
-        <!-- Page 3 -->
-        <div id="page3" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="teamNameDisplay" class="text-xl font-semibold mb-4"></h2>
-            <select id="roundName" class="w-full p-2 border rounded mb-4">
-                <option value="">라운드 선택</option>
-            </select>
-            <div class="flex justify-between">
-                <button onclick="prevPage(2)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="nextPage(4)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <i class="fas fa-arrow-right mr-2"></i>다음
-                </button>
-            </div>
-        </div>
+<br>
+<br>
 
-        <!-- Page 4 -->
-        <div id="page4" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="roundNameDisplay" class="text-xl font-semibold mb-4"></h2>
-            <p class="mb-2">
-                <i class="fas fa-money-bill-wave mr-2"></i>경매 입찰 금액
-            </p>
-            <select id="bidAmount" class="w-full p-2 border rounded mb-4">
-                <option value="">선택하세요</option>
-            </select>
-            <div class="flex justify-between">
-                <button onclick="prevPage(3)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="nextPage(5)" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <i class="fas fa-arrow-right mr-2"></i>다음
-                </button>
-            </div>
-        </div>
+게임의 개요
+<br>
+친구들과 짜장면과 탕수육 세트 메뉴 먹다 보면, 다들 자기 짜장면은 안 먹고 탕수육만 먹다가 탕수육이 금방 사라지게 됩니다. 어차피 1/N을 해서 비용을 지불하게 된다면 다 같이 공유하는 탕수육을 하나라도 더 먹어 이득을 보고자 하는 마음이 있기 때문입니다. 이 때 탕수육은 주인 없는 공유지라고 할 수 있고 짜장면은 개인 소유권이 있는 사유지라고 할 수 있습니다.
+<br>
+공유지란, 개인이나 기업이 아니라 국가나 공공단체 등 많은 사람이 소유하는 것을 말합니다.
+<br>
+공유자원은 사회적 관점에서 볼 때 과다하게 사용돼 결국 고갈된다는 이야기다. 호수가 공유지라면, 어부들은 최대한의 시간을 들여 물고기를 최고로 많이 잡으려고 할 것입니다. 결국, 호수의 물고기는 씨가 마를 것이다. 이것이 미국의 생물학자 가렛 하딘 교수가 주장한 공유지의 비극입니다. 한 마을에 있는 공동 소유의 목초지에서 소를 키우는 사람들은 자기 소가 가능한 한 많은 풀을 먹게 했다. 이렇게 되면 결국 목초지는 황폐화됩니다.
+<br>
+양을 키우는 마을 근처에 주인 없는 목초지가 있다면 목동들은 어떻게 할까요? 그 목초지의 풀이 무한하다면 문제 없지만 양을 풀을 먹는 순간 목초지는 점점 황폐화되어 갑니다. 이 때 목동들간의 더 많은 풀을 자기의 양떼에게 먹이려고 경쟁까지 붙게 되면 목초지가 황폐화되어가는 속도는 더욱 빨라집니다. 개별 목동들의 합리적인 판단과 자유가 전체 공동체의 합리성을 답보하지 못합니다.
+<br>
+공유지라는 것은 경제학에서 경합성은 있으되 배제성은 없는 특성을 지니고 있습니다. 죄수의 딜레마를 바다 목장이라는 공유지의 비극과도 연결할 수 있습니다. 목초지는 내가 사용하지 않으면 다른 사람이 사용해 버리는 경합성을 가지고 있습니다. 이런 경합성을 지닌 재화를 조금이라도 더 소비하는 것이 당장에 이득입니다. 그리고 이러한 목초지에는 어떠한 배제성도 없습니다.
+<br>
+어부1과 어부2는 규정을 준수하면 서로 규정을 준수하면 7마리의 물고기를 잡을 수 있습니다. 그러나 어느 어부가 남획을 하게 되면 물고기가 달아나서 나머지는 5마리밖에 잡지 못하게 됩니다. 그리고 두 어부가 모두 남획을 하면 서로간에 10마리씩 얻습니다.
+<br>
+결국
+<br>
+내쉬 균형은? (남획, 남획)에서 나타나게 됩니다. 어부들은 서로 규정준수를 통해서 7이라는 이익을 얻을 수 있지만 서로에 대한 불신으로 인해 (10, 10)를 얻게 됩니다. 이렇게 됨으로써 바다 물고기는 멸종에 이르게 됩니다.
+<br>
+|마을 주민 전원이 충분히 먹을 수 있을 만큼 물고기가 풍부한 어장이라 할지라도 누군가 더 많은 고기를 잡겠다고 욕심을 부리면 결국 모든 어부들이 손해를 보게 되는 원리라고 할 수 있습니다.
+<br>
+<br>
 
-        <!-- Page 5 -->
-        <div id="page5" class="page bg-white rounded-lg shadow-md p-6">
-            <h2 id="bidAmountDisplay" class="text-xl font-semibold mb-4"></h2>
-            <p class="mb-2">
-                <i class="fas fa-dice mr-2"></i>낙찰 베팅
-            </p>
-            <select id="betting" class="w-full p-2 border rounded mb-4">
-                <option value="">선택하세요</option>
-                <option value="0">0</option>
-                <option value="3">3</option>
-            </select>
-            <div class="flex justify-between mb-4">
-                <button onclick="prevPage(4)" class="btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
-                </button>
-                <button onclick="submitData()" class="btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                    <i class="fas fa-paper-plane mr-2"></i>제출하기
-                </button>
-            </div>
-        </div>
+준비물
+<br>
+(1) 스코어보드판을 위한 화면(태블릿 10인치 이상 화면) : 게임 참가자들이 스코어보드판을 통해 게임 진행 상황을 확인하는 용도. 되도록 큰 화면일 수록 좋음
+<br>
+4~5명의 소수 인원일 경우에는 태블릿 화면으로도 매 라운드의 점수 상황을 확인할 수 있음.
 
-        <!-- Loading Spinner -->
-        <div id="loadingSpinner" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center hidden">
-            <div class="spinner"></div>
-        </div>
+<br>
+(2) Player와 Host 용 휴대폰(반드시 안드로이드) 또는 태블릿
 
-        <!-- Popup -->
-        <div id="popup" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <p id="popupMessage" class="text-xl mb-4"></p>
-                <button onclick="closePopup()" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-                    <i class="fas fa-check mr-2"></i>확인
-                </button>
-            </div>
-        </div>
-    </div>
+<br>
+(3) OnBoardGame 앱 설치(안드로이드용). 플레이스토어에서 온라인보드게임 또는 OnBoardGame이라고 치면 됨.
+<br>
+<br>
 
-    <script>
-        let currentPage = 1;
-        let submissionAllowed = true;
-        let gameData = {
-            groupName: '',
-            teamName: '',
-            roundName: '',
-            bidAmount: '',
-            betting: ''
-        };
+메인 화면
 
-        function nextPage(pageNum) {
-            document.getElementById(`page${currentPage}`).classList.remove('active');
-            document.getElementById(`page${pageNum}`).classList.add('active');
-            currentPage = pageNum;
-            updateDisplays();
-        }
+<br>
+온라인 보드게임(onBoardGame 앱) 메인 화면
+<br>
+보드 게임 목록은 앞으로 계속 추가될 예정입니다.
 
-        function prevPage(pageNum) {
-            document.getElementById(`page${currentPage}`).classList.remove('active');
-            document.getElementById(`page${pageNum}`).classList.add('active');
-            currentPage = pageNum;
-        }
+<br>
+비어있는 보드 게임방 가져오기를 클릭하면 맨 처음 비어 있는 방을 가져옵니다. 기본적으로 a001 ~ a200까지 200여개의 방이 마련되어 있습니다. 사용되지 않고 있는 방 중에서 맨 처음 번호의 방을 자동으로 가져옵니다.
 
-        function updateDisplays() {
-            gameData.groupName = document.getElementById('groupName').value;
-            gameData.teamName = document.getElementById('teamName').value;
-            gameData.roundName = document.getElementById('roundName').value;
-            gameData.bidAmount = document.getElementById('bidAmount').value;
-            gameData.betting = document.getElementById('betting').value;
+<br>
+**사용자가 적을 경우에는 호스트를 비롯한 모든 플레이들이 빈방 가져오기를 클릭하면 동시에 같은 방 번호가 뜰 것입니다. 이 경우에는 모든 플레이어들이 같은 방이 떴음을 확인하고 동시에 모두 입장하면 됩니다. 가장 중요한 것은 모든 플레이어들인 1번의 게임방 번호가 같아야 한다는 것입니다.
+<br>
+**사용자가 많을 경우에는 빈방 가져오기를 했을 때, 어디선가 다른 사람도 같은 빈방을 가져오게 될 수도 있습니다. 왜냐하면 아직 빈방만 확인한 상태이기 때문입니다. 이 경우에는 먼저 들어간 호스트가 그 빈방을 차지하게 됩니다. 이렇게 사용자가 많은 경우에는 모든 플레이더들이 빈방 가져오기를 하니 a102번 방이 비었다고 나온 경우에, 멀찍이 a150번 방으로 들어가자고 약속하고 모든 플레이어들이 텍스트 상자에 해당 게임방 번호 a150을 입력하고 들어오면 안전합니다. 
+<br>
+즉, 1번 텍스트 상자에 Player와 Host가 모두 같은 방 번호를 입력하고 들어가는 것이 핵심적인 사항입니다.
 
-            document.getElementById('groupNameDisplay').textContent = `단체명: ${gameData.groupName}`;
-            document.getElementById('teamNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}`;
-            document.getElementById('roundNameDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}, 라운드: ${gameData.roundName}`;
-            document.getElementById('bidAmountDisplay').textContent = `단체명: ${gameData.groupName}, 팀명: ${gameData.teamName}, 라운드: ${gameData.roundName}, 입찰 금액: ${gameData.bidAmount}`;
-        }
+<br>
+2번의 스코어보드판 열기를 클릭하면 스코어보드판이 새 창으로 열립니다. 게임 참가자 모두가 게임 진행 상황을 볼 수 있는 스크린. 휴대폰 화면으로는 작게 보이겠지만 화면을 이동시키면서 볼 수는 있습니다. 
 
-        async function submitData() {
-    if (!submissionAllowed) {
-        showPopup('잠시 후 다시 시도해주세요.');
-        return;
-    }
+<br>
+3번 게임 Home은 게임에 대한 자세한 목록이 나와 있는 곳입니다. 여기에서 전체 게임들의 스코어판을 확인할 수도 있고 게임 매뉴얼을 확인할 수도 있습니다. 
+<br>
+<br>
 
-    submissionAllowed = false;
-    setTimeout(() => { submissionAllowed = true; }, 3000);
-    document.getElementById('loadingSpinner').classList.remove('hidden');
+스코어 보드판
 
-    try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwT3qhWVzUWZA9UEuP-mCev94t2HvRTV0ANsQhtZy4fXIJwn8wV9EsMYS_OKa81dSreVQ/exec", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(gameData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`서버 응답 오류: ${response.status}`);
-        }
-
-        const result = await response.json();
-        onSuccess(result);
-
-    } catch (error) {
-        onFailure(error);
-    }
-}
-
-        function onSuccess(result) {
-            document.getElementById('loadingSpinner').classList.add('hidden');
-            showPopup(`${gameData.groupName}, ${gameData.teamName}, ${gameData.roundName} 내용이 잘 입력됐습니다.`);
-        }
-
-        function onFailure(error) {
-            document.getElementById('loadingSpinner').classList.add('hidden');
-            showPopup('오류가 발생했습니다: ' + error.message);
-        }
-
-        function showPopup(message) {
-            document.getElementById('popupMessage').textContent = message;
-            document.getElementById('popup').classList.remove('hidden');
-        }
-
-        function closePopup() {
-            document.getElementById('popup').classList.add('hidden');
-            const currentRound = parseInt(gameData.roundName);
-            if (currentRound < 15) {
-                nextPage(3);
-                document.getElementById('roundName').value = (currentRound + 1).toString();
-                gameData.roundName = (currentRound + 1).toString();
-            } else {
-                showPopup('모든 입력이 완료되었습니다!');
-                setTimeout(() => {
-                    document.getElementById('popup').classList.add('hidden');
-                    nextPage(1);
-                }, 2000);
-            }
-        }
-
-        // 팀 옵션 생성
-        const teamSelect = document.getElementById('teamName');
-        for (let i = 1; i <= 60; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `${i}팀`;
-            teamSelect.appendChild(option);
-        }
-
-        // 라운드 옵션 생성
-        const roundSelect = document.getElementById('roundName');
-        for (let i = 1; i <= 15; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `${i}라운드`;
-            roundSelect.appendChild(option);
-        }
-
-        // 입찰 금액 옵션 생성
-        const bidAmountSelect = document.getElementById('bidAmount');
-        for (let i = 1; i <= 30; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            bidAmountSelect.appendChild(option);
-        }
-
-        // 페이지 로드 시 초기화
-        window.onload = function() {
-            updateDisplays();
-        }
-
-        // 입력 필드 변경 시 gameData 업데이트
-        document.getElementById('groupName').addEventListener('change', updateDisplays);
-        document.getElementById('teamName').addEventListener('change', updateDisplays);
-        document.getElementById('roundName').addEventListener('change', updateDisplays);
-        document.getElementById('bidAmount').addEventListener('change', updateDisplays);
-        document.getElementById('betting').addEventListener('change', updateDisplays);
-    </script>
-</body>
-</html>
+<br>
+1번은 게임방 이름입니다.
+<br>
+2번은 최초의 목초지의 블럭 갯수입니다. 목초지로 양뗴를 보냈을 때 양떼가 먹는 목초지의 양과 대등한 개념이므로 양떼의 갯수와 목초지의 블럭의 갯수를 동일시해도 됩니다.
+<br>
+3번의 빨간 네모 부분으로 학생들의 입력 내용이 나타납니다. 학생들은 목초지에 몇 마리의 양떼를 풀어놓느냐에 따라 남은 목초지의 블럭 갯수가 정해집니다.
+<br>
+4번의 체크박스를 호스트가 체크하게 되면 3번이 학생들의 입력사항이 나타나게 되어 있습니다. 그러므로 학생들은 결과가 나오기 전까지는 서로 몇 마리를 보냈는 지 알 수 없습니다.
+<br>
+5번은 입력 결과 받게 되는 목초지의 남은 블럭의 숫자입니다. 자동 계산 됩니다. 목초지는 번식을 하기 때문에 2번의 최초의 블럭 갯수만큼 자랄 수 있습니다.
+<br>
+6번은 최종 라운드까지 진행되었을 때 자신의 양떼의 갯수입니다. 최종 라운드는 목초지가 황폐화가 되었을 때, 즉 게임이 종료될 때의 라운드입니다. 양떼의 갯수는 곧 먹은 목초지의 블럭의 갯수와도 같습니다. 많은 양떼를 먹일 수록 우승합니다. 그러나 우승 조건에 최종라운드까지 가는 동안 목초지가 황폐화되었을 때에는 가장 적게 목초지로 양떼를 보낸 팀이 우승한다고 할 수도 있습니다.<br>
+    </div></body>
