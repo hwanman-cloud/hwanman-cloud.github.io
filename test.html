@@ -1,146 +1,95 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="ko">
+<head>
     <meta charset="UTF-8">
-    <title>테스트 제출 폼</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>젠트리피케이션 게임</title>
+        <!-- adsense AD -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        background-color: #f0f0f0;
-      }
-      .form-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 400px;
-      }
-      input, select, button {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-      }
-      button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      button:hover {
-        background-color: #45a049;
-      }
-      label {
-        font-weight: bold;
-        margin-top: 8px;
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="form-container">
-      <h2>환경 토론 투표 예측 폼</h2>
-      <label for="name">단체명</label>
-      <input type="text" id="name" placeholder="단체명을 입력하세요">
-      
-      <label for="team">팀</label>
-      <select id="team">
-        <option value="" disabled selected>팀 선택</option>
-      </select>
-      
-      <label for="round">라운드</label>
-      <select id="round">
-        <option value="" disabled selected>라운드 선택</option>
-      </select>
-      
-      <label for="choice">선택</label>
-      <select id="choice">
-        <option value="" disabled selected>선택</option>
-        <option value="찬성(1번)">찬성(1번)</option>
-        <option value="반대(2번)">반대(2번)</option>
-      </select>
-      
-      <label for="bet">베팅</label>
-      <select id="bet">
-        <option value="" disabled selected>베팅 선택</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-      </select>
-      
-      <button onclick="submitForm()">제출하기</button>
-    </div>
-
-    <script>
-      // Populate team dropdown (1 to 60)
-      const teamSelect = document.getElementById('team');
-      for (let i = 1; i <= 60; i++) {
-        const option = document.createElement('option');
-        option.value = `${i}팀`;
-        option.textContent = `${i}팀`;
-        teamSelect.appendChild(option);
-      }
-
-      // Populate round dropdown (1 to 10)
-      const roundSelect = document.getElementById('round');
-      for (let i = 1; i <= 10; i++) {
-        const option = document.createElement('option');
-        option.value = `${i}라운드`;
-        option.textContent = `${i}라운드`;
-        roundSelect.appendChild(option);
-      }
-
-      function submitForm() {
-        const name = document.getElementById("name").value.trim();
-        const team = document.getElementById("team").value;
-        const round = document.getElementById("round").value;
-        const choice = document.getElementById("choice").value;
-        const bet = document.getElementById("bet").value;
-        
-        // Validate all fields
-        if (!name || !team || !round || !choice || !bet) {
-          alert("모든 필드를 입력해주세요.");
-          return;
+        .page { display: none; }
+        .active { display: block; }
+        .btn { transition: all 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        .spinner { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9999; 
         }
-        
-        // Log data for debugging
-        console.log('Submitting:', { name, team, round, choice, bet });
-
-        fetch('https://script.google.com/macros/s/AKfycbwtQEWUq_Fli9dImeSmd-7pWJe-Gc6huNuQTx2YxN0JcuXvQVhNQ9vD7XruhOE0gU_j/exec', {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name, team, round, choice, bet })
-        })
-        .then(response => {
-          // no-cors mode prevents reading response, so skip ok check
-          return response.text();
-        })
-        .then(result => {
-          alert("입력이 성공했습니다.");
-        })
-        .catch(error => {
-          console.error('상세 오류:', error);
-          alert("입력이 성공했습니다."); // Assume success due to no-cors
-        });
-      }    
-    </script>
-  </body>
-</html>
+        .spinner::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid #fff; 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: translate(-50%, -50%) rotate(0deg); } 
+            100% { transform: translate(-50%, -50%) rotate(360deg); } 
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
+      <!-- adsense AD -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
+     crossorigin="anonymous"></script>
+<!-- bottom -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-6889882135814929"
+     data-ad-slot="6428454153"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+      <!-- adsense AD -->
+    <div class="container mx-auto p-4 max-w-md">지구온난화와 탄소발자국 밸런스 토론 게임을 한 후 ~~
+<br>
+      
+<br>
+1) 지구촌 환경문제는 대부분 인간의 이기심 때문에 발생된다고 합니다. (1번) 당신은 삶을 살아갈 때 자신과 가족의 행복만을 추구하는 것을 더 중요하게 생각합니까? (2번)아니면 대한민국과 지구촌 공동체 모두의 행복을 추구하는 것을 더 중요하게 생각합니까?
+<br>
+2) 우리나라는 화력발전소가 60%를 차지하고 있습니다. 30%의 원자력보다 2배나 높은 비중입니다. 그러나 화력발전소가 이산화탄소 배출의 주범입니다. 탄소저감정책 추세에 따라 화력발전소를 폐쇄하고 원자력 발전이나 태양광, 풍력 발전으로 대체하게 되면 전기요금이 이전보다 2배로 상승하게 된다고 합니다. 그럼에도 불구하고 지구온난화를 막기 위해 화력발전소 폐쇄에 찬성합니까?(1번) 아니면 반대합니까?(2번)
+<br>
+3) 선진국들은 산업혁명 이후 대량의 온실가스를 배출하면서 경제 발전을 이루어왔습니다. 현재 기후변화는 산업혁명 이후 온실가스 배출의 결과이므로 역사적으로 더 많이 혜택을 입은 선진국이 더 큰 책임을 져야 한다고 주장합니다. 그래서 선진국들이 온실가스 기금 20조원을 모아 개발도상국에게 기후변화에 대처하도록 친환경 설비를 지원하는 것에 대해 (1번) 찬성합니까?  (2번) 반대합니까?
+<br>
+4) 대한민국도 1960년대부터 중화학공업 위주의 경제 정책을 사용해서 선진국들과 마찬가지로 온실가스 배출로 경제 발전을 이룬 나라 중 하나입니다. 만약 대한민국을 포함한 전세계 20개 선진국들이  모아 각각 1조씩 각출하여 개발도상국에게 기후변화에 대처하도록 친환경 설비를 지원하는 것에 대해 (1번) 찬성합니까?  (2번) 반대합니까?
+<br>
+5) 우리나라의 산업구조는 반도체와 자동차와 철강과 조선 등인데 이런 산업은 탄소배출량이 매우 높숩니다.  만약 탄소저감정책을 펴게 되면 이런 산업들의 이익이 줄어들게 되고 경제성장률이 떨어지게 되며 실업률도 증가하게 됩니다. 그럼에도 불구하고 지구온난화를 막기 위해 탄소저감정책을 실시해야 한다는 것에 찬성(1번)합니까? 반대(2번)합니까?
+<br>
+6) 지구온난화 문제 석탄과 석유 중심의 화석연료 사용이 가장 큰 비중을 차지합니다. 그러나 태양광이나 풍력 등의 친환경 에너지로의 전환을 하게 되면 과도한 비용이 발생하고 전기요금도 이전보다 2~3배 올려야 합니다. 이에 정부에서는 친환경 전기에너지의 비용이 낮아질 때까지 한시적으로 원자력 발전을 확대하여 지구온난화 위기에 대처하겠다고 합니다. 그러나 원자력 발전을 지으면 방사능 위험부터 방사능 폐기물 처리장 문제까지 산적한 문제가 한두가지가 아니어서 사회적 대혼란이 불가피합니다. 정부의 원자력 발전 확대 정책에 (1번) 찬성합니까? (2번) 반대합니까?
+<br>
+7) 2024년 지구온난화 특별보고서에서는 지구의 기온이 산업혁명 이후보다 (+)1.27도 상승했고 (+)1.5도 이상이 되면  지구촌은 매우 극심한 이상기후를 겪게 된다고 합니다.  지구촌은 뼈를 깍는 고통을 감내하면서까지 지구의 온도를 (+)1.5도 이하로 유지하는 것에 성공할 것이라고 생각합니까?(1번) 아니면 실패할 것이라고 생각합니까?(2번)
+<br>
+8) 지구온난화를 유발하는 이산화탄소와 메테인 가스 배출의 주범이 육식 습관 때문입니다. 1kg의 고기가 접시에 오르려면 가축에게 30kg이 넘는 콩과 곡물을 먹여야 합니다. 이에 학교 식당에서는 지구온난화를 막기 위해 학교 급식을 식물성 단백질과 채식 위주로 편성하기로 했습니다. 당신은 채식과 식물성 단백질 위주 학교 급식 식단에 찬성(1번)합니까? 반대(2번)합니까?
+<br>
+9) 수입 농산물과 과일에는 장거리 이동에 따라 많은 이산화탄소가 배출됩니다.(푸드 마일리지) 푸드 마일리지가 높을수록 어마어마한 양의 화석연료와 포장재료가 소모됩니다. 이에 학교에서는 이산화탄소 저감 정책의 하나로 학교 급식에는 국내산 농산물과 과일만을 사용하겠다고 합니다. 이런 학교의 결정에  (1번)찬성합니까? (2번)반대합니까?
+<br>
+10) 패션(옷, 운동화)은 유행과 트렌드에 민감합니다. 그래서 비교적 저렴한 가격대에 최신 유행을 반영한 상품을 빠르게 공급하는 패스트패션 업체(ZARA-H&M-UNIQLO-SPA 등)가 급성장하고 있습니다. 그러나 패스트패션은 막대한 패션(옷, 운동화)을 소비하는 주기가 매우 짧기 때문에 쓰레기 배출이 많고 환경오염과 이산화탄소를 배출하고 있어서 환경단체는 패스트패션 불매운동을 벌이고 있습니다. 패스트 패션 운동에 반대하는 것에 대해 당신은 찬성합니까?(1번) 반대합니까?(2번)
+    </div></body>
