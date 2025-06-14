@@ -1,147 +1,156 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="ko">
+<head>
     <meta charset="UTF-8">
-    <title>테스트 제출 폼</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>젠트리피케이션 게임</title>
+        <!-- adsense AD -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        background-color: #f0f0f0;
-      }
-      .form-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 400px;
-      }
-      input, select, button {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-      }
-      button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      button:hover {
-        background-color: #45a049;
-      }
-      label {
-        font-weight: bold;
-        margin-top: 8px;
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="form-container">
-      <h2>환경 토론 투표 예측 폼</h2>
-      <label for="name">단체명</label>
-      <input type="text" id="name" placeholder="단체명을 입력하세요">
-      
-      <label for="team">팀</label>
-      <select id="team">
-        <option value="" disabled selected>팀 선택</option>
-      </select>
-      
-      <label for="round">라운드</label>
-      <select id="round">
-        <option value="" disabled selected>라운드 선택</option>
-      </select>
-      
-      <label for="choice">선택</label>
-      <select id="choice">
-        <option value="" disabled selected>선택</option>
-        <option value="찬성(1번)">찬성(1번)</option>
-        <option value="반대(2번)">반대(2번)</option>
-      </select>
-      
-      <label for="bet">베팅</label>
-      <select id="bet">
-        <option value="" disabled selected>베팅 선택</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-      </select>
-      
-      <button onclick="submitForm()">제출하기</button>
-    </div>
-
-    <script>
-      // Populate team dropdown (1 to 60)
-      const teamSelect = document.getElementById('team');
-      for (let i = 1; i <= 60; i++) {
-        const option = document.createElement('option');
-        option.value = `${i}팀`;
-        option.textContent = `${i}팀`;
-        teamSelect.appendChild(option);
-      }
-
-      // Populate round dropdown (1 to 10)
-      const roundSelect = document.getElementById('round');
-      for (let i = 1; i <= 10; i++) {
-        const option = document.createElement('option');
-        option.value = `${i}라운드`;
-        option.textContent = `${i}라운드`;
-        roundSelect.appendChild(option);
-      }
-
-      function submitForm() {
-        const name = document.getElementById("name").value.trim();
-        const team = document.getElementById("team").value;
-        const round = document.getElementById("round").value;
-        const choice = document.getElementById("choice").value;
-        const percentagePrediction = '70';
-        const bet = document.getElementById("bet").value;
-        
-        // Validate all fields
-        if (!name || !team || !round || !choice || !bet) {
-          alert("모든 필드를 입력해주세요.");
-          return;
+        .page { display: none; }
+        .active { display: block; }
+        .btn { transition: all 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        .spinner { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9999; 
         }
-        
-        // Log data for debugging
-        console.log('Submitting:', { name, team, round, choice, percentagePrediction, bet });
+        .spinner::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid #fff; 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: translate(-50%, -50%) rotate(0deg); } 
+            100% { transform: translate(-50%, -50%) rotate(360deg); } 
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
+      <!-- adsense AD -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
+     crossorigin="anonymous"></script>
+<!-- bottom -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-6889882135814929"
+     data-ad-slot="6428454153"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+      <!-- adsense AD -->
+    <div class="container mx-auto p-4 max-w-md">물발자국과 수자원의 가치 밸런스 토론 게임
+<br>
+      
+게임 방법
+<br>
+  1) 3명 또는 5명(홀수)이 한 모둠이 되도록 구성합니다. 그리고 가위바위보로 모둠의 대표를 정합니다.
+<br>
+    총 모둠의 개수는 인원 수에 따라 짝수 또는 홀수가 될 수 도 있지만 각 모둠의 모둠원은 홀수가 되도록 합니다.
+<br>
+  2) 수자원 관련 갈등 상황으로 밸런스 게임을 하기 위한 10가지 문항이 있습니다.
+<br>
+    먼저 1번 ~ 10번 까지의 문항을 보고, 나의 선택(1 or 2)과 나의 모둠의 선택 예측(과반수 이상 - (1 or 2)),
+<br>
+    전체 모둠의 선택 예측(과반수 이상- (1 or 2))을 적습니다. 나의 선택과 모둠의 선택이 일치하지 않더라도 게임에
+<br>
+    지장을 주지 않으므로 나의 선택은 소신껏 적으면 됩니다. 이 게임에서는 나의 예측을 잘 하는 것이 중요합니다.
+<br>
+  3) 10번 문항까지의 예측을 모두 적은 후에, 모둠에서 1번 문항부터 토른을 시작합니다.
+<br>
+     토론 시간은 1문항당 2분 정도로 제한합니다. 토론이 끝난 후 모둠의 선택을 투표로 정합니다.
+<br>
+     투표 결과 나의 예측과 실제 모둠의 선택이 맞았다면 3점, 틀렸다면 0점을 부여합니다.
+<br>
+  4) 모둠의 대표가 각자 자기 모둠의 선택을 발표합니다. 그리고 전체 모둠의 선택은 몇 번이었는 지를 기록합니다.
+<br>
+     이 때 모둠의 총 수가 짝수였다면 동률이 나올 수도 있습니다.
+<br>
+     나의 예측이 맞았다면 5점, 틀렸다면 0점, 동률이었다면 2점을 부여합니다.
+<br>
+  5) 나의 모둠의 예측 점수와 전체 모둠의 예측 점수의 합을 기록합니다.
+<br>
+  6) 10번 문항까지 똑같은 방식으로 진행합니다.
+<br>
+  7) 나의 모둠의 예측 점수와 전체 모둠의 예측 점수의 총합을 기록합니다.
+<br>
+  8) 전체에서 총합 점수가 가장 높은 학생 순서대로 시상합니다.
+<br>
 
-        fetch('https://script.google.com/macros/s/AKfycbwnuXEshKGz25-LWke4p81sJ8JYCkVVQYIpVYrJvcUf4ndE7ZI1MUfZ2KWp2oM1LRw7/exec', {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name, team, round, choice, percentagePrediction, bet })
-        })
-        .then(response => {
-          // no-cors mode prevents reading response, so skip ok check
-          return response.text();
-        })
-        .then(result => {
-          alert("입력이 성공했습니다.");
-        })
-        .catch(error => {
-          console.error('상세 오류:', error);
-          alert("입력이 성공했습니다."); // Assume success due to no-cors
-        });
-      }    
-    </script>
-  </body>
-</html>
+
+<br>
+      
+1번 상황
+<br>
+최근 에티오피아는 자국의 전기공급과 경제성장을 위해 소양강댐의 20배나 되는 거대한 수력발전댐을 건설하겠다고 합니다. 이 경우 하류의 이집트에는 심각한 물부족 현상이 발생하고 농업에도 위기가 찾아옵니다. 하류의 이집트는 어떻게 해야 할까요? (1번) 전쟁을 선포하고 미사일로 에티오피아 댐을 폭파시킨다. (2번) 그냥 참는다. 그리고 비용을 지불하고 댐의 물을 적절하게 방류하도록 협상한다.
+<br>
+2번 상황
+<br>
+지구온난화는 어느 지역의 기후를 전혀 다른 기후로 변화시켜 버립니다. 만약 지구온난화로 인한 이상기후로 인해 대한민국 경제의 중심인 수도 서울이 건조기후 또는 사막기후로 바뀌어서 한강이 마르는 상황까지 이르렀다면, 1번) 서울의 건물들과 경제 시설들을 포기하고 수도를 옮겨야 한다. 2번) 중동 국가처럼 해수담수화 시설 등을 통해 막대한 비용을 투입해서라도 물 부족을 해결하고 수도를 그대로 유지한다.
+<br>
+3번 상황
+<br>
+나는 해안가 마을의 5억 짜리 집에 살고 있습니다. 그런데 지구온난화로 인한 해수면 상승으로 만조와 폭우(태풍)가 내릴 때에는 1년에 1~2번 물난리가 나서 우리 마을이 완전히 물에 잠기곤 합니다. 당신은 (1번) 5억짜리 우리 집과 마을을 포기하고 새로운 곳으로 이사가겠습니까? (2번) 아니면 계속 그 집과 마을에서 살면서 정부가 해안가 벽을 세워주기를 기다리겠습니까?
+<br>
+4번 상황
+<br>
+대한민국의 수도요금(4인가족 기준 월 2.5만원)이 싼 이유는 정부의 물가 안정 정책으로 인해 손해를 보면서 국민들에게 물을 제공하기 때문입니다. 만약 정부에서 국민들의 물 절약을 유도하고 아울러 수도로 인한 적자를 메우기 위해 수도요금을  지금보다 2배(월 5만원)로 인상한다면 당신은 (1번) 물절약 유도와 수도요금 인상에 찬성합니까? (2번) 물절약 유도와 수도요금 인상에 반대합니까?
+<br>
+5번 상황
+<br>
+국토부는 점점 증가하는 1인당 물 사용량과, 지구온난화로 인해 예상치 못한 폭우와 가뭄 등에 대비하기 위해 추가로 30여개의 대형댐의 건설이 필요하다고 주장합니다.  (1번) 물 부족을 해결하기 위해 대규모 환경파괴와 막대한 세금 투입으로 댐건설을 통한 새로운 수자원 개발이 더 중요하다고 생각합니까?, (2번) 수도요금과 생수요금을 몇배 인상하는 수자원 절약 유도 정책으로 물 부족을 해결하는 것이 더 중요하다고 생각합니까?
+<br>
+
+<br>
+6번 상황
+<br>
+전국의 강에 소형댐(보)을 설치하면 강물의 속도가 느려지게 되어서 물이 혼탁해지고 녹조가 발생하여 물이 썪는다고 합니다. 그러나 소형댐(보)을 설치하지 않으면 물이 금방 바다로 흘러가서 농업용, 공업용 용수가 부족해지고 가뭄 등의 비상상황에 대처하지 못한다고 합니다. 강에 소형댐(보)을 설치하는 것에 (1번) 찬성합니까?, (2번) 반대합니까?
+<br>
+7번 상황
+<br>
+수돗물에 대한 불신은 주로 노후 수도관인데, 전국의 노후 수도관 비율은 평균 12%라고 합니다. 서울은 2%만 미만. 수돗물은 불소 소독으로 인한 소독약 냄새 때문에 물맛이 좋지는 않습니다만 대체적으로 안전합니다. 그러나 시판되는 PET 생수는 50% 제품이 수질부적합 판정을 받고 있고 미세(나노)플라스틱이 평균 24만개나 발견되고 있습니다. 당신은 (1번) 수돗물을 거의 무료로 먹겠습니까? (2번) 50% 확률로 수질 부적합 판정을 받고 있고 미세플라스틱이 많은 PET 생수를 돈 주고 사 먹겠습니까?
+<br>
+8번 상황
+<br>
+정부는 학교 등의 공공기관에서도 플라스틱 쓰레기 줄이기 운동에 동참하고 수돗물 마시기 운동을 적극적으로 전개하기로 했다고 가정하겠습니다. 이를 위해 개인 머그잔이나 개인 텀블러를 휴대할 것을 적극 권장하고, 학교 등의 공공기관 내에서는 수돗물만을 사용하도록 하기로 했다고 합니다. 당신은 학교와 공공기관에서 생수보다는 수돗물을 권장하는 정부의 정책에 (1번) 찬성합니까? (2번) 반대합니까?
+<br>
+9번 상황
+<br>
+비누는 식물성 기름으로 제조되어 물에서 분해가 잘 되지만 샴푸는 석유화학 제품으로 물에서 분해가 잘 안되기 때문에 수질 오염을 유발합니다. 샴푸와 비누의 장단점이 엄연히 존재하는 현실에서, 당신은  (1번) 당신은 샴푸를 사용하겠습니까?, (2번) 조금이나마 환경을 생각해서 비누를 사용하겠습니까?
+<br>
+10번 상황
+<br>
+소고기 1kg을 생산하는 데 필요한 물의 양(물발자국)은 15,415L로 닭고기의 4배에 육박합니다. 아울러 탄소배출량(탄소발자국)도 27kg으로 닭의 4배에 달합니다. 이에 정부에서는 물 절약적인 측면과 지구 온난화 방지라는 측면 등 환경을 생각해서 앞으로는 소고기 소비를 줄이는 정책을 추진하고 차라리 닭고기, 돼지고기 소비를 늘리겠다고 합니다. 정부의 이런 소고기 소비 억제 정책에 대해 (1번) 찬성합니까, (2번) 반대합니까?
+<br>
+<br>
+    </div></body>
