@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지니어스-먹이사슬 게임</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .btn-hover {
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .btn-hover:hover {
+      transform: scale(1.1);
+      background-color: #2563eb;
+    }
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: #3b82f6;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center font-sans">
+  <div id="app" class="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <!-- Page 1: Group Name Input -->
+    <div id="page1" class="page flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-4">지니어스-먹이사슬 게임</h1>
+      <p class="text-center text-gray-700 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+      <input id="groupName" type="text" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+      <button id="next1" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">다음</button>
+    </div>
+
+    <!-- Page 2: Team Selection -->
+    <div id="page2" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">지니어스-먹이사슬 게임</h1>
+      <p class="text-gray-700 mb-4">단체명: <span id="groupNameDisplay2"></span></p>
+      <select id="teamName" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">팀 선택</option>
+      </select>
+      <div class="flex space-x-4">
+        <button id="back2" class="btn-hover bg-gray-500 text-white px-6 py-2 rounded-lg">뒤로 가기</button>
+        <button id="next2" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Selection -->
+    <div id="page3" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">지니어스-먹이사슬 게임</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupNameDisplay3"></span></p>
+      <p class="text-gray-700 mb-4">팀명: <span id="teamNameDisplay3"></span></p>
+      <select id="round" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">라운드 선택</option>
+      </select>
+      <div class="flex space-x-4">
+        <button id="back3" class="btn-hover bg-gray-500 text-white px-6 py-2 rounded-lg">뒤로 가기</button>
+        <button id="next3" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">다음</button>
+      </div>
+    </div>
+
+    <!-- Page 4: Location and Action Selection -->
+    <div id="page4" class="page hidden flex flex-col items-center">
+      <h1 class="text-2xl font-bold text-blue-600 mb-2">지니어스-먹이사슬 게임</h1>
+      <p class="text-gray-700 mb-2">단체명: <span id="groupNameDisplay4"></span></p>
+      <p class="text-gray-700 mb-4">팀명: <span id="teamNameDisplay4"></span></p>
+      <p class="text-blue-600 font-bold mb-2">먼저 자신의 동물명을 확인해주세요.</p>
+      <p class="text-blue-600 font-bold mb-2">장소1과 장소2는 중복되면 안됩니다.</p>
+      <p class="text-blue-600 font-bold mb-4">동물명의 뒤에서 3번째 숫자는 해당 동물에게는 약간은 안전한 장소로서 1-숲, 2-들, 3-강, 4-하늘을 뜻합니다.</p>
+      <div class="w-full mb-4">
+        <label class="block text-gray-700 mb-1">첫번째로 이동할 장소 1은?</label>
+        <select id="location1" class="w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">장소 선택</option>
+          <option value="숲">숲</option>
+          <option value="들">들</option>
+          <option value="강">강</option>
+          <option value="하늘">하늘</option>
+        </select>
+        <label class="block text-gray-700 mb-1">공격 또는 패스</label>
+        <select id="action1" class="w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">선택</option>
+          <option value="공격">공격</option>
+          <option value="패스">패스</option>
+        </select>
+      </div>
+      <div class="w-full mb-4">
+        <label class="block text-gray-700 mb-1">두번째로 이동할 장소 2는?</label>
+        <select id="location2" class="w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">장소 선택</option>
+          <option value="숲">숲</option>
+          <option value="들">들</option>
+          <option value="강">강</option>
+          <option value="하늘">하늘</option>
+        </select>
+        <label class="block text-gray-700 mb-1">공격 또는 패스</label>
+        <select id="action2" class="w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">선택</option>
+          <option value="공격">공격</option>
+          <option value="패스">패스</option>
+        </select>
+      </div>
+      <div class="flex space-x-4">
+        <button id="back4" class="btn-hover bg-gray-500 text-white px-6 py-2 rounded-lg">뒤로 가기</button>
+        <button id="submit" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">제출하기</button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="spinner" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" data-next-page="">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <p id="successMessage" class="text-gray-700 mb-4"></p>
+        <button id="confirmSuccess" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">확인</button>
+      </div>
+    </div>
+
+    <!-- Final Popup -->
+    <div id="finalPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" data-next-page="1">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <p class="text-gray-700 mb-4">모든 입력이 완료되었습니다!</p>
+        <button id="confirmFinal" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">확인</button>
+      </div>
+    </div>
+
+    <!-- Error Popup -->
+    <div id="errorPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <p id="errorMessage" class="text-red-600 mb-4"></p>
+        <button id="confirmError" class="btn-hover bg-blue-500 text-white px-6 py-2 rounded-lg">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let groupName = '';
+    let teamName = '';
+    let round = 1;
+    let isSubmitting = false;
+
+    // Populate team dropdown (1 to 60)
+    const teamSelect = document.getElementById('teamName');
+    for (let i = 1; i <= 60; i++) {
+      const option = document.createElement('option');
+      option.value = `${i}팀`;
+      option.textContent = `${i}팀`;
+      teamSelect.appendChild(option);
+    }
+
+    // Populate round dropdown (1 to 12)
+    const roundSelect = document.getElementById('round');
+    for (let i = 1; i <= 12; i++) {
+      const option = document.createElement('option');
+      option.value = `${i}라운드`;
+      option.textContent = `${i}라운드`;
+      roundSelect.appendChild(option);
+    }
+    roundSelect.value = '1라운드';
+
+    // Page navigation
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page${pageId}`).classList.remove('hidden');
+    }
+
+    // Page 1: Group Name
+    document.getElementById('next1').addEventListener('click', () => {
+      groupName = document.getElementById('groupName').value.trim();
+      if (!groupName) {
+        showError('단체명을 입력해주세요.');
+        return;
+      }
+      document.getElementById('groupNameDisplay2').textContent = groupName;
+      document.getElementById('groupNameDisplay3').textContent = groupName;
+      document.getElementById('groupNameDisplay4').textContent = groupName;
+      showPage('2');
+    });
+
+    // Page 2: Team Selection
+    document.getElementById('next2').addEventListener('click', () => {
+      teamName = document.getElementById('teamName').value;
+      if (!teamName) {
+        showError('팀을 선택해주세요.');
+        return;
+      }
+      document.getElementById('teamNameDisplay3').textContent = teamName;
+      document.getElementById('teamNameDisplay4').textContent = teamName;
+      showPage('3');
+    });
+    document.getElementById('back2').addEventListener('click', () => showPage('1'));
+
+    // Page 3: Round Selection
+    document.getElementById('next3').addEventListener('click', () => {
+      round = parseInt(document.getElementById('round').value.replace('라운드', ''));
+      showPage('4');
+    });
+    document.getElementById('back3').addEventListener('click', () => showPage('2'));
+
+    // Page 4: Location and Action Validation
+    document.getElementById('location1').addEventListener('change', validateLocations);
+    document.getElementById('location2').addEventListener('change', validateLocations);
+
+    function validateLocations() {
+      const location1 = document.getElementById('location1').value;
+      const location2 = document.getElementById('location2').value;
+      if (location1 && location2 && location1 === location2) {
+        showError('장소1과 장소2는 서로 달라야 합니다.');
+        document.getElementById('submit').disabled = true;
+      } else {
+        document.getElementById('submit').disabled = false;
+      }
+    }
+
+    // Page 4: Back Button
+    document.getElementById('back4').addEventListener('click', () => showPage('3'));
+
+    // Page 4: Submit
+    document.getElementById('submit').addEventListener('click', () => {
+      if (isSubmitting) return;
+
+      const location1 = document.getElementById('location1').value;
+      const action1 = document.getElementById('action1').value;
+      const location2 = document.getElementById('location2').value;
+      const action2 = document.getElementById('action2').value;
+
+      if (!location1 || !action1 || !location2 || !action2) {
+        showError('모든 필드를 입력해주세요.');
+        return;
+      }
+
+      document.getElementById('spinner').classList.remove('hidden');
+      isSubmitting = true;
+      document.getElementById('submit').disabled = true;
+
+      fetch('https://script.google.com/macros/s/AKfycbwforFNPQK6eEh6bRSLGwibhfErJRAL5d8cJhVxrEMhTHbEO3HzQxwxZ7vodClqqrw/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          groupName,
+          round: `${round}라운드`,
+          teamName,
+          location1,
+          action1,
+          location2,
+          action2
+        })
+      })
+      .then(() => {
+        handleSubmissionSuccess(groupName, teamName, `${round}라운드`);
+      })
+      .catch(() => {
+        handleSubmissionSuccess(groupName, teamName, `${round}라운드`); // Handle as success due to no-cors
+      });
+    });
+
+    function handleSubmissionSuccess(groupName, teamName, round) {
+      document.getElementById('spinner').classList.add('hidden');
+      const currentRoundNum = parseInt(round.match(/\d+/)[0]);
+      if (currentRoundNum < 12) {
+        document.getElementById('successMessage').textContent = `${groupName}, ${teamName}, ${round} 내용이 잘 입력됐습니다.`;
+        document.getElementById('successPopup').dataset.nextPage = '3';
+        document.getElementById('successPopup').classList.remove('hidden');
+        round = currentRoundNum + 1;
+        document.getElementById('round').value = `${round}라운드`;
+      } else {
+        document.getElementById('finalPopup').classList.remove('hidden');
+      }
+
+      // Reset form
+      document.getElementById('location1').value = '';
+      document.getElementById('action1').value = '';
+      document.getElementById('location2').value = '';
+      document.getElementById('action2').value = '';
+
+      // Re-enable submit after 3 seconds
+      setTimeout(() => {
+        isSubmitting = false;
+        document.getElementById('submit').disabled = false;
+      }, 3000);
+    }
+
+    // Success Popup Confirm
+    document.getElementById('confirmSuccess').addEventListener('click', () => {
+      document.getElementById('successPopup').classList.add('hidden');
+      showPage(document.getElementById('successPopup').dataset.nextPage);
+    });
+
+    // Final Popup Confirm
+    document.getElementById('confirmFinal').addEventListener('click', () => {
+      document.getElementById('finalPopup').classList.add('hidden');
+      showPage('1');
+      document.getElementById('groupName').value = '';
+      document.getElementById('teamName').value = '';
+      round = 1;
+      document.getElementById('round').value = '1라운드';
+    });
+
+    // Error Popup Confirm
+    document.getElementById('confirmError').addEventListener('click', () => {
+      document.getElementById('errorPopup').classList.add('hidden');
+    });
+
+    // Show Error Message
+    function showError(message) {
+      document.getElementById('errorMessage').textContent = message;
+      document.getElementById('errorPopup').classList.remove('hidden');
+    }
+
+    // Initialize
+    showPage('1');
+  </script>
+</body>
+</html>
