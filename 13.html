@@ -22,7 +22,13 @@
         }
         .left {
             width: 40%;
+            display: flex;
+            flex-direction: column;
             background-color: #f0f0f0;
+        }
+        .left-top, .left-bottom {
+            height: 50%;
+            width: 100%;
         }
         .right {
             width: 60%;
@@ -38,7 +44,12 @@
 <body>
     <div class="container">
         <div class="left">
-            <iframe src="13_top.html" title="Left Frame"></iframe>
+            <div class="left-top">
+                <iframe src="13_top1.html" title="Left Top Frame"></iframe>
+            </div>
+            <div class="left-bottom">
+                <iframe src="13_top.html" title="Left Bottom Frame"></iframe>
+            </div>
         </div>
         <div class="right">
             <iframe src="https://onboardgame.tistory.com/13" title="Right Frame"></iframe>
