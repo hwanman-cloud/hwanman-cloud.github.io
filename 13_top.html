@@ -4,152 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>친환경 ESG 경영과 지속 가능한 환경 사회 - 참지잡이 하러 선박 보내기</title>
-    <!-- adsense AD -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
-     crossorigin="anonymous"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Adsense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929" crossorigin="anonymous"></script>
     <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         .page { display: none; }
         .active { display: block; }
-        .btn { transition: all 0.3s; }
-        .btn:hover { transform: scale(1.05); background-color: #2563eb; }
-        .btn:active { transform: scale(0.95); }
-        .spinner { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.5); 
-            z-index: 9999; 
-            justify-content: center;
-            align-items: center;
-        }
-        .spinner::after { 
-            content: ''; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            width: 40px; 
-            height: 40px; 
-            border: 4px solid #fff; 
-            border-top-color: transparent; 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
-        }
-        @keyframes spin { 
-            0% { transform: translate(-50%, -50%) rotate(0deg); } 
-            100% { transform: translate(-50%, -50%) rotate(360deg); } 
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            z-index: 10000;
-            text-align: center;
-            max-width: 90%;
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
-          <!-- adsense AD -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6889882135814929"
-     crossorigin="anonymous"></script>
-<!-- bottom -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-6889882135814929"
-     data-ad-slot="6428454153"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-      <!-- adsense AD -->
-  
-    <div class="container mx-auto p-4 max-w-md">
+<body class="bg-gradient-to-b from-blue-50 to-green-50 min-h-screen flex items-center justify-center font-sans">
+    <!-- Google Adsense -->
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6889882135814929" data-ad-slot="6428454153" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+    <div class="container mx-auto p-6 max-w-lg">
         <!-- Page 1: 단체명 입력 -->
-        <div id="page1" class="page active bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-2xl font-bold text-blue-700 mb-4">친환경 ESG 경영과 지속 가능한 환경 사회-참지잡이 하러 선박 보내기</h1>
-            <p class="text-gray-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
-            <input type="text" id="groupName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
-            <button onmouseup="nextPage(1)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+        <div id="page1" class="page active bg-white p-8 rounded-2xl shadow-xl text-center fade-in">
+            <h1 class="text-3xl font-bold text-green-700 mb-4">친환경 ESG 경영과 지속 가능한 환경 사회</h1>
+            <p class="text-gray-600 mb-6">Host가 알려준 단체명을 정확히 입력해 주세요.</p>
+            <input type="text" id="groupName" class="w-full p-3 border border-green-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500 transition" placeholder="단체명 입력">
+            <button onmouseup="nextPage(1)" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition transform hover:scale-105">다음</button>
         </div>
 
         <!-- Page 2: 팀명 선택 -->
-        <div id="page2" class="page bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-2xl font-bold text-blue-700 mb-2">친환경 ESG 경영과 지속 가능한 환경 사회-참지잡이 하러 선박 보내기</h1>
-            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay1" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-4">팀명을 선택하세요.</p>
-            <select id="teamName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div id="page2" class="page bg-white p-8 rounded-2xl shadow-xl text-center">
+            <h1 class="text-3xl font-bold text-green-700 mb-4">친환경 ESG 경영과 지속 가능한 환경 사회</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay1" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-6">팀명을 선택하세요.</p>
+            <select id="teamName" class="w-full p-3 border border-green-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
                 <option value="">팀명 선택</option>
             </select>
-            <div class="flex justify-between gap-2">
-                <button onmouseup="prevPage(2)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(2)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+            <div class="flex justify-between gap-4">
+                <button onmouseup="prevPage(2)" class="w-full bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600 transition transform hover:scale-105">뒤로 가기</button>
+                <button onmouseup="nextPage(2)" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition transform hover:scale-105">다음</button>
             </div>
         </div>
 
         <!-- Page 3: 라운드 선택 -->
-        <div id="page3" class="page bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-2xl font-bold text-blue-700 mb-2">친환경 ESG 경영과 지속 가능한 환경 사회-참지잡이 하러 선박 보내기</h1>
-            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay2" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay1" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-4">라운드를 선택하세요.</p>
-            <select id="round" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div id="page3" class="page bg-white p-8 rounded-2xl shadow-xl text-center">
+            <h1 class="text-3xl font-bold text-green-700 mb-4">친환경 ESG 경영과 지속 가능한 환경 사회</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay2" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay1" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-6">라운드를 선택하세요.</p>
+            <select id="round" class="w-full p-3 border border-green-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
                 <option value="">라운드 선택</option>
             </select>
-            <div class="flex justify-between gap-2">
-                <button onmouseup="prevPage(3)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(3)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+            <div class="flex justify-between gap-4">
+                <button onmouseup="prevPage(3)" class="w-full bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600 transition transform hover:scale-105">뒤로 가기</button>
+                <button onmouseup="nextPage(3)" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition transform hover:scale-105">다음</button>
             </div>
         </div>
 
         <!-- Page 4: 가까운 바다에 보낼 선박 수 선택 -->
-        <div id="page4" class="page bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-2xl font-bold text-blue-700 mb-2">친환경 ESG 경영과 지속 가능한 환경 사회-참지잡이 하러 선박 보내기</h1>
-            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay3" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay2" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay1" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-4">가까운 바다에 보낼 선박 수를 선택하세요.</p>
-            <select id="nearSeaShips" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div id="page4" class="page bg-white p-8 rounded-2xl shadow-xl text-center">
+            <h1 class="text-3xl font-bold text-green-700 mb-4">친환경 ESG 경영과 지속 가능한 환경 사회</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay3" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay2" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay1" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-6">가까운 바다에 보낼 선박 수를 선택하세요.</p>
+            <select id="nearSeaShips" class="w-full p-3 border border-green-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
                 <option value="">선택</option>
             </select>
-            <div class="flex justify-between gap-2">
-                <button onmouseup="prevPage(4)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button onmouseup="nextPage(4)" class="btn bg-blue-600 text-white p-2 rounded w-full">다음</button>
+            <div class="flex justify-between gap-4">
+                <button onmouseup="prevPage(4)" class="w-full bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600 transition transform hover:scale-105">뒤로 가기</button>
+                <button onmouseup="nextPage(4)" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition transform hover:scale-105">다음</button>
             </div>
         </div>
 
         <!-- Page 5: 먼 바다에 보낼 선박 수 선택 및 제출 -->
-        <div id="page5" class="page bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-2xl font-bold text-blue-700 mb-2">친환경 ESG 경영과 지속 가능한 환경 사회-참지잡이 하러 선박 보내기</h1>
-            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay4" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay3" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay2" class="font-semibold text-blue-600"></span></p>
-            <p class="text-gray-600 mb-4">먼 바다에 보낼 선박 수를 선택하세요.</p>
-            <select id="farSeaShips" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div id="page5" class="page bg-white p-8 rounded-2xl shadow-xl text-center">
+            <h1 class="text-3xl font-bold text-green-700 mb-4">친환경 ESG 경영과 지속 가능한 환경 사회</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay4" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay3" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay2" class="font-semibold text-green-600"></span></p>
+            <p class="text-gray-600 mb-6">먼 바다에 보낼 선박 수를 선택하세요.</p>
+            <select id="farSeaShips" class="w-full p-3 border border-green-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
                 <option value="">선택</option>
             </select>
-            <div class="flex justify-between gap-2">
-                <button onmouseup="prevPage(5)" class="btn bg-gray-500 text-white p-2 rounded w-full hover:bg-gray-600">뒤로 가기</button>
-                <button id="submitBtn" onmouseup="nextPage(5)" class="btn bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">제출하기</button>
+            <div class="flex justify-between gap-4">
+                <button onmouseup="prevPage(5)" class="w-full bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600 transition transform hover:scale-105">뒤로 가기</button>
+                <button id="submitBtn" onmouseup="nextPage(5)" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition transform hover:scale-105">제출하기</button>
             </div>
         </div>
 
         <!-- 로딩 스피너 -->
-        <div id="spinner" class="spinner"></div>
+        <div id="spinner" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
 
         <!-- 팝업 창 -->
-        <div id="popup" class="popup">
-            <p id="popupMessage" class="text-lg text-blue-800 mb-4"></p>
-            <button onmouseup="closePopup()" class="btn bg-blue-600 text-white p-2 rounded w-full">확인</button>
+        <div id="popup" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-sm w-full">
+                <p id="popupMessage" class="text-lg text-green-800 mb-6"></p>
+                <button onmouseup="closePopup()" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition transform hover:scale-105">확인</button>
+            </div>
         </div>
     </div>
 
@@ -162,7 +120,6 @@
         let farSeaShips = '';
         let isSubmitting = false;
 
-        // 드롭다운 옵션 동적 생성
         function populateOptions() {
             const teamSelect = document.getElementById('teamName');
             for (let i = 1; i <= 60; i++) {
@@ -179,7 +136,7 @@
                 option.textContent = `${i}라운드`;
                 roundSelect.appendChild(option);
             }
-            roundSelect.value = '1라운드'; // Default to 1라운드
+            roundSelect.value = '1라운드';
 
             const nearSeaShipsSelect = document.getElementById('nearSeaShips');
             const farSeaShipsSelect = document.getElementById('farSeaShips');
@@ -196,14 +153,14 @@
             }
         }
 
-        // 페이지 표시
         function showPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page${page}`).classList.add('active');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'fade-in'));
+            const targetPage = document.getElementById(`page${page}`);
+            targetPage.classList.add('active', 'fade-in');
             currentPage = page;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 다음 페이지로 이동
         function nextPage(fromPage) {
             if (fromPage === 1) {
                 groupName = document.getElementById('groupName').value.trim();
@@ -252,24 +209,20 @@
             }
         }
 
-        // 이전 페이지로 이동
         function prevPage(toPage) {
             showPage(toPage - 1);
         }
 
-        // 데이터 제출
         function submitData() {
             if (isSubmitting) return;
             isSubmitting = true;
 
-            // Re-fetch values from DOM to ensure synchronization
             groupName = document.getElementById('groupName').value.trim();
             teamName = document.getElementById('teamName').value;
             round = document.getElementById('round').value;
             nearSeaShips = document.getElementById('nearSeaShips').value;
             farSeaShips = document.getElementById('farSeaShips').value;
 
-            // Validate fields
             const missingFields = [];
             if (!groupName) missingFields.push('단체명');
             if (!teamName) missingFields.push('팀명');
@@ -278,7 +231,6 @@
             if (farSeaShips === '') missingFields.push('먼 바다에 보낼 선박 수');
 
             if (missingFields.length > 0) {
-                console.log('Missing fields:', missingFields);
                 showPopup(`다음 필드를 입력해주세요: ${missingFields.join(', ')}`);
                 isSubmitting = false;
                 return;
@@ -286,33 +238,24 @@
 
             const spinner = document.getElementById('spinner');
             const submitBtn = document.getElementById('submitBtn');
-            spinner.style.display = 'flex';
+            spinner.classList.remove('hidden');
             submitBtn.disabled = true;
 
             const data = { groupName, teamName, round, nearSeaShips, farSeaShips };
-            console.log('Submitting:', data);
-
             fetch('https://script.google.com/macros/s/AKfycbzA0QEL5K0H206gGHBGMrbsbOr_iQ1JubiSzq2Ng--MB4BTk0TkMzAyvez0kVjR8N6x/exec', {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
-            .then(() => {
-                handleSubmissionSuccess(groupName, teamName, round);
-            })
-            .catch(() => {
-                handleSubmissionSuccess(groupName, teamName, round); // Handle as success due to no-cors
-            });
+            .then(() => handleSubmissionSuccess(groupName, teamName, round))
+            .catch(() => handleSubmissionSuccess(groupName, teamName, round));
         }
 
-        // 제출 성공 처리
         function handleSubmissionSuccess(groupName, teamName, round) {
             const spinner = document.getElementById('spinner');
             const submitBtn = document.getElementById('submitBtn');
-            spinner.style.display = 'none';
+            spinner.classList.add('hidden');
 
             const currentRoundNum = parseInt(round.match(/\d+/)[0]);
             if (currentRoundNum < 15) {
@@ -325,7 +268,6 @@
                 document.getElementById('popup').dataset.nextPage = 1;
             }
 
-            // Reset fields for next round
             document.getElementById('nearSeaShips').value = '';
             document.getElementById('farSeaShips').value = '';
             nearSeaShips = '';
@@ -337,20 +279,17 @@
             }, 3000);
         }
 
-        // 팝업 표시
         function showPopup(message) {
             document.getElementById('popupMessage').textContent = message;
-            document.getElementById('popup').style.display = 'block';
+            document.getElementById('popup').classList.remove('hidden');
         }
 
-        // 팝업 닫기
         function closePopup() {
-            document.getElementById('popup').style.display = 'none';
+            document.getElementById('popup').classList.add('hidden');
             const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
             showPage(nextPage);
         }
 
-        // 초기화
         window.onload = function() {
             populateOptions();
             showPage(1);
