@@ -217,7 +217,7 @@
             if (fromPage === 1) {
                 groupName = document.getElementById('groupName').value.trim();
                 if (!groupName) {
-                    alert('단체명을 입력해주세요.');
+                    showPopup('단체명을 입력해주세요.');
                     return;
                 }
                 document.getElementById('groupNameDisplay1').textContent = groupName;
@@ -227,7 +227,7 @@
             } else if (fromPage === 2) {
                 teamName = document.getElementById('teamName').value;
                 if (!teamName) {
-                    alert('팀명을 선택해주세요.');
+                    showPopup('팀명을 선택해주세요.');
                     return;
                 }
                 document.getElementById('teamNameDisplay1').textContent = teamName;
@@ -236,7 +236,7 @@
             } else if (fromPage === 3) {
                 round = document.getElementById('round').value;
                 if (!round) {
-                    alert('라운드를 선택해주세요.');
+                    showPopup('라운드를 선택해주세요.');
                     return;
                 }
                 document.getElementById('roundDisplay1').textContent = round;
@@ -255,7 +255,7 @@
         function submitData() {
             const currentTime = new Date().getTime();
             if (currentTime - lastSubmissionTime < 3000 || isSubmitting) {
-                alert('잠시 후 다시 시도해주세요.');
+                showPopup('잠시 후 다시 시도해주세요.');
                 return;
             }
 
@@ -269,8 +269,16 @@
             const betHorse3 = document.getElementById('betHorse3').value;
             const betChips3 = document.getElementById('betChips3').value;
 
+            // 필수 입력 검증
             if (!groupName || !teamName || !round || !betHorse1 || !betChips1 || !betHorse2 || !betChips2 || !betHorse3 || !betChips3) {
-                alert('모든 필드를 입력해주세요.');
+                showPopup('모든 필드를 입력해주세요.');
+                isSubmitting = false;
+                return;
+            }
+
+            // 베팅 경마 중복 검증
+            if (betHorse1 === betHorse2 || betHorse1 === betHorse3 || betHorse2 === betHorse3) {
+                showPopup('베팅 경마1, 베팅 경마2, 베팅 경마3은 서로 다른 말을 선택해야 합니다.');
                 isSubmitting = false;
                 return;
             }
@@ -347,14 +355,16 @@
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
             const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
-            showPage(nextPage);
-            if (nextPage === 1) {
-                groupName = '';
-                teamName = '';
-                round = '';
-                document.getElementById('groupName').value = '';
-                document.getElementById('teamName').value = '';
-                document.getElementById('round').value = '1라운드';
+            if (nextPage) {
+                showPage(nextPage);
+                if (nextPage === 1) {
+                    groupName = '';
+                    teamName = '';
+                    round = '';
+                    document.getElementById('groupName').value = '';
+                    document.getElementById('teamName').value = '';
+                    document.getElementById('round').value = '1라운드';
+                }
             }
         }
 
