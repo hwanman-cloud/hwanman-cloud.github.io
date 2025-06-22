@@ -7,7 +7,6 @@
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
-      margin: 0;
       padding: 40px;
     }
     h1 {
@@ -15,37 +14,29 @@
       color: #2c3e50;
       margin-bottom: 40px;
     }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
-    .category {
-      flex: 1 1 300px;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      min-width: 280px;
+    caption {
+      caption-side: top;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 15px;
+      background-color: #ecf0f1;
+      color: #2c3e50;
     }
-    .category h2 {
-      border-bottom: 2px solid #eee;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
-      font-size: 18px;
-      color: #34495e;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      margin: 8px 0;
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
     }
     a {
-      text-decoration: none;
       color: #2980b9;
+      text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
@@ -56,92 +47,88 @@
 
 <h1>카테고리별 게임 목록</h1>
 
-<div class="container">
+<!-- 환경 딜레마 게임 -->
+<table>
+  <caption>환경 딜레마 게임</caption>
+  <tbody>
+    <tr><td><a href="https://onboardgame.tistory.com/14" target="_blank">지구온난화 딜레마 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/15" target="_blank">원자력 vs 친환경 에너지 딜레마 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/18" target="_blank">플라스틱의 역습 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/19" target="_blank">미세먼지 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/16" target="_blank">사막(메마른 지구)의 역습 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/17" target="_blank">바이러스(코로나19)의 역습 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/48" target="_blank">환경호르몬의 역습 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/30" target="_blank">바다목장 문어의 비극 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/9" target="_blank">죄수의 딜레마 (남획편)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/49" target="_blank">멸종위기 동물 보호 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/30" target="_blank">멸종위기 동물 개체수 시뮬레이션</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/53" target="_blank">환경 토론 투표 예측 게임 (물 발자국)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/54" target="_blank">환경 토론 투표 예측 게임 (탄소발자국)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/76" target="_blank">환경 토론 투표 예측 게임 (원자력발전)</a></td></tr>
+  </tbody>
+</table>
 
-  <!-- 환경 딜레마 게임 -->
-  <div class="category">
-    <h2>환경 딜레마 게임</h2>
-    <ul>
-      <li><a href="https://onboardgame.tistory.com/14" target="_blank">지구온난화 딜레마 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/15" target="_blank">원자력 vs 친환경 에너지 딜레마 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/18" target="_blank">플라스틱의 역습 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/19" target="_blank">미세먼지 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/16" target="_blank">사막(메마른 지구)의 역습 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/17" target="_blank">바이러스(코로나19)의 역습 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/48" target="_blank">환경호르몬의 역습 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/30" target="_blank">바다목장 문어의 비극 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/9" target="_blank">죄수의 딜레마 (남획편)</a></li>
-      <li><a href="https://onboardgame.tistory.com/49" target="_blank">멸종위기 동물 보호 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/30" target="_blank">멸종위기 동물 개체수 시뮬레이션</a></li>
-      <li><a href="https://onboardgame.tistory.com/53" target="_blank">환경 토론 투표 예측 게임 (물 발자국)</a></li>
-      <li><a href="https://onboardgame.tistory.com/54" target="_blank">환경 토론 투표 예측 게임 (탄소발자국)</a></li>
-      <li><a href="https://onboardgame.tistory.com/76" target="_blank">환경 토론 투표 예측 게임 (원자력발전)</a></li>
-    </ul>
-  </div>
+<!-- 경영 전략 딜레마 게임 -->
+<table>
+  <caption>경영 전략 딜레마 게임</caption>
+  <tbody>
+    <tr><td><a href="https://onboardgame.tistory.com/13" target="_blank">ESG 친환경 경영과 지속 가능한 사회</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/26" target="_blank">바이오 신약 개발과 원료식물 확보 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/47" target="_blank">공정무역 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/27" target="_blank">주식 투자 게임(6종목)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/11" target="_blank">기와집 건축 경영 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/12" target="_blank">첨단 제품 제조 경영 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/57" target="_blank">1억 투자 밸런스 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/56" target="_blank">1억 투자 타임머신 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/50" target="_blank">캐쉬플로우 자산 증식 게임</a></td></tr>
+  </tbody>
+</table>
 
-  <!-- 경영 전략 딜레마 게임 -->
-  <div class="category">
-    <h2>경영 전략 딜레마 게임</h2>
-    <ul>
-      <li><a href="https://onboardgame.tistory.com/13" target="_blank">ESG 친환경 경영과 지속 가능한 사회</a></li>
-      <li><a href="https://onboardgame.tistory.com/26" target="_blank">바이오 신약 개발과 원료식물 확보 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/47" target="_blank">공정무역 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/27" target="_blank">주식 투자 게임(6종목)</a></li>
-      <li><a href="https://onboardgame.tistory.com/11" target="_blank">기와집 건축 경영 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/12" target="_blank">첨단 제품 제조 경영 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/57" target="_blank">1억 투자 밸런스 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/56" target="_blank">1억 투자 타임머신 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/50" target="_blank">캐쉬플로우 자산 증식 게임</a></li>
-    </ul>
-  </div>
+<!-- 사회 윤리 딜레마 게임 -->
+<table>
+  <caption>사회 윤리 딜레마 게임</caption>
+  <tbody>
+    <tr><td><a href="https://onboardgame.tistory.com/24" target="_blank">국제구호기금과 재해재난의 나비효과</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/81" target="_blank">젠트리피케이션 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/25" target="_blank">부동산 세금과 복지 있는 세상 브루마블 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/78" target="_blank">저출산 문제와 인구변화 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/27" target="_blank">가치관 경매 게임-(직업편 15가지)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/28" target="_blank">가치관 경매 게임-(인생편 15가지)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/63" target="_blank">진로선택 경매 게임-(진로선택 15과목)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/69" target="_blank">토론 투표 예측 게임(정의란 무엇인가)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/70" target="_blank">토론 투표 예측 게임(ALL)</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/64" target="_blank">발표 투자 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/58" target="_blank">죄수의 딜레마 게임(5가지 버전)</a></td></tr>
+  </tbody>
+</table>
 
-  <!-- 사회 윤리 딜레마 게임 -->
-  <div class="category">
-    <h2>사회 윤리 딜레마 게임</h2>
-    <ul>
-      <li><a href="https://onboardgame.tistory.com/24" target="_blank">국제구호기금과 재해재난의 나비효과</a></li>
-      <li><a href="https://onboardgame.tistory.com/81" target="_blank">젠트리피케이션 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/25" target="_blank">부동산 세금과 복지 있는 세상 브루마블 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/78" target="_blank">저출산 문제와 인구변화 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/27" target="_blank">가치관 경매 게임-(직업편 15가지)</a></li>
-      <li><a href="https://onboardgame.tistory.com/28" target="_blank">가치관 경매 게임-(인생편 15가지)</a></li>
-      <li><a href="https://onboardgame.tistory.com/63" target="_blank">진로선택 경매 게임-(진로선택 15과목)</a></li>
-      <li><a href="https://onboardgame.tistory.com/69" target="_blank">토론 투표 예측 게임(정의란 무엇인가)</a></li>
-      <li><a href="https://onboardgame.tistory.com/70" target="_blank">토론 투표 예측 게임(ALL)</a></li>
-      <li><a href="https://onboardgame.tistory.com/64" target="_blank">발표 투자 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/58" target="_blank">죄수의 딜레마 게임(5가지 버전)</a></li>
-    </ul>
-  </div>
+<!-- 조난에서 살아남기 시리즈 -->
+<table>
+  <caption>조난에서 살아남기 시리즈</caption>
+  <tbody>
+    <tr><td><a href="https://onboardgame.tistory.com/45" target="_blank">우주(달) 조난에서 살아남기 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/71" target="_blank">바다 조난에서 살아남기 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/72" target="_blank">사막 조난에서 살아남기 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/73" target="_blank">무인도 조난에서 살아남기 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/67" target="_blank">난파선에서의 생존자 선택의 윤리적 딜레마 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/68" target="_blank">제2의 지구 개척 프로젝트 게임</a></td></tr>
+  </tbody>
+</table>
 
-  <!-- 조난에서 살아남기 시리즈 -->
-  <div class="category">
-    <h2>조난에서 살아남기 시리즈</h2>
-    <ul>
-      <li><a href="https://onboardgame.tistory.com/45" target="_blank">우주(달) 조난에서 살아남기 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/71" target="_blank">바다 조난에서 살아남기 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/72" target="_blank">사막 조난에서 살아남기 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/73" target="_blank">무인도 조난에서 살아남기 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/67" target="_blank">난파선에서의 생존자 선택의 윤리적 딜레마 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/68" target="_blank">제2의 지구 개쳑 프로젝트 게임</a></li>
-    </ul>
-  </div>
-
-  <!-- 런닝맨 딜레마 게임 -->
-  <div class="category">
-    <h2>런닝맨 딜레마 게임</h2>
-    <ul>
-      <li><a href="https://onboardgame.tistory.com/26" target="_blank">런닝맨 - 알사탕 불신 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/28" target="_blank">런닝맨 - 갱스터즈 딜레마 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/83" target="_blank">런닝맨 - 밸런스 토론 투표 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/31" target="_blank">지니어스-투자와 기부 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/29" target="_blank">지니어스-인디언 포커 카드 제출 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/84" target="_blank">지니어스-경마 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/82" target="_blank">지니어스-먹이사슬 게임</a></li>
-      <li><a href="https://onboardgame.tistory.com/51" target="_blank">런닝맨 - 라이어 게임</a></li>
-    </ul>
-  </div>
-
-</div>
+<!-- 런닝맨 딜레마 게임 -->
+<table>
+  <caption>런닝맨 딜레마 게임</caption>
+  <tbody>
+    <tr><td><a href="https://onboardgame.tistory.com/26" target="_blank">런닝맨 - 알사탕 불신 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/28" target="_blank">런닝맨 - 갱스터즈 딜레마 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/83" target="_blank">런닝맨 - 밸런스 토론 투표 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/31" target="_blank">지니어스-투자와 기부 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/29" target="_blank">지니어스-인디언 포커 카드 제출 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/84" target="_blank">지니어스-경마 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/82" target="_blank">지니어스-먹이사슬 게임</a></td></tr>
+    <tr><td><a href="https://onboardgame.tistory.com/51" target="_blank">런닝맨 - 라이어 게임</a></td></tr>
+  </tbody>
+</table>
 
 </body>
 </html>
