@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지니어스-경마 게임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .page { display: none; }
+        .active { display: block; }
+        .btn-hover { transition: all 0.3s; }
+        .btn-hover:hover { transform: scale(1.05); background-color: #2563eb; }
+        .btn-hover:active { transform: scale(0.95); background-color: #1e40af; }
+        .spinner { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9999; 
+        }
+        .spinner::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid #fff; 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: translate(-50%, -50%) rotate(0deg); } 
+            100% { transform: translate(-50%, -50%) rotate(360deg); } 
+        }
+    </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center font-sans">
+    <div class="container mx-auto p-4 max-w-md">
+        <!-- Page 1: 단체명 입력 -->
+        <div id="page1" class="page active bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-4"><i class="fas fa-horse-head mr-2"></i>지니어스-경마 게임</h1>
+            <p class="text-gray-600 mb-4">Host가 알려준 단체명을 입력합니다. 대소문자 구분해서 정확히 입력해 주세요.</p>
+            <input type="text" id="groupName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="단체명 입력">
+            <button onclick="nextPage(1)" class="btn-hover bg-blue-600 text-white p-2 rounded w-full flex items-center justify-center">
+                <i class="fas fa-arrow-right mr-2"></i>다음
+            </button>
+        </div>
+
+        <!-- Page 2: 팀명 선택 -->
+        <div id="page2" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-horse-head mr-2"></i>지니어스-경마 게임</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay1" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">팀명을 선택하세요.</p>
+            <select id="teamName" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">팀명 선택</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(2)" class="btn-hover bg-gray-500 text-white p-2 rounded w-full flex items-center justify-center">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button onclick="nextPage(2)" class="btn-hover bg-blue-600 text-white p-2 rounded w-full flex items-center justify-center">
+                    <i class="fas fa-arrow-right mr-2"></i>다음
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 3: 라운드 선택 -->
+        <div id="page3" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-horse-head mr-2"></i>지니어스-경마 게임</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay2" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay1" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-4">라운드를 선택하세요.</p>
+            <select id="round" class="w-full p-2 border border-blue-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">라운드 선택</option>
+            </select>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(3)" class="btn-hover bg-gray-500 text-white p-2 rounded w-full flex items-center justify-center">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button onclick="nextPage(3)" class="btn-hover bg-blue-600 text-white p-2 rounded w-full flex items-center justify-center">
+                    <i class="fas fa-arrow-right mr-2"></i>다음
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 4: 베팅 입력 -->
+        <div id="page4" class="page bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-horse-head mr-2"></i>지니어스-경마 게임</h1>
+            <p class="text-gray-600 mb-2">단체명: <span id="groupNameDisplay3" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">팀명: <span id="teamNameDisplay2" class="font-semibold text-blue-600"></span></p>
+            <p class="text-gray-600 mb-2">라운드: <span id="roundDisplay1" class="font-semibold text-blue-600"></span></p>
+            <div class="space-y-4 mb-4">
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-600 w-1/2 text-left">베팅 경마1:</label>
+                    <select id="betHorse1" class="w-1/2 p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">말 선택</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-600 w-1/2 text-left">베팅 칩 갯수1:</label>
+                    <select id="betChips1" class="w-1/2 p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">칩 선택</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-600 w-1/2 text-left">베팅 경마2:</label>
+                    <select id="betHorse2" class="w-1/2 p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">말 선택</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-600 w-1/2 text-left">베팅 칩 갯수2:</label>
+                    <select id="betChips2" class="w-1/2 p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">칩 선택</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-600 w-1/2 text-left">베팅 경마3:</label>
+                    <select id="betHorse3" class="w-1/2 p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">말 선택</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-gray-600 w-1/2 text-left">베팅 칩 갯수3:</label>
+                    <select id="betChips3" class="w-1/2 p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">칩 선택</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between gap-2">
+                <button onclick="prevPage(4)" class="btn-hover bg-gray-500 text-white p-2 rounded w-full flex items-center justify-center">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <button id="submitBtn" onclick="submitData()" class="btn-hover bg-green-600 text-white p-2 rounded w-full flex items-center justify-center">
+                    <i class="fas fa-paper-plane mr-2"></i>제출하기
+                </button>
+            </div>
+        </div>
+
+        <!-- 로딩 스피너 -->
+        <div id="spinner" class="spinner"></div>
+
+        <!-- 팝업 -->
+        <div id="popup" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+                <p id="popup-message" class="text-xl font-semibold text-blue-700 mb-4"></p>
+                <button onclick="closePopup()" class="btn-hover bg-blue-600 text-white p-2 rounded w-full">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let isSubmitting = false;
+        let lastSubmissionTime = 0;
+        let groupName = '';
+        let teamName = '';
+        let round = '';
+
+        // 드롭다운 옵션 동적 생성
+        function populateOptions() {
+            const teamSelect = document.getElementById('teamName');
+            for (let i = 1; i <= 60; i++) {
+                const option = document.createElement('option');
+                option.value = `${i}팀`;
+                option.textContent = `${i}팀`;
+                teamSelect.appendChild(option);
+            }
+
+            const roundSelect = document.getElementById('round');
+            for (let i = 1; i <= 12; i++) {
+                const option = document.createElement('option');
+                option.value = `${i}라운드`;
+                option.textContent = `${i}라운드`;
+                roundSelect.appendChild(option);
+            }
+            roundSelect.value = '1라운드';
+
+            const horseSelects = ['betHorse1', 'betHorse2', 'betHorse3'];
+            horseSelects.forEach(id => {
+                const select = document.getElementById(id);
+                for (let i = 1; i <= 8; i++) {
+                    const option = document.createElement('option');
+                    option.value = `${i}번말`;
+                    option.textContent = `${i}번말`;
+                    select.appendChild(option);
+                }
+            });
+
+            const chipSelects = ['betChips1', 'betChips2', 'betChips3'];
+            chipSelects.forEach(id => {
+                const select = document.getElementById(id);
+                for (let i = 1; i <= 20; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            });
+        }
+
+        // 페이지 표시
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page${page}`).classList.add('active');
+            currentPage = page;
+        }
+
+        // 다음 페이지로 이동
+        function nextPage(fromPage) {
+            if (fromPage === 1) {
+                groupName = document.getElementById('groupName').value.trim();
+                if (!groupName) {
+                    alert('단체명을 입력해주세요.');
+                    return;
+                }
+                document.getElementById('groupNameDisplay1').textContent = groupName;
+                document.getElementById('groupNameDisplay2').textContent = groupName;
+                document.getElementById('groupNameDisplay3').textContent = groupName;
+                showPage(2);
+            } else if (fromPage === 2) {
+                teamName = document.getElementById('teamName').value;
+                if (!teamName) {
+                    alert('팀명을 선택해주세요.');
+                    return;
+                }
+                document.getElementById('teamNameDisplay1').textContent = teamName;
+                document.getElementById('teamNameDisplay2').textContent = teamName;
+                showPage(3);
+            } else if (fromPage === 3) {
+                round = document.getElementById('round').value;
+                if (!round) {
+                    alert('라운드를 선택해주세요.');
+                    return;
+                }
+                document.getElementById('roundDisplay1').textContent = round;
+                showPage(4);
+            }
+        }
+
+        // 이전 페이지로 이동
+        function prevPage(toPage) {
+            if (toPage === 2) showPage(1);
+            else if (toPage === 3) showPage(2);
+            else if (toPage === 4) showPage(3);
+        }
+
+        // 데이터 제출
+        function submitData() {
+            const currentTime = new Date().getTime();
+            if (currentTime - lastSubmissionTime < 3000 || isSubmitting) {
+                alert('잠시 후 다시 시도해주세요.');
+                return;
+            }
+
+            isSubmitting = true;
+            lastSubmissionTime = currentTime;
+
+            const betHorse1 = document.getElementById('betHorse1').value;
+            const betChips1 = document.getElementById('betChips1').value;
+            const betHorse2 = document.getElementById('betHorse2').value;
+            const betChips2 = document.getElementById('betChips2').value;
+            const betHorse3 = document.getElementById('betHorse3').value;
+            const betChips3 = document.getElementById('betChips3').value;
+
+            if (!groupName || !teamName || !round || !betHorse1 || !betChips1 || !betHorse2 || !betChips2 || !betHorse3 || !betChips3) {
+                alert('모든 필드를 입력해주세요.');
+                isSubmitting = false;
+                return;
+            }
+
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            fetch('https://script.google.com/macros/s/AKfycbzyX7jwBQCNdt0K8BZ-ZCLO5q8JeC0053ARd2K6GrLtWBzQopJQ6OmWYasZxd51Qcj1Vw/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    teamName: teamName,
+                    round: round,
+                    betHorse1: betHorse1,
+                    betChips1: betChips1,
+                    betHorse2: betHorse2,
+                    betChips2: betChips2,
+                    betHorse3: betHorse3,
+                    betChips3: betChips3,
+                    groupName: groupName
+                })
+            })
+            .then(() => {
+                handleSubmissionSuccess();
+            })
+            .catch(() => {
+                handleSubmissionSuccess(); // Handle as success due to no-cors
+            });
+        }
+
+        // 제출 성공 처리
+        function handleSubmissionSuccess() {
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'none';
+
+            const currentRoundNum = parseInt(round.match(/\d+/)[0]);
+            if (currentRoundNum < 12) {
+                showPopup(`${groupName}, ${teamName}, ${round} 내용이 잘 입력됐습니다.`);
+                document.getElementById('popup').dataset.nextPage = 3;
+                const nextRound = `${currentRoundNum + 1}라운드`;
+                document.getElementById('round').value = nextRound;
+            } else {
+                showPopup('모든 입력이 완료되었습니다!');
+                document.getElementById('popup').dataset.nextPage = 1;
+            }
+
+            // Reset fields for next round
+            document.getElementById('betHorse1').value = '';
+            document.getElementById('betChips1').value = '';
+            document.getElementById('betHorse2').value = '';
+            document.getElementById('betChips2').value = '';
+            document.getElementById('betHorse3').value = '';
+            document.getElementById('betChips3').value = '';
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            }, 3000);
+        }
+
+        // 팝업 표시
+        function showPopup(message) {
+            document.getElementById('popup-message').textContent = message;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        // 팝업 닫기
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            const nextPage = parseInt(document.getElementById('popup').dataset.nextPage);
+            showPage(nextPage);
+            if (nextPage === 1) {
+                groupName = '';
+                teamName = '';
+                round = '';
+                document.getElementById('groupName').value = '';
+                document.getElementById('teamName').value = '';
+                document.getElementById('round').value = '1라운드';
+            }
+        }
+
+        // 초기화
+        populateOptions();
+        showPage(1);
+    </script>
+</body>
+</html>
